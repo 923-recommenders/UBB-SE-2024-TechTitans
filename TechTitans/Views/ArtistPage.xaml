@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--import pt Components namesapace ca sa putem refolosi componente (this some DRY shit)
+    asta e syntaxa: xmlns:controls="clr-namespace:TechTitans.Views.Components"-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:TechTitans.Views.Components"
+             x:Class="TechTitans.Views.ArtistPage"
+             Title="ArtistPage">
+    <VerticalStackLayout>
+        <custom:BackHomeButton />
+        <Label 
+            Text="Artist Page"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>
