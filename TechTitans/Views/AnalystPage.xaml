@@ -11,6 +11,7 @@
         <Label 
             Text="ANALyst page!"
             VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" 
+        />
     </VerticalStackLayout>
 </ContentPage>

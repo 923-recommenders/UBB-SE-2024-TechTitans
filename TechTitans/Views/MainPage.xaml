@@ -11,43 +11,43 @@
                 Source="retarded_logo.png"
                 HeightRequest="185"
                 Aspect="AspectFit"
-                />
+            />
 
             <Label
                 Text="Coxify"
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1"
-                />
+            />
             <Button
                 x:Name="UserBtn"
                 Text="User View"
                 Clicked="OnUserCLicked"
                 HorizontalOptions="Fill"
-                />
+            />
             <Button
                 x:Name="ArtistBtn"
                 Text="Artist View"
                 Clicked="OnArtistClicked"
                 HorizontalOptions="Fill"
-                />
+            />
             <Button
                 x:Name="AnaylstBtn"
                 Text="Analyst View"
                 Clicked="OnAnalystClicked"
                 HorizontalOptions="Fill"
-                />
+            />
             <Label
                 x:Name="TestId"
                 Text=""
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1"
-                />
+            />
             <Label
                 x:Name="TestName"
                 Text=""
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1"
-                />
+            />
         </VerticalStackLayout>
     </ScrollView>
 

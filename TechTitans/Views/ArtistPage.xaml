@@ -11,6 +11,12 @@
         <Label 
             Text="Artist Page"
             VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" 
+        />
+        <VerticalStackLayout Spacing="15" Padding="10, 0">
+            <custom:SongItem />
+            <custom:SongItem />
+            <custom:SongItem />
+        </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>
