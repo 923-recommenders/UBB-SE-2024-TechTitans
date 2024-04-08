@@ -71,6 +71,7 @@ public partial class MainPage : ContentPage
     private void OnUserCLicked(object sender, EventArgs e) => Navigation.PushAsync(new UserPage());
     private void OnArtistClicked(object sender, EventArgs e) => Navigation.PushAsync(new ArtistPage());
     private void OnAnalystClicked(object sender, EventArgs e) => Navigation.PushAsync(new AnalystPage());
+    private void OnEndOfYearRecapClicked(object sender, EventArgs e) => Navigation.PushAsync(new EndOfYearRecap());
 }
 
 
