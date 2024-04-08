@@ -19,7 +19,7 @@ namespace TechTitans.Models
         public string Name { get; set; }
 
         [Column("gender")]
-        public string Gender { get; set; }
+        public int Gender { get; set; }
 
         [Column("date_of_birth")]
         public DateTime DateOfBirth { get; set; }

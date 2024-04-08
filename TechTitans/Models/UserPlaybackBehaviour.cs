@@ -11,14 +11,14 @@ namespace TechTitans.Models
 {
     public enum PlaybackEventType
     {
-        like = 0,
-        start_play = 1,
-        end_play = 2,
-        dislike = 3,
-        skip = 4
+        like = 1,
+        start_play = 2,
+        end_play = 3,
+        dislike = 4,
+        skip = 5
     }
-    [Table("UserPlaybackBehavior")]
-    public class UserPlaybackBehavior
+    [Table("UserPlaybackBehaviour")]
+    public class UserPlaybackBehaviour
     {
         [Key]
         [Column("user_id")]
