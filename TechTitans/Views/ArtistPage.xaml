@@ -7,7 +7,6 @@
              x:Class="TechTitans.Views.ArtistPage"
              Title="ArtistPage">
     <VerticalStackLayout>
-        <custom:BackHomeButton />
         <Label 
             Text="Artist Page"
             VerticalOptions="Center" 
