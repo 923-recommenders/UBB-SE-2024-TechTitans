@@ -1,3 +1,4 @@
+using TechTitans.Models;
 using TechTitans.Repositories;
 
 namespace TechTitans.Views;
@@ -6,6 +7,7 @@ public partial class MainPage : ContentPage
 {
     int count = 0;
     public TestRepository Repository { get; set; }
+    // public TestRepositoryDemographic Repository { get; set; }
 
     public MainPage()
     {
@@ -14,6 +16,10 @@ public partial class MainPage : ContentPage
         var dbData = Repository.TestMethod();
         TestId.Text = dbData.Id.ToString();
         TestName.Text = dbData.Name;
+        // Repository = new TestRepositoryDemographic();
+        // var dbData = Repository.TestMethod();
+        // TestId.Text = dbData.UserId.ToString();
+        // TestName.Text = dbData.Name;
 
     }
 
