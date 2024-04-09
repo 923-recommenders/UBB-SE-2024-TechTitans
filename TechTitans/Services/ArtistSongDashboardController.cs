@@ -97,7 +97,9 @@ namespace TechTitans.Services
                     return songDetails;
                 }
             }
-            return null;
+
+            return new SongRecommendationDetails();
+            
         }
 
         //gets artist info by song id
@@ -119,8 +121,52 @@ namespace TechTitans.Services
             return null;
         }
 
-
+        public AuthorDetails getMostPublishedAuthor()
+        {
+            Dictionary<int, int> artistCount = new Dictionary<int, int>();
+            foreach (SongBasicDetails song in SongRepo.GetAll())
+            {
+                if (artistCount.ContainsKey(song.Artist_Id))
+                {
+                    artistCount[song.Artist_Id]++;
+                }
+                else
+                {
+                    artistCount.Add(song.Artist_Id, 1);
+                }
+            }
+            int max = 0;
+            int artistId = 0;
+            foreach (KeyValuePair<int, int> entry in artistCount)
+            {
+                if (entry.Value > max)
+                {
+                    max = entry.Value;
+                    artistId = entry.Key;
+                }
+            }
+            foreach (AuthorDetails artist in ArtistRepo.GetAll())
+            {
+                if (artist.Artist_Id == artistId)
+                {
+                    return artist;
+                }
+            }
+            return null;
+        }
+        public List<SongBasicInfo> getSongsForMainPage()
+        {
+            List<SongBasicInfo> songs = new List<SongBasicInfo>();
+            int artistId = getMostPublishedAuthor().Artist_Id;
+            foreach (SongBasicDetails song in SongRepo.GetAll())
+            {
+                if (song.Artist_Id == artistId)
+                {
+                    SongBasicInfo songInfo = songBasicDetailsToInfo(song);
+                    songs.Add(songInfo);
+                }
+            }
+            return songs;
+        }   
     }
-
-
 }
