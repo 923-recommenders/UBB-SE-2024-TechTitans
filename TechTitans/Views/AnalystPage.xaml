@@ -6,7 +6,7 @@
              xmlns:custom="clr-namespace:TechTitans.Views.Components"
              x:Class="TechTitans.Views.AnalystPage"
              Title="AnalystPage">
-    <VerticalStackLayout> 
+    <VerticalStackLayout Margin="15,0">
         <StackLayout Orientation="Horizontal">
             <StackLayout Padding="10">
                 <Picker Title="Select Month:" x:Name="MonthPicker" SelectedIndex="0" >
@@ -48,80 +48,64 @@
                     </Picker.ItemsSource>
                 </Picker>
             </StackLayout>
+            <Button Text="Show Top 3s" Clicked="OnShowTop3Clicked" HeightRequest="40" HorizontalOptions="CenterAndExpand"/>
         </StackLayout>
-
-
-
-
-        <StackLayout Margin="15,0,0,0" Orientation="Horizontal" Spacing="150">
+        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+        <StackLayout Orientation="Vertical" Spacing="20">
             <!-- First row -->
             <StackLayout x:Name="Top3Genres">
                 <Label Text="Top 3 Genres" FontSize="30"/>
-
-                <StackLayout Orientation="Horizontal" Spacing="50">
-                    <Label Text="Genre" FontSize="20"/>
-                    <Label Text="Total Listens" FontSize="20"/>
-                    <Label Text="Percentage" FontSize="20"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal" Spacing="100">
-                    <Label x:Name="Genre1Name" />
-                    <Label x:Name="Genre1Minutes" />
-                    <Label x:Name="Percentage1"/>
-                </StackLayout>
-                
-                <StackLayout Orientation="Horizontal" Spacing="100">
-                    <Label x:Name="Genre2Name" />
-                    <Label x:Name="Genre2Minutes" />
-                    <Label x:Name="Percentage2"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal" Spacing="100">
-                    <Label x:Name="Genre3Name" />
-                    <Label x:Name="Genre3Minutes" />
-                    <Label x:Name="Percentage3"/>
-
-                </StackLayout>
+                <HorizontalStackLayout Spacing="20">
+                    <VerticalStackLayout>
+                        <Label Text="Genre" FontSize="20"/>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+                        <Label x:Name="Genre1Name" HorizontalOptions="Center" />
+                        <Label x:Name="Genre2Name" HorizontalOptions="Center" />
+                        <Label x:Name="Genre3Name" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Total Listens" FontSize="20"/>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+                        <Label x:Name="Genre1Minutes" HorizontalOptions="Center"/>
+                        <Label x:Name="Genre2Minutes" HorizontalOptions="Center"/>
+                        <Label x:Name="Genre3Minutes" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Percentage" FontSize="20"/>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+                        <Label x:Name="Percentage1" HorizontalOptions="Center"/>
+                        <Label x:Name="Percentage2" HorizontalOptions="Center"/>
+                        <Label x:Name="Percentage3" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
             </StackLayout>
-
-            <StackLayout Margin="15,0,0,0">
-
-
+            <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+            <StackLayout>
                 <Label Text="Top 3 Subgenres" FontSize="30"/>
-
-
-                <StackLayout Orientation="Horizontal" Spacing="50">
-                    <Label Text="Genre" FontSize="20"/>
-                    <Label Text="Total Listens" FontSize="20"/>
-                    <Label Text="Percentage" FontSize="20"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal" Spacing="100">
-                    <Label x:Name="Subgenre1Name" />
-                    <Label x:Name="Subgenre1Minutes" />
-                    <Label x:Name="Subgenre1Percentage"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal" Spacing="100">
-                    <Label x:Name="Subgenre2Name" />
-                    <Label x:Name="Subgenre2Minutes" />
-                    <Label x:Name="Subgenre2Percentage"/>
-
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal" Spacing="100">
-                    <Label x:Name="Subgenre3Name" />
-                    <Label x:Name="Subgenre3Minutes" />
-                    <Label x:Name="Subgenre3Percentage"/>
-                </StackLayout>
-
+                <HorizontalStackLayout Spacing="20">
+                    <VerticalStackLayout>
+                        <Label Text="Genre" FontSize="20"/>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+                        <Label x:Name="Subgenre1Name" />
+                        <Label x:Name="Subgenre2Name" />
+                        <Label x:Name="Subgenre3Name" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Total Listens" FontSize="20"/>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+                        <Label x:Name="Subgenre1Minutes" />
+                        <Label x:Name="Subgenre2Minutes" />
+                        <Label x:Name="Subgenre3Minutes" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Percentage" FontSize="20"/>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="FillAndExpand" Margin="0, 5" />
+                        <Label x:Name="Subgenre1Percentage"/>
+                        <Label x:Name="Subgenre2Percentage"/>
+                        <Label x:Name="Subgenre3Percentage"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
             </StackLayout>
-
-        </StackLayout>
-        
-       
-        <StackLayout Margin="15,50,0,0" AnchorX="20">
-            <Button Text="Show Top 3s" WidthRequest="150" HeightRequest="150" Clicked="OnShowTop3Clicked" HorizontalOptions="Start"/>
         </StackLayout>
     </VerticalStackLayout>
     
