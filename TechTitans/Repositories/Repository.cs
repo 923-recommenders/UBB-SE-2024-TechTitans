@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace TechTitans.Repositories
 {
+    
     public class Repository<T> : IRepository<T> where T : class
     {
         public IDbConnection _connection;
@@ -28,7 +29,7 @@ namespace TechTitans.Repositories
 
         public bool Add(T entity)
         {
-            int rowsEffected = 0;
+            int rowsAffectedByQueryExecution = 0;
             try
             {
                 string tableName = GetTableName();
@@ -36,16 +37,16 @@ namespace TechTitans.Repositories
                 string properties = GetPropertyNames(excludeKey: true);
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
 
-                rowsEffected = _connection.Execute(query, entity);
+                rowsAffectedByQueryExecution = _connection.Execute(query, entity);
             }
             catch (Exception ex) { }
 
-            return rowsEffected > 0 ? true : false;
+            return rowsAffectedByQueryExecution > 0 ? true : false;
         }
 
         public bool Delete(T entity)
         {
-            int rowsEffected = 0;
+            int rowsAffectedByQueryExecution = 0;
             try
             {
                 string tableName = GetTableName();
@@ -53,11 +54,11 @@ namespace TechTitans.Repositories
                 string keyProperty = GetKeyPropertyName();
                 string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
 
-                rowsEffected = _connection.Execute(query, entity);
+                rowsAffectedByQueryExecution = _connection.Execute(query, entity);
             }
             catch (Exception ex) { }
 
-            return rowsEffected > 0 ? true : false;
+            return rowsAffectedByQueryExecution > 0 ? true : false;
         }
 
         public IEnumerable<T> GetAll()
@@ -77,23 +78,23 @@ namespace TechTitans.Repositories
 
         public T GetById(int Id)
         {
-            IEnumerable<T> result = null;
+            IEnumerable<T> resultOfQueryExecution = null;
             try
             {
                 string tableName = GetTableName();
                 string keyColumn = GetKeyColumnName();
                 string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{Id}'";
 
-                result = _connection.Query<T>(query);
+                resultOfQueryExecution = _connection.Query<T>(query);
             }
             catch (Exception ex) { }
 
-            return result.FirstOrDefault();
+            return resultOfQueryExecution.FirstOrDefault();
         }
 
         public bool Update(T entity)
         {
-            int rowsEffected = 0;
+            int rowsAffectedByQueryExecution = 0;
             try
             {
                 string tableName = GetTableName();
@@ -105,10 +106,10 @@ namespace TechTitans.Repositories
 
                 foreach (var property in GetProperties(true))
                 {
-                    var columnAttr = property.GetCustomAttribute<ColumnAttribute>();
+                    var columnAttribute = property.GetCustomAttribute<ColumnAttribute>();
 
                     string propertyName = property.Name;
-                    string columnName = columnAttr.Name;
+                    string columnName = columnAttribute.Name;
 
                     query.Append($"{columnName} = @{propertyName},");
                 }
@@ -117,21 +118,21 @@ namespace TechTitans.Repositories
 
                 query.Append($" WHERE {keyColumn} = @{keyProperty}");
 
-                rowsEffected = _connection.Execute(query.ToString(), entity);
+                rowsAffectedByQueryExecution = _connection.Execute(query.ToString(), entity);
             }
             catch (Exception ex) { }
 
-            return rowsEffected > 0 ? true : false;
+            return rowsAffectedByQueryExecution > 0 ? true : false;
         }
 
         private string GetTableName()
         {
             string tableName = "";
             var type = typeof(T);
-            var tableAttr = type.GetCustomAttribute<TableAttribute>();
-            if (tableAttr != null)
+            var tableAttribute = type.GetCustomAttribute<TableAttribute>();
+            if (tableAttribute != null)
             {
-                tableName = tableAttr.Name;
+                tableName = tableAttribute.Name;
                 return tableName;
             }
 
@@ -170,11 +171,11 @@ namespace TechTitans.Repositories
         {
             var type = typeof(T);
             var columns = string.Join(", ", type.GetProperties()
-                .Where(p => !excludeKey || !p.IsDefined(typeof(KeyAttribute)))
-                .Select(p =>
+                .Where(propertyInformation => !excludeKey || !propertyInformation.IsDefined(typeof(KeyAttribute)))
+                .Select(propertyInformation =>
                 {
-                    var columnAttr = p.GetCustomAttribute<ColumnAttribute>();
-                    return columnAttr != null ? columnAttr.Name : p.Name;
+                    var columnAttribute = propertyInformation.GetCustomAttribute<ColumnAttribute>();
+                    return columnAttribute != null ? columnAttribute.Name : propertyInformation.Name;
                 }));
 
             return columns;
@@ -183,11 +184,11 @@ namespace TechTitans.Repositories
         protected string GetPropertyNames(bool excludeKey = false)
         {
             var properties = typeof(T).GetProperties()
-                .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
+                .Where(propertyInformation => !excludeKey || propertyInformation.GetCustomAttribute<KeyAttribute>() == null);
 
-            var values = string.Join(", ", properties.Select(p =>
+            var values = string.Join(", ", properties.Select(propertyInformation =>
             {
-                return $"@{p.Name}";
+                return $"@{propertyInformation.Name}";
             }));
 
             return values;
@@ -196,7 +197,7 @@ namespace TechTitans.Repositories
         protected IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
         {
             var properties = typeof(T).GetProperties()
-                .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
+                .Where(propertyInformation => !excludeKey || propertyInformation.GetCustomAttribute<KeyAttribute>() == null);
 
             return properties;
         }
@@ -204,7 +205,7 @@ namespace TechTitans.Repositories
         protected string GetKeyPropertyName()
         {
             var properties = typeof(T).GetProperties()
-                .Where(p => p.GetCustomAttribute<KeyAttribute>() != null);
+                .Where(propertyInformation => propertyInformation.GetCustomAttribute<KeyAttribute>() != null);
 
             if (properties.Any())
             {

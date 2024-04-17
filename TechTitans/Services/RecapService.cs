@@ -69,7 +69,7 @@ namespace TechTitans.Services
 
         public List<string> NewGenresDiscovered(int userId)
         {
-            return this.songBasicDetailsRepository.NewGenresDiscovered(userId);
+            return this.songBasicDetailsRepository.GetAllNewGenresDiscovered(userId);
         }
 
         public ListenerPersonality ListenerPersonality(int userId)
