@@ -7,7 +7,7 @@ namespace TechTitans.Views.Components.User
         // alt domain song type cu mai multe detalii
         int songId;
         ArtistSongDashboardViewModel viewModel;
-        public UserSongDashboard(SongBasicInfo song)
+        public UserSongDashboard(SongBasicInformation song)
         {
             // song = service.GetSongById(songId);
             songId = song.SongId;
@@ -41,16 +41,16 @@ namespace TechTitans.Views.Components.User
             content4.Text = viewModel.SongInfo.Language;
         }
 
-        private SongBasicInfo getMockedSong()
+        private SongBasicInformation getMockedSong()
         {
-            return new SongBasicInfo();
+            return new SongBasicInformation();
         }
 
         private ArtistSongDashboardViewModel getMockedViewModel()
         {
             var mockedModel = new ArtistSongDashboardViewModel()
             {
-                SongInfo = new SongBasicInfo(),
+                SongInfo = new SongBasicInformation(),
                 SongDetails = new SongRecommendationDetails(),
                 ArtistInfo = new AuthorDetails(),
             };

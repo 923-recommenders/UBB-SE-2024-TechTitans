@@ -9,7 +9,7 @@ public partial class ArtistSongDashboard : ContentPage
 	// alt domain song type cu mai multe detalii
 	int songId;
 	ArtistSongDashboardViewModel viewModel;
-	public ArtistSongDashboard(SongBasicInfo song)
+	public ArtistSongDashboard(SongBasicInformation song)
 	{
 		songId = song.SongId;
 		InitializeComponent();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace TechTitans.Models
 {
     [Table ("SongBasicDetails")]
-    public class SongBasicDetails
+    public class SongDataBaseModel
     {
         [Key]
         [Column("song_id")]

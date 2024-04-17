@@ -9,15 +9,15 @@ using TechTitans.Models;
 
 namespace TechTitans.Repositories
 {
-    internal class SongBasicDetailsRepository : Repository<SongBasicDetails>
+    internal class SongBasicDetailsRepository : Repository<SongDataBaseModel>
     {
-        public SongBasicInfo SongBasicDetailsToSongBasicInfo(SongBasicDetails songBasicDetails)
+        public SongBasicInformation SongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
         {   
             var artistId = songBasicDetails.Artist_Id;
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
-            var artistName = _connection.Query<string>(cmd.ToString(), new { artistId }).FirstOrDefault();
-            return new SongBasicInfo
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
+            var artistName = _connection.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
+            return new SongBasicInformation
             {
                 SongId = songBasicDetails.Song_Id,
                 Name = songBasicDetails.Name,
@@ -31,33 +31,33 @@ namespace TechTitans.Repositories
             };
         }
         
-        public SongBasicDetails GetSongBasicDetails(int songId)
+        public SongDataBaseModel GetSongBasicDetails(int songId)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id = @songId");
-            return _connection.Query<SongBasicDetails>(queryBuilder.ToString(), new { songId }).FirstOrDefault();
+            return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { songId }).FirstOrDefault();
         }
 
-        public List<SongBasicDetails> GetTop5MostListenedSongs(int userId)
+        public List<SongDataBaseModel> GetTop5MostListenedSongs(int userId)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id IN (SELECT TOP 5 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _connection.Query<SongBasicDetails>(queryBuilder.ToString(), new { userId }).ToList();
+            return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).ToList();
         }
 
-        public Tuple<SongBasicDetails, decimal> GetMostPlayedSongPercentile(int userId)
+        public Tuple<SongDataBaseModel, decimal> GetMostPlayedSongPercentile(int userId)
         {
             var mostPlayedSong = GetMostPlayedSong(userId);
             var totalSongs = GetTotalSongsPlayedByUser(userId);
             var mostListenedSongCount = GetMostListenedSongCount(userId);
-            return new Tuple<SongBasicDetails, decimal>(mostPlayedSong, (decimal)mostListenedSongCount / totalSongs);
+            return new Tuple<SongDataBaseModel, decimal>(mostPlayedSong, (decimal)mostListenedSongCount / totalSongs);
         }
 
-        private SongBasicDetails GetMostPlayedSong(int userId)
+        private SongDataBaseModel GetMostPlayedSong(int userId)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id IN (SELECT TOP 1 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _connection.Query<SongBasicDetails>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
         private int GetTotalSongsPlayedByUser(int userId)
@@ -85,13 +85,13 @@ namespace TechTitans.Repositories
             return new Tuple<string, decimal>(mostPlayedArtist, (decimal)mostPlayedArtistInfo.Start_Listen_Events / totalSongs);
         }
 
-        private MostPlayedArtistInfo GetMostPlayedArtistInfo(int userId)
+        private MostPlayedArtistInformation GetMostPlayedArtistInfo(int userId)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT TOP 1 sd.artist_id as Artist_Id, COUNT(*) AS Start_Listen_Events FROM UserPlaybackBehaviour ub JOIN SongBasicDetails sd ON ub.song_id = sd.song_id WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY sd.artist_id ORDER BY COUNT(*) DESC;");
-            return _connection.Query<MostPlayedArtistInfo>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            return _connection.Query<MostPlayedArtistInformation>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
-        private string GetMostPlayedArtist(int userId, MostPlayedArtistInfo mostPlayedArtistInfo)
+        private string GetMostPlayedArtist(int userId, MostPlayedArtistInformation mostPlayedArtistInfo)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artist_Id");

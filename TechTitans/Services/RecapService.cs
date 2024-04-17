@@ -16,10 +16,10 @@ namespace TechTitans.Services
         SongBasicDetailsRepository songBasicDetailsRepository = new SongBasicDetailsRepository();
         UserPlaybackBehaviourRepository userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository();
 
-        public List<SongBasicInfo> Top5MostListenedSongs(int userId)
+        public List<SongBasicInformation> Top5MostListenedSongs(int userId)
         {
             var top5Songs = songBasicDetailsRepository.GetTop5MostListenedSongs(userId);
-            List<SongBasicInfo> top5SongsInfo = new List<SongBasicInfo>();
+            List<SongBasicInformation> top5SongsInfo = new List<SongBasicInformation>();
             foreach (var song in top5Songs)
             {
                 top5SongsInfo.Add(songBasicDetailsRepository.SongBasicDetailsToSongBasicInfo(song));
@@ -27,10 +27,10 @@ namespace TechTitans.Services
             return top5SongsInfo;
         }
 
-        public Tuple<SongBasicInfo, decimal> MostPlayedSongPercentile(int userId)
+        public Tuple<SongBasicInformation, decimal> MostPlayedSongPercentile(int userId)
         {
             var mostPlayedSong = songBasicDetailsRepository.GetMostPlayedSongPercentile(userId);
-            return new Tuple<SongBasicInfo, decimal>(songBasicDetailsRepository.SongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
+            return new Tuple<SongBasicInformation, decimal>(songBasicDetailsRepository.SongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
         }
 
         public Tuple<string, decimal> MostPlayedArtistPercentile(int userId)

@@ -13,7 +13,7 @@ public partial class EndOfYearRecap : ContentPage
     private EndOfYearRecapViewModel _viewModel;
 	public EndOfYearRecap()
 	{
-		var mockSongs = new List<SongBasicInfo>()
+		var mockSongs = new List<SongBasicInformation>()
 		{
 			new()
 			{
@@ -67,7 +67,7 @@ public partial class EndOfYearRecap : ContentPage
                 Album = "Single",
                 Image = "https://i.ytimg.com/vi/Ovbn5mPit8o/sddefault.jpg?v=64c3f573"
             },
-            new SongBasicInfo()
+            new SongBasicInformation()
             {
                 SongId = 1,
                 Name = "Roma5",
@@ -85,7 +85,7 @@ public partial class EndOfYearRecap : ContentPage
         var viewModel = new EndOfYearRecapViewModel()
         {
             Top5MostListenedSongs = mockSongs,
-            MostPlayedSongPercentile = new Tuple<SongBasicInfo, decimal>(mockSongs.FirstOrDefault(), 0.1m),
+            MostPlayedSongPercentile = new Tuple<SongBasicInformation, decimal>(mockSongs.FirstOrDefault(), 0.1m),
             MostPlayedArtistPercentile = new Tuple<string, decimal>("BDLP", 0.01m),
             MinutesListened = 9000,
             Top5Genres = ["Manele", "Trap", "Rock", "Rap", "Pop"],

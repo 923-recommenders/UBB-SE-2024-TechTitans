@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TechTitans.Models
 {
-    internal class MostPlayedArtistInfo
+    internal class MostPlayedArtistInformation
     {
         [Column("artist_id")]
         public int Artist_Id { get; set; }

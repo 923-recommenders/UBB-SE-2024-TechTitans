@@ -1,7 +1,7 @@
 ﻿
 namespace TechTitans.Models
 {
-    public class SongBasicInfo
+    public class SongBasicInformation
     {
         public int SongId { get; set; } = 0;
         public string Name { get; set; } = "DefaultName";

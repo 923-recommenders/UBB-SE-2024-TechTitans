@@ -6,7 +6,7 @@ namespace TechTitans.ViewModels
 {
     class ArtistSongDashboardViewModel
     {
-        public SongBasicInfo SongInfo { get; set; }
+        public SongBasicInformation SongInfo { get; set; }
         public AuthorDetails ArtistInfo { get; set; }
         public SongRecommendationDetails SongDetails { get; set; }
     }

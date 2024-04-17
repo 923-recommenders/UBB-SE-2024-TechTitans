@@ -9,15 +9,15 @@ using Dapper;
 
 namespace TechTitans.Repositories
 {
-    internal class UserRepository : Repository<SongBasicDetails>
+    internal class UserRepository : Repository<SongDataBaseModel>
     {
-            public SongBasicInfo SongBasicDetailsToSongBasicInfo(SongBasicDetails songBasicDetails)
+            public SongBasicInformation SongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
             {
                 var artistId = songBasicDetails.Artist_Id;
-                var cmd = new StringBuilder();
-                cmd.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
-                var artistName = _connection.Query<string>(cmd.ToString(), new { artistId }).FirstOrDefault();
-                return new SongBasicInfo
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
+                var artistName = _connection.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
+                return new SongBasicInformation
                 {
                     SongId = songBasicDetails.Song_Id,
                     Name = songBasicDetails.Name,

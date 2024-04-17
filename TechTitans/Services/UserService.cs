@@ -13,10 +13,10 @@ namespace TechTitans.Services
     {
         private UserRepository SongRepo= new UserRepository();
         
-        public List<SongBasicInfo> get_recently_played() {
-            List<SongBasicInfo> list_song=new List<SongBasicInfo>();
-            foreach (SongBasicDetails song in SongRepo.GetAll()){ 
-                SongBasicInfo song_info = SongRepo.SongBasicDetailsToSongBasicInfo(song);
+        public List<SongBasicInformation> get_recently_played() {
+            List<SongBasicInformation> list_song=new List<SongBasicInformation>();
+            foreach (SongDataBaseModel song in SongRepo.GetAll()){ 
+                SongBasicInformation song_info = SongRepo.SongBasicDetailsToSongBasicInfo(song);
                 list_song.Add(song_info);
             }
             return list_song.Take(6).ToList();
