@@ -52,7 +52,7 @@ namespace TechTitans.Views.Components.User
             {
                 SongInfo = new SongBasicInformation(),
                 SongDetails = new SongRecommendationDetails(),
-                ArtistInfo = new AuthorDetails(),
+                ArtistInfo = new ArtistDetails(),
             };
             return mockedModel;
         }

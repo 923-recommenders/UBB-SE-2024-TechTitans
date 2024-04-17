@@ -8,7 +8,7 @@ namespace TechTitans.Services
         private Repository<SongDataBaseModel> SongRepository = new Repository<SongDataBaseModel>();
         private Repository<SongFeatures> FeatureRepository = new Repository<SongFeatures>();
         private Repository<SongRecommendationDetails> SongRecommendationRepository = new Repository<SongRecommendationDetails>();
-        private Repository<AuthorDetails> ArtistRepository = new Repository<AuthorDetails>();
+        private Repository<ArtistDetails> ArtistRepository = new Repository<ArtistDetails>();
 
         public SongBasicInformation TransformSongDataBaseModelToSongInfo(SongDataBaseModel song)
         {
@@ -21,7 +21,7 @@ namespace TechTitans.Services
             songInfo.Country = song.Country;
             songInfo.Album = song.Album;
             songInfo.Image = song.Image;
-            foreach (AuthorDetails artist in ArtistRepository.GetAll())
+            foreach (ArtistDetails artist in ArtistRepository.GetAll())
             {
                 if (artist.Artist_Id == song.Artist_Id)
                 {
@@ -38,7 +38,7 @@ namespace TechTitans.Services
             return songInfo;
         }
 
-        public List<SongBasicInformation> getAllArtistSongs(int artistId)
+        public List<SongBasicInformation> GetAllArtistSongs(int artistId)
         {
             List<SongBasicInformation> artistSongs = new List<SongBasicInformation>();
             foreach (SongDataBaseModel song in SongRepository.GetAll())
@@ -52,9 +52,7 @@ namespace TechTitans.Services
             return artistSongs;
         }
 
-        //search by string in titles (returns list of songs, case insensitive)
-
-        public List<SongBasicInformation> searchByTitle(string title)
+        public List<SongBasicInformation> searchSongsByTitle(string title)
         {
             List<SongBasicInformation> songs = new List<SongBasicInformation>();
             foreach (SongDataBaseModel song in SongRepository.GetAll())
@@ -69,8 +67,7 @@ namespace TechTitans.Services
         }
 
 
-        //gets song info by song id
-        public SongBasicInformation getSongInfo(int songId)
+        public SongBasicInformation GetSongInformation(int songId)
         {
             foreach (SongDataBaseModel song in SongRepository.GetAll())
             {
@@ -82,9 +79,8 @@ namespace TechTitans.Services
             }
             return null;
         }
-
-        //gets song recommendation details by song id
-        public SongRecommendationDetails getSongDetails(int songId)
+        
+        public SongRecommendationDetails GetSongRecommandationDetails(int songId)
         {
             foreach (SongRecommendationDetails songDetails in SongRecommendationRepository.GetAll())
             {
@@ -97,15 +93,13 @@ namespace TechTitans.Services
             return new SongRecommendationDetails();
             
         }
-
-        //gets artist info by song id
-        public AuthorDetails getArtistInfo(int SongId)
+        public ArtistDetails GetArtistInfoBySong(int SongId)
         {
             foreach (SongDataBaseModel song in SongRepository.GetAll())
             {
                 if (song.Song_Id == SongId)
                 {
-                    foreach (AuthorDetails artist in ArtistRepository.GetAll())
+                    foreach (ArtistDetails artist in ArtistRepository.GetAll())
                     {
                         if (artist.Artist_Id == song.Artist_Id)
                         {
@@ -117,7 +111,7 @@ namespace TechTitans.Services
             return null;
         }
 
-        public AuthorDetails getMostPublishedAuthor()
+        public ArtistDetails GetMostPublishedArtist()
         {
             Dictionary<int, int> artistCount = new Dictionary<int, int>();
             foreach (SongDataBaseModel song in SongRepository.GetAll())
@@ -141,7 +135,7 @@ namespace TechTitans.Services
                     artistId = entry.Key;
                 }
             }
-            foreach (AuthorDetails artist in ArtistRepository.GetAll())
+            foreach (ArtistDetails artist in ArtistRepository.GetAll())
             {
                 if (artist.Artist_Id == artistId)
                 {
@@ -150,10 +144,10 @@ namespace TechTitans.Services
             }
             return null;
         }
-        public List<SongBasicInformation> getSongsForMainPage()
+        public List<SongBasicInformation> GetSongsByMostPublishedArtistForMainPage()
         {
             List<SongBasicInformation> songs = new List<SongBasicInformation>();
-            int artistId = getMostPublishedAuthor().Artist_Id;
+            int artistId = GetMostPublishedArtist().Artist_Id;
             foreach (SongDataBaseModel song in SongRepository.GetAll())
             {
                 if (song.Artist_Id == artistId)

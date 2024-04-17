@@ -9,9 +9,10 @@ using Dapper;
 
 namespace TechTitans.Repositories
 {
-    internal class UserRepository : Repository<SongDataBaseModel>
+    internal class UserSongRepository : Repository<SongDataBaseModel>
     {
-            public SongBasicInformation SongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
+       
+        public SongBasicInformation ConvertSongDataBaseModelToSongInfo(SongDataBaseModel songBasicDetails)
             {
                 var artistId = songBasicDetails.Artist_Id;
                 var queryBuilder = new StringBuilder();

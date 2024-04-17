@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,15 +12,15 @@ namespace TechTitans.Services
 {
     internal class UserService
     {
-        private UserRepository SongRepo= new UserRepository();
-        
-        public List<SongBasicInformation> get_recently_played() {
-            List<SongBasicInformation> list_song=new List<SongBasicInformation>();
+        private UserSongRepository SongRepo= new UserSongRepository();
+       
+        public List<SongBasicInformation> GetRecentlyPlayed() {
+            List<SongBasicInformation> groupOfSongsInformation=new List<SongBasicInformation>();
             foreach (SongDataBaseModel song in SongRepo.GetAll()){ 
-                SongBasicInformation song_info = SongRepo.SongBasicDetailsToSongBasicInfo(song);
-                list_song.Add(song_info);
+                SongBasicInformation song_info = SongRepo.ConvertSongDataBaseModelToSongInfo(song);
+                groupOfSongsInformation.Add(song_info);
             }
-            return list_song.Take(6).ToList();
+            return groupOfSongsInformation.Take(6).ToList();
         }
     }
 }

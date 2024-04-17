@@ -93,7 +93,7 @@ public partial class EndOfYearRecap : ContentPage
             ListenerPersonality = ListenerPersonality.Explorer
         };
 
-        viewModel = new RecapService().GenerateEndOfYearRecap(1001);
+        viewModel = new RecapController().GenerateEndOfYearRecap(1001);
 
         BindingContext = viewModel;
         _viewModel = viewModel;

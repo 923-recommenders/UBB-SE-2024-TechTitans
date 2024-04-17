@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.Enums;
@@ -12,23 +11,21 @@ namespace TechTitans.Services
 {
     internal class FullDetailsOnSongController
     {
-        //private readonly Repository<SongBasicDetails> SongRepo = new();
-        //private readonly Repository<SongRecommendationDetails> SongRecommendationRepo = new();
         private readonly Repository<UserPlaybackBehaviour> UserPlaybackBehaviourRepo = new();
         private readonly Repository<AdDistributionData> AdDistributionDataRepo = new();
         public FullDetailsOnSong GetFullDetailsOnSong(int songId) {
             FullDetailsOnSong currentSongDetails = new();
             DateTime start = new(); 
-            bool found = false;
-            foreach (UserPlaybackBehaviour action in UserPlaybackBehaviourRepo.GetAll()) {
+            bool foundSongCheck = false;
+            foreach (UserPlaybackBehaviour action in UserPlaybackBehaviourRepo.GetAll())
+            {
 
-                if (action.Song_Id == songId) {
-                    found = true;
-                    // string message;
-                    // message = action.Event_Type.ToString() + " " + action.Timestamp.ToString() + " " + action.Song_Id.ToString() + " " + action.User_Id.ToString() + "\n";
-                    // MessageBox.Show(message);
+                if (action.Song_Id == songId)
+                {
+                    foundSongCheck = true;
 
-                    switch (action.Event_Type) {
+                    switch (action.Event_Type)
+                    {
                         case PlaybackEventType.start_play:
                             start = action.Timestamp;
                             break;
@@ -46,13 +43,12 @@ namespace TechTitans.Services
                         case PlaybackEventType.skip:
                             currentSongDetails.TotalSkips++;
                             break;
-                        
+
                     }
                 }
             }
-            // MessageBox.Show(currentSongDetails.TotalMinutesListened.ToString());
-            if (!found) {
-                // MessageBox.Show("Song not found");
+            if (!foundSongCheck) {
+                
                 return null;
             }
             return currentSongDetails;

@@ -11,7 +11,7 @@ using TechTitans.Enums;
 
 namespace TechTitans.Services
 {   
-    internal class RecapService
+    internal class RecapController
     {
         SongBasicDetailsRepository songBasicDetailsRepository = new SongBasicDetailsRepository();
         UserPlaybackBehaviourRepository userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository();
@@ -38,22 +38,25 @@ namespace TechTitans.Services
             return songBasicDetailsRepository.GetMostPlayedArtistPercentile(userId);
         }
 
+        /// <summary>
+        /// Calculates the total minutes listened by a user based on their playback behavior.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The total minutes listened by the user.</returns>
         public int MinutesListened(int userId)
         {
-            //get list of all userplaybackbehaviour for a userid sorted ascending by timestamp and go over them calculating the difference between the timestamps and summing them up
             var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
             int minutesListened = 0;
-            //for every start and end event pair, calculate the difference in minutes and add it to the total
-            for (int i = 0; i < userEvents.Count; i++)
+            for (int firstCounter = 0; firstCounter < userEvents.Count; firstCounter++)
             {
-                if (userEvents[i].Event_Type == PlaybackEventType.start_play)
+                if (userEvents[firstCounter].Event_Type == PlaybackEventType.start_play)
                 {
-                    for (int j = i + 1; j < userEvents.Count; j++)
+                    for (int secondCounter = firstCounter + 1; secondCounter < userEvents.Count; secondCounter++)
                     {
-                        if (userEvents[j].Event_Type == PlaybackEventType.end_play)
+                        if (userEvents[secondCounter].Event_Type == PlaybackEventType.end_play)
                         {
-                            minutesListened += (int)(userEvents[j].Timestamp - userEvents[i].Timestamp).TotalMinutes;
-                            i = j;
+                            minutesListened += (int)(userEvents[secondCounter].Timestamp - userEvents[firstCounter].Timestamp).TotalMinutes;
+                            firstCounter = secondCounter;
                             break;
                         }
                     }
@@ -76,9 +79,9 @@ namespace TechTitans.Services
         {
             var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
             int playCount = 0;
-            for(int i = 0; i < userEvents.Count; i++)
+            for(int counter = 0; counter < userEvents.Count; counter++)
             {
-                if ((userEvents[i].Event_Type == PlaybackEventType.start_play) && (userEvents[i].Timestamp.Year == DateTime.Now.Year))
+                if ((userEvents[counter].Event_Type == PlaybackEventType.start_play) && (userEvents[counter].Timestamp.Year == DateTime.Now.Year))
                 {
                     playCount++;
                 }
@@ -101,15 +104,15 @@ namespace TechTitans.Services
 
         public EndOfYearRecapViewModel GenerateEndOfYearRecap(int userId)
         {
-            var recap = new EndOfYearRecapViewModel();
-            recap.Top5MostListenedSongs = Top5MostListenedSongs(userId);
-            recap.MostPlayedSongPercentile = MostPlayedSongPercentile(userId);
-            recap.MostPlayedArtistPercentile = MostPlayedArtistPercentile(userId);
-            recap.MinutesListened = MinutesListened(userId);
-            recap.Top5Genres = Top5Genres(userId);
-            recap.NewGenresDiscovered = NewGenresDiscovered(userId);
-            recap.ListenerPersonality = ListenerPersonality(userId);
-            return recap;
+            var endOfYearRecap = new EndOfYearRecapViewModel();
+            endOfYearRecap.Top5MostListenedSongs = Top5MostListenedSongs(userId);
+            endOfYearRecap.MostPlayedSongPercentile = MostPlayedSongPercentile(userId);
+            endOfYearRecap.MostPlayedArtistPercentile = MostPlayedArtistPercentile(userId);
+            endOfYearRecap.MinutesListened = MinutesListened(userId);
+            endOfYearRecap.Top5Genres = Top5Genres(userId);
+            endOfYearRecap.NewGenresDiscovered = NewGenresDiscovered(userId);
+            endOfYearRecap.ListenerPersonality = ListenerPersonality(userId);
+            return endOfYearRecap;
         }
     }
 }

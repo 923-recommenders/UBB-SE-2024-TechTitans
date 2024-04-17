@@ -27,13 +27,13 @@ namespace TechTitans.Repositories
             return _connection.Query<UserDemographicsDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
-    public class TestAuthorDetails : Repository<AuthorDetails>
+    public class TestAuthorDetails : Repository<ArtistDetails>
     {
-        public AuthorDetails TestMethod()
+        public ArtistDetails TestMethod()
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM AuthorDetails");
-            return _connection.Query<AuthorDetails>(queryBuilder.ToString()).FirstOrDefault();
+            return _connection.Query<ArtistDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestAdDistributionData : Repository<AdDistributionData>

@@ -15,7 +15,7 @@ public partial class ArtistPage : ContentPage
 
     private void LoadSongs()
     {
-        var songs = service.getSongsForMainPage(); // Get your list of songs from somewhere (e.g., database, API, local storage)
+        var songs = service.GetSongsByMostPublishedArtistForMainPage(); // Get your list of songs from somewhere (e.g., database, API, local storage)
 
         // initial row
         SongsGrid.RowDefinitions.Add(new RowDefinition());

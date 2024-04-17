@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace TechTitans.Models
 {
     [Table("AuthorDetails")]
-    public class AuthorDetails
+    public class ArtistDetails
     {
         [Key]
         [Column("artist_id")]

@@ -19,9 +19,9 @@ public partial class ArtistSongDashboard : ContentPage
 	private void populateViewModel(int songID)
 	{
 		viewModel = new ArtistSongDashboardViewModel() {
-			SongInfo = service.getSongInfo(songID),
-			SongDetails = service.getSongDetails(songID),
-			ArtistInfo = service.getArtistInfo(songID)
+			SongInfo = service.GetSongInformation(songID),
+			SongDetails = service.GetSongRecommandationDetails(songID),
+			ArtistInfo = service.GetArtistInfoBySong(songID)
 		};
 	}
 	private void LoadPage()

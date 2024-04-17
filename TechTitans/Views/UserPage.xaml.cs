@@ -18,7 +18,7 @@ using TechTitans.Services;
         }
     private void LoadSongs()
     {
-        var recentlyPlayedSongs = userService.get_recently_played(); 
+        var recentlyPlayedSongs = userService.GetRecentlyPlayed(); 
 
         int rowIndex = 0;
         int columnIndex = 0;
