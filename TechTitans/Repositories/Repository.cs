@@ -21,12 +21,21 @@ namespace TechTitans.Repositories
         public IDbConnection _connection;
         private readonly IConfiguration _configuration = MauiProgram.Configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Repository{T}"/> class.
+        /// </summary>
         public Repository()
         {
 
             _connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
         }
 
+
+        /// <summary>
+        /// Adds a new entity to the database.
+        /// </summary>
+        /// <param name="entity">The entity to add.</param>
+        /// <returns>True if the entity was added successfully; otherwise, false.</returns>
         public bool Add(T entity)
         {
             int rowsAffectedByQueryExecution = 0;
@@ -44,6 +53,11 @@ namespace TechTitans.Repositories
             return rowsAffectedByQueryExecution > 0 ? true : false;
         }
 
+        /// <summary>
+        /// Deletes an entity from the database.
+        /// </summary>
+        /// <param name="entity">The entity to delete.</param>
+        /// <returns>True if the entity was deleted successfully; otherwise, false.</returns>
         public bool Delete(T entity)
         {
             int rowsAffectedByQueryExecution = 0;
@@ -61,6 +75,10 @@ namespace TechTitans.Repositories
             return rowsAffectedByQueryExecution > 0 ? true : false;
         }
 
+        /// <summary>
+        /// Retrieves all entities from the database.
+        /// </summary>
+        /// <returns>An enumerable collection of entities.</returns>
         public IEnumerable<T> GetAll()
         {
             IEnumerable<T> result = null;
@@ -75,6 +93,12 @@ namespace TechTitans.Repositories
 
             return result;
         }
+
+        /// <summary>
+        /// Retrieves an entity by its ID.
+        /// </summary>
+        /// <param name="Id">The ID of the entity.</param>
+        /// <returns>The entity if found; otherwise, null.</returns>
 
         public T GetById(int Id)
         {
@@ -92,6 +116,11 @@ namespace TechTitans.Repositories
             return resultOfQueryExecution.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Updates an existing entity in the database.
+        /// </summary>
+        /// <param name="entity">The entity to update.</param>
+        /// <returns>True if the entity was updated successfully; otherwise, false.</returns>
         public bool Update(T entity)
         {
             int rowsAffectedByQueryExecution = 0;
@@ -125,6 +154,10 @@ namespace TechTitans.Repositories
             return rowsAffectedByQueryExecution > 0 ? true : false;
         }
 
+        /// <summary>
+        /// Retrieves the name of the table associated with the entity type T.
+        /// </summary>
+        /// <returns>The name of the table.</returns>
         private string GetTableName()
         {
             string tableName = "";
@@ -139,6 +172,10 @@ namespace TechTitans.Repositories
             return type.Name + "s";
         }
 
+        /// <summary>
+        /// Retrieves the name of the key column for the entity type T.
+        /// </summary>
+        /// <returns>The name of the key column.</returns>
         public static string GetKeyColumnName()
         {
             PropertyInfo[] properties = typeof(T).GetProperties();
@@ -166,7 +203,13 @@ namespace TechTitans.Repositories
             return null;
         }
 
-
+        /// <summary>
+        /// Retrieves a comma-separated list of column names for the entity type T, 
+        /// excluding the key column if specified.
+        /// </summary>
+        /// <param name="excludeKey">Indicates whether to exclude the key column
+        /// from the list.</param>
+        /// <returns>A comma-separated list of column names.</returns>
         private string GetColumns(bool excludeKey = false)
         {
             var type = typeof(T);
@@ -181,6 +224,15 @@ namespace TechTitans.Repositories
             return columns;
         }
 
+        /// <summary>
+        /// Retrieves a comma-separated list of property names for 
+        /// the entity type T, excluding the key property if specified.
+        /// </summary>
+        /// <param>
+        /// name="excludeKey">Indicates whether to 
+        /// exclude the key property from the list.
+        /// </param>
+        /// <returns>A comma-separated list of property names.</returns>
         protected string GetPropertyNames(bool excludeKey = false)
         {
             var properties = typeof(T).GetProperties()
@@ -194,6 +246,13 @@ namespace TechTitans.Repositories
             return values;
         }
 
+        /// <summary>
+        /// Retrieves a collection of PropertyInfo objects for the entity type T,
+        /// excluding the key property if specified.
+        /// </summary>
+        /// <param name="excludeKey">Indicates whether to exclude the 
+        /// key property from the collection.</param>
+        /// <returns>A collection of PropertyInfo objects.</returns>
         protected IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
         {
             var properties = typeof(T).GetProperties()
@@ -202,6 +261,10 @@ namespace TechTitans.Repositories
             return properties;
         }
 
+        /// <summary>
+        /// Retrieves the name of the key property for the entity type T.
+        /// </summary>
+        /// <returns>The name of the key property.</returns>
         protected string GetKeyPropertyName()
         {
             var properties = typeof(T).GetProperties()

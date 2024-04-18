@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace TechTitans.Models
 {
+    /// <summary>
+    /// Represents the details of an artist, including their unique identifier 
+    /// and name.
+    /// </summary>
     [Table("AuthorDetails")]
     public class ArtistDetails
     {

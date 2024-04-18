@@ -48,8 +48,8 @@ public partial class AnalystPage : ContentPage
 				Console.WriteLine(ex.Message);
 			}
 
-			topGenresController.getTop3Genres(monthInt, yearInt,Genre1Name,Genre1Minutes,Percentage1,Genre2Name,Genre2Name,Percentage2,Genre3Name,Genre3Minutes,Percentage3);
-			topGenresController.top3SubGenres(monthInt, yearInt,Subgenre1Name,Subgenre1Minutes,Subgenre1Percentage,Subgenre2Name,Subgenre2Minutes,Subgenre2Percentage,Subgenre3Name,Subgenre3Minutes,Subgenre3Percentage);
+			topGenresController.GetTop3Genres(monthInt, yearInt,Genre1Name,Genre1Minutes,Percentage1,Genre2Name,Genre2Name,Percentage2,Genre3Name,Genre3Minutes,Percentage3);
+			topGenresController.GetTop3SubGenres(monthInt, yearInt,Subgenre1Name,Subgenre1Minutes,Subgenre1Percentage,Subgenre2Name,Subgenre2Minutes,Subgenre2Percentage,Subgenre3Name,Subgenre3Minutes,Subgenre3Percentage);
 
 		}
 

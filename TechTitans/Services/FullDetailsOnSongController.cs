@@ -9,10 +9,22 @@ using TechTitans.Enums;
 
 namespace TechTitans.Services
 {
+    /// <summary>
+    /// Provides functionality for retrieving detailed information about songs,
+    /// including playback behavior and ad distribution data.
+    /// </summary>
     internal class FullDetailsOnSongController
     {
         private readonly Repository<UserPlaybackBehaviour> UserPlaybackBehaviourRepo = new();
         private readonly Repository<AdDistributionData> AdDistributionDataRepo = new();
+
+        /// <summary>
+        /// Retrieves full details on a song, including total minutes listened,
+        /// total plays, likes, dislikes, and skips.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>A <see cref="FullDetailsOnSong"/> object containing the detailed 
+        /// information about the song, or null if the song is not found.</returns>
         public FullDetailsOnSong GetFullDetailsOnSong(int songId) {
             FullDetailsOnSong currentSongDetails = new();
             DateTime start = new(); 
@@ -53,6 +65,15 @@ namespace TechTitans.Services
             }
             return currentSongDetails;
         }
+
+        /// <summary>
+        /// Retrieves the details of a song for the current month,
+        /// including total minutes listened, total plays, likes, dislikes,
+        /// and skips.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>A <see cref="FullDetailsOnSong"/> object containing the 
+        /// detailed information about the song for the current month.</returns>
         public FullDetailsOnSong GetCurrentMonthDetails(int songId) {
             FullDetailsOnSong currentSongDetails = new();
             foreach (UserPlaybackBehaviour action in UserPlaybackBehaviourRepo.GetAll()) {
@@ -79,6 +100,14 @@ namespace TechTitans.Services
             }
             return currentSongDetails;
         }
+
+        /// <summary>
+        /// Retrieves the active ad distribution data for a specific song.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>An <see cref="AdDistributionData"/> object containing
+        /// the active ad distribution data for the song, or null
+        /// if no active ad is found.</returns>
         public AdDistributionData GetActiveAd(int songId) {
             foreach (AdDistributionData ad in AdDistributionDataRepo.GetAll()) {
                 if (ad.Song_Id == songId && ad.Month == DateTime.Now.Month && ad.Year == DateTime.Now.Year) {

@@ -4,6 +4,10 @@ using TechTitans.Models;
 
 namespace TechTitans.ViewModels
 {
+    /// <summary>
+    /// Represents the view model for the artist song dashboard,
+    /// including song information, artist details, and song recommendation details.
+    /// </summary>
     class ArtistSongDashboardViewModel
     {
         public SongBasicInformation SongInfo { get; set; }

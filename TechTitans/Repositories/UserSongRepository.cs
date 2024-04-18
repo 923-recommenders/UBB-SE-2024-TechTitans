@@ -9,9 +9,20 @@ using Dapper;
 
 namespace TechTitans.Repositories
 {
+    /// <summary>
+    /// Represents a repository for managing user song data, 
+    /// including operations for converting song database models
+    /// to simplified song information.
+    /// </summary>
     internal class UserSongRepository : Repository<SongDataBaseModel>
     {
-       
+        /// <summary>
+        /// Converts a song database model to a simplified song information model,
+        /// including retrieving the artist's name.
+        /// </summary>
+        /// <param name="songBasicDetails">The song database model to convert.</param>
+        /// <returns>A simplified song information model with
+        /// the artist's name included.</returns>
         public SongBasicInformation ConvertSongDataBaseModelToSongInfo(SongDataBaseModel songBasicDetails)
             {
                 var artistId = songBasicDetails.Artist_Id;

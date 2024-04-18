@@ -3,6 +3,10 @@ using TechTitans.Repositories;
 
 namespace TechTitans.Services
 {
+    /// <summary>
+    /// /// Provides functionality for managing and retrieving information 
+    /// about songs and artists, including song features and recommendations.
+    /// </summary>
     public class ArtistSongDashboardController
     {
         private Repository<SongDataBaseModel> SongRepository = new Repository<SongDataBaseModel>();
@@ -10,6 +14,13 @@ namespace TechTitans.Services
         private Repository<SongRecommendationDetails> SongRecommendationRepository = new Repository<SongRecommendationDetails>();
         private Repository<ArtistDetails> ArtistRepository = new Repository<ArtistDetails>();
 
+        /// <summary>
+        /// Transforms a song database model to a simplified song information model, 
+        /// including retrieving the artist's name and song features.
+        /// </summary>
+        /// <param name="song">The song database model to transform.</param>
+        /// <returns>A simplified song information model with the artist's name 
+        /// and song features included.</returns>
         public SongBasicInformation TransformSongDataBaseModelToSongInfo(SongDataBaseModel song)
         {
             SongBasicInformation songInfo = new SongBasicInformation();
@@ -38,6 +49,12 @@ namespace TechTitans.Services
             return songInfo;
         }
 
+        /// <summary>
+        /// Retrieves all songs by a specific artist.
+        /// </summary>
+        /// <param name="artistId">The ID of the artist.</param>
+        /// <returns>A list of simplified song information models
+        /// for the specified artist.</returns>
         public List<SongBasicInformation> GetAllArtistSongs(int artistId)
         {
             List<SongBasicInformation> artistSongs = new List<SongBasicInformation>();
@@ -52,7 +69,13 @@ namespace TechTitans.Services
             return artistSongs;
         }
 
-        public List<SongBasicInformation> searchSongsByTitle(string title)
+        /// <summary>
+        /// Searches for songs by title.
+        /// </summary>
+        /// <param name="title">The title of the song to search for.</param>
+        /// <returns>A list of simplified song information models 
+        /// that match the search title.</returns>
+        public List<SongBasicInformation> SearchSongsByTitle(string title)
         {
             List<SongBasicInformation> songs = new List<SongBasicInformation>();
             foreach (SongDataBaseModel song in SongRepository.GetAll())
@@ -66,7 +89,12 @@ namespace TechTitans.Services
             return songs;
         }
 
-
+        /// <summary>
+        /// Retrieves detailed information about a specific song.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>A simplified song information model for the specified song,
+        /// or null if not found.</returns>
         public SongBasicInformation GetSongInformation(int songId)
         {
             foreach (SongDataBaseModel song in SongRepository.GetAll())
@@ -79,7 +107,12 @@ namespace TechTitans.Services
             }
             return null;
         }
-        
+
+        /// <summary>
+        /// Retrieves song recommendation details for a specific song.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>Song recommendation details for the specified song.</returns>
         public SongRecommendationDetails GetSongRecommandationDetails(int songId)
         {
             foreach (SongRecommendationDetails songDetails in SongRecommendationRepository.GetAll())
@@ -93,6 +126,13 @@ namespace TechTitans.Services
             return new SongRecommendationDetails();
             
         }
+
+        /// <summary>
+        /// Retrieves artist information by a specific song.
+        /// </summary>
+        /// <param name="SongId">The ID of the song.</param>
+        /// <returns>Artist details for the specified song, 
+        /// or null if not found.</returns>
         public ArtistDetails GetArtistInfoBySong(int SongId)
         {
             foreach (SongDataBaseModel song in SongRepository.GetAll())
@@ -111,6 +151,11 @@ namespace TechTitans.Services
             return null;
         }
 
+        /// <summary>
+        /// Retrieves the artist with the most published songs.
+        /// </summary>
+        /// <returns>Artist details for the artist 
+        /// with the most published songs.</returns>
         public ArtistDetails GetMostPublishedArtist()
         {
             Dictionary<int, int> artistSongCount = new Dictionary<int, int>();
@@ -144,6 +189,12 @@ namespace TechTitans.Services
             }
             return null;
         }
+
+        /// <summary>
+        /// Retrieves songs by the most published artist for the main page.
+        /// </summary>
+        /// <returns>A list of simplified song information
+        /// models by the most published artist.</returns>
         public List<SongBasicInformation> GetSongsByMostPublishedArtistForMainPage()
         {
             List<SongBasicInformation> songsOfMostPublishedArtist = new List<SongBasicInformation>();

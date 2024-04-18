@@ -6,6 +6,11 @@ using TechTitans.Models;
 
 namespace TechTitans.ViewModels
 {
+    /// <summary>
+    /// Represents the view model for the end-of-year recap, 
+    /// including top songs, artist percentiles, minutes listened, genres,
+    /// and listener personality.
+    /// </summary>
     public class EndOfYearRecapViewModel
     {
         public List<SongBasicInformation> Top5MostListenedSongs { get; set; }

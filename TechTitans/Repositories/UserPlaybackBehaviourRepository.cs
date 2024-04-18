@@ -9,8 +9,22 @@ using TechTitans.Models;
 
 namespace TechTitans.Repositories
 {
+    /// <summary>
+    /// Represents a repository for managing user playback behavior data, 
+    /// including operations for retrieving playback behavior records.
+    /// </summary>
     internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
     {
+
+        /// <summary>
+        /// Retrieves a specific user's playback behavior record 
+        /// based on the provided criteria.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="songId">The optional ID of the song.</param>
+        /// <param name="timestamp">The optional timestamp.</param>
+        /// <returns>The user's playback behavior record matching
+        /// the specified criteria, or null if no match is found.</returns>
         public UserPlaybackBehaviour GetUserPlaybackBehaviour(int userId, int? songId = null, DateTime? timestamp = null)
         {
             var queryBuilder = new StringBuilder();
@@ -25,6 +39,12 @@ namespace TechTitans.Repositories
             }
             return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Retrieves all playback behavior records for a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>A list of playback behavior records for the specified user.</returns>
         public List<UserPlaybackBehaviour> GetUserPlaybackBehaviour(int userId)
         {
             var queryBuilder = new StringBuilder();

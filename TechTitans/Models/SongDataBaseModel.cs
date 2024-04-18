@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace TechTitans.Models
 {
+    /// <summary>
+    /// Represents basic details of a song stored in the database,
+    /// including its ID, name, genre, subgenre, artist ID, language, country, 
+    /// album, and image.
+    /// </summary>
     [Table ("SongBasicDetails")]
     public class SongDataBaseModel
     {

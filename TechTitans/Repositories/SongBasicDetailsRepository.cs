@@ -9,8 +9,18 @@ using TechTitans.Models;
 
 namespace TechTitans.Repositories
 {
+    /// <summary>
+    /// Represents a repository for managing song basic details,
+    /// including operations for retrieving song information, top listened songs, 
+    /// and user playback behavior analysis.
+    /// </summary>
     internal class SongBasicDetailsRepository : Repository<SongDataBaseModel>
     {
+        /// <summary>
+        /// Converts song basic details to a simplified song information model.
+        /// </summary>
+        /// <param name="songBasicDetails">The song basic details to convert.</param>
+        /// <returns>A simplified song information model.</returns>
         public SongBasicInformation SongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
         {   
             var artistId = songBasicDetails.Artist_Id;
@@ -30,7 +40,12 @@ namespace TechTitans.Repositories
                 Image = songBasicDetails.Image
             };
         }
-        
+
+        /// <summary>
+        /// Retrieves the basic details of a song by its ID.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>The song basic details.</returns>
         public SongDataBaseModel GetSongBasicDetails(int songId)
         {
             var queryBuilder = new StringBuilder();
@@ -38,6 +53,11 @@ namespace TechTitans.Repositories
             return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { songId }).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Retrieves the top 5 most listened songs for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>A list of the top 5 most listened songs.</returns>
         public List<SongDataBaseModel> GetTop5MostListenedSongs(int userId)
         {
             var queryBuilder = new StringBuilder();
@@ -45,6 +65,11 @@ namespace TechTitans.Repositories
             return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).ToList();
         }
 
+        /// <summary>
+        /// Retrieves the percentile of the most played song for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>A tuple containing the most played song and its percentile.</returns>
         public Tuple<SongDataBaseModel, decimal> GetMostPlayedSongPercentile(int userId)
         {
             var mostPlayedSong = GetMostPlayedSong(userId);
@@ -53,6 +78,11 @@ namespace TechTitans.Repositories
             return new Tuple<SongDataBaseModel, decimal>(mostPlayedSong, (decimal)mostListenedSongCount / totalSongs);
         }
 
+        /// <summary>
+        /// Retrieves the most played song for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The most played song.</returns>
         private SongDataBaseModel GetMostPlayedSong(int userId)
         {
             var queryBuilder = new StringBuilder();
@@ -60,6 +90,11 @@ namespace TechTitans.Repositories
             return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Retrieves the total number of songs played by a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The total number of songs played.</returns>
         private int GetTotalSongsPlayedByUser(int userId)
         {
             var queryBuilder = new StringBuilder();
@@ -67,6 +102,11 @@ namespace TechTitans.Repositories
             return _connection.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Retrieves the count of the most listened song for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The count of the most listened song.</returns>
         private int GetMostListenedSongCount(int userId)
         {
             var queryBuilder = new StringBuilder();
@@ -74,6 +114,11 @@ namespace TechTitans.Repositories
             return _connection.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Retrieves the percentile of the most played artist for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>Percentile of the most played artist.</returns>
         public Tuple<string, decimal> GetMostPlayedArtistPercentile(int userId)
         {
             var mostPlayedArtistInfo = GetMostPlayedArtistInfo(userId);
@@ -85,24 +130,48 @@ namespace TechTitans.Repositories
             return new Tuple<string, decimal>(mostPlayedArtist, (decimal)mostPlayedArtistInfo.Start_Listen_Events / totalSongs);
         }
 
+        /// <summary>
+        /// Retrieves information about the most played artist for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>Information about the most played artist.</returns>
         private MostPlayedArtistInformation GetMostPlayedArtistInfo(int userId)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT TOP 1 sd.artist_id as Artist_Id, COUNT(*) AS Start_Listen_Events FROM UserPlaybackBehaviour ub JOIN SongBasicDetails sd ON ub.song_id = sd.song_id WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY sd.artist_id ORDER BY COUNT(*) DESC;");
             return _connection.Query<MostPlayedArtistInformation>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Retrieves the name of the most played artist for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="mostPlayedArtistInfo">Information about the most played artist.</param>
+        /// <returns>The name of the most played artist.</returns>
         private string GetMostPlayedArtist(int userId, MostPlayedArtistInformation mostPlayedArtistInfo)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artist_Id");
             return _connection.Query<string>(queryBuilder.ToString(), new { mostPlayedArtistInfo.Artist_Id }).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Retrieves the total number of songs for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The total number of songs.</returns>
         private int GetTotalNumberOfSongs(int userId)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE());");
             return _connection.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Retrieves the top 5 genres for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>A list of the top 5 genres.</returns>
         public List<string> GetTop5Genres(int userId)
         {
             var queryBuilder = new StringBuilder();
