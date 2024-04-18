@@ -33,9 +33,9 @@ namespace TechTitans.Services
                 }
             }
 
-            var sortedDict = from entry in genreCount orderby entry.Value descending select entry;
+            var sortedGenres = from entry in genreCount orderby entry.Value descending select entry;
             int count = 0;
-            foreach (KeyValuePair<String, int> entry in sortedDict)
+            foreach (KeyValuePair<String, int> entry in sortedGenres)
             {
                 switch(count)
                 {
@@ -86,9 +86,9 @@ namespace TechTitans.Services
                 }
             }
 
-            var sortedDict = from entry in subgenreCount orderby entry.Value descending select entry;
+            var sortedSubGenres = from entry in subgenreCount orderby entry.Value descending select entry;
             int count = 0;
-            foreach (KeyValuePair<String, int> entry in sortedDict)
+            foreach (KeyValuePair<String, int> entry in sortedSubGenres)
             {
                 switch (count)
                 {

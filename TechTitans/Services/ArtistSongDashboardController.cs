@@ -113,25 +113,25 @@ namespace TechTitans.Services
 
         public ArtistDetails GetMostPublishedArtist()
         {
-            Dictionary<int, int> artistCount = new Dictionary<int, int>();
+            Dictionary<int, int> artistSongCount = new Dictionary<int, int>();
             foreach (SongDataBaseModel song in SongRepository.GetAll())
             {
-                if (artistCount.ContainsKey(song.Artist_Id))
+                if (artistSongCount.ContainsKey(song.Artist_Id))
                 {
-                    artistCount[song.Artist_Id]++;
+                    artistSongCount[song.Artist_Id]++;
                 }
                 else
                 {
-                    artistCount.Add(song.Artist_Id, 1);
+                    artistSongCount.Add(song.Artist_Id, 1);
                 }
             }
-            int max = 0;
+            int maximumSongCount = 0;
             int artistId = 0;
-            foreach (KeyValuePair<int, int> entry in artistCount)
+            foreach (KeyValuePair<int, int> entry in artistSongCount)
             {
-                if (entry.Value > max)
+                if (entry.Value > maximumSongCount)
                 {
-                    max = entry.Value;
+                    maximumSongCount = entry.Value;
                     artistId = entry.Key;
                 }
             }
@@ -146,17 +146,17 @@ namespace TechTitans.Services
         }
         public List<SongBasicInformation> GetSongsByMostPublishedArtistForMainPage()
         {
-            List<SongBasicInformation> songs = new List<SongBasicInformation>();
+            List<SongBasicInformation> songsOfMostPublishedArtist = new List<SongBasicInformation>();
             int artistId = GetMostPublishedArtist().Artist_Id;
             foreach (SongDataBaseModel song in SongRepository.GetAll())
             {
                 if (song.Artist_Id == artistId)
                 {
                     SongBasicInformation songInfo = TransformSongDataBaseModelToSongInfo(song);
-                    songs.Add(songInfo);
+                    songsOfMostPublishedArtist.Add(songInfo);
                 }
             }
-            return songs;
+            return songsOfMostPublishedArtist;
         }   
     }
 }

@@ -19,12 +19,12 @@ namespace TechTitans.Services
         public List<SongBasicInformation> Top5MostListenedSongs(int userId)
         {
             var top5Songs = songBasicDetailsRepository.GetTop5MostListenedSongs(userId);
-            List<SongBasicInformation> top5SongsInfo = new List<SongBasicInformation>();
+            List<SongBasicInformation> top5SongsInformation = new List<SongBasicInformation>();
             foreach (var song in top5Songs)
             {
-                top5SongsInfo.Add(songBasicDetailsRepository.SongBasicDetailsToSongBasicInfo(song));
+                top5SongsInformation.Add(songBasicDetailsRepository.SongBasicDetailsToSongBasicInfo(song));
             }
-            return top5SongsInfo;
+            return top5SongsInformation;
         }
 
         public Tuple<SongBasicInformation, decimal> MostPlayedSongPercentile(int userId)
@@ -43,26 +43,26 @@ namespace TechTitans.Services
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <returns>The total minutes listened by the user.</returns>
-        public int MinutesListened(int userId)
+        public int GetTotalMinutesListened(int userId)
         {
             var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
-            int minutesListened = 0;
+            int totalMinutesListened = 0;
             for (int firstCounter = 0; firstCounter < userEvents.Count; firstCounter++)
             {
-                if (userEvents[firstCounter].Event_Type == PlaybackEventType.start_play)
+                if (userEvents[firstCounter].Event_Type == PlaybackEventType.startSongPlayback)
                 {
                     for (int secondCounter = firstCounter + 1; secondCounter < userEvents.Count; secondCounter++)
                     {
-                        if (userEvents[secondCounter].Event_Type == PlaybackEventType.end_play)
+                        if (userEvents[secondCounter].Event_Type == PlaybackEventType.endSongPlayback)
                         {
-                            minutesListened += (int)(userEvents[secondCounter].Timestamp - userEvents[firstCounter].Timestamp).TotalMinutes;
+                            totalMinutesListened += (int)(userEvents[secondCounter].Timestamp - userEvents[firstCounter].Timestamp).TotalMinutes;
                             firstCounter = secondCounter;
                             break;
                         }
                     }
                 }
             }
-            return minutesListened;
+            return totalMinutesListened;
         }
 
         public List<string> Top5Genres(int userId)
@@ -70,18 +70,18 @@ namespace TechTitans.Services
             return this.songBasicDetailsRepository.GetTop5Genres(userId);
         }
 
-        public List<string> NewGenresDiscovered(int userId)
+        public List<string> GetNewGenresDiscovered(int userId)
         {
             return this.songBasicDetailsRepository.GetAllNewGenresDiscovered(userId);
         }
 
-        public ListenerPersonality ListenerPersonality(int userId)
+        public ListenerPersonality GetListenerPersonality(int userId)
         {
             var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
             int playCount = 0;
             for(int counter = 0; counter < userEvents.Count; counter++)
             {
-                if ((userEvents[counter].Event_Type == PlaybackEventType.start_play) && (userEvents[counter].Timestamp.Year == DateTime.Now.Year))
+                if ((userEvents[counter].Event_Type == PlaybackEventType.startSongPlayback) && (userEvents[counter].Timestamp.Year == DateTime.Now.Year))
                 {
                     playCount++;
                 }
@@ -90,7 +90,7 @@ namespace TechTitans.Services
             {
                 return Enums.ListenerPersonality.Melophile;
             }
-            var newGenres = NewGenresDiscovered(userId);
+            var newGenres = GetNewGenresDiscovered(userId);
             if(newGenres.Count > 3)
             {
                 return Enums.ListenerPersonality.Explorer;
@@ -108,10 +108,10 @@ namespace TechTitans.Services
             endOfYearRecap.Top5MostListenedSongs = Top5MostListenedSongs(userId);
             endOfYearRecap.MostPlayedSongPercentile = MostPlayedSongPercentile(userId);
             endOfYearRecap.MostPlayedArtistPercentile = MostPlayedArtistPercentile(userId);
-            endOfYearRecap.MinutesListened = MinutesListened(userId);
+            endOfYearRecap.MinutesListened = GetTotalMinutesListened(userId);
             endOfYearRecap.Top5Genres = Top5Genres(userId);
-            endOfYearRecap.NewGenresDiscovered = NewGenresDiscovered(userId);
-            endOfYearRecap.ListenerPersonality = ListenerPersonality(userId);
+            endOfYearRecap.NewGenresDiscovered = GetNewGenresDiscovered(userId);
+            endOfYearRecap.ListenerPersonality = GetListenerPersonality(userId);
             return endOfYearRecap;
         }
     }

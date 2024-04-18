@@ -10,14 +10,14 @@ using TechTitans.Models;
 using TechTitans.Repositories;
 namespace TechTitans.Services
 {
-    internal class UserService
+    internal class UserController
     {
-        private UserSongRepository SongRepo= new UserSongRepository();
+        private UserSongRepository SongRepository= new UserSongRepository();
        
         public List<SongBasicInformation> GetRecentlyPlayed() {
             List<SongBasicInformation> groupOfSongsInformation=new List<SongBasicInformation>();
-            foreach (SongDataBaseModel song in SongRepo.GetAll()){ 
-                SongBasicInformation song_info = SongRepo.ConvertSongDataBaseModelToSongInfo(song);
+            foreach (SongDataBaseModel song in SongRepository.GetAll()){ 
+                SongBasicInformation song_info = SongRepository.ConvertSongDataBaseModelToSongInfo(song);
                 groupOfSongsInformation.Add(song_info);
             }
             return groupOfSongsInformation.Take(6).ToList();

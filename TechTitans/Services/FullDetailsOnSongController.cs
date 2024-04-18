@@ -26,10 +26,10 @@ namespace TechTitans.Services
 
                     switch (action.Event_Type)
                     {
-                        case PlaybackEventType.start_play:
+                        case PlaybackEventType.startSongPlayback:
                             start = action.Timestamp;
                             break;
-                        case PlaybackEventType.end_play:
+                        case PlaybackEventType.endSongPlayback:
                             int minutes = (action.Timestamp - start).Minutes;
                             currentSongDetails.TotalMinutesListened += minutes;
                             currentSongDetails.TotalPlays++;
@@ -58,9 +58,9 @@ namespace TechTitans.Services
             foreach (UserPlaybackBehaviour action in UserPlaybackBehaviourRepo.GetAll()) {
                 if (action.Song_Id == songId && action.Timestamp.Month == DateTime.Now.Month && action.Timestamp.Year == DateTime.Now.Year) {
                     switch (action.Event_Type) {
-                        case PlaybackEventType.start_play:
+                        case PlaybackEventType.startSongPlayback:
                             break;
-                        case PlaybackEventType.end_play:
+                        case PlaybackEventType.endSongPlayback:
                             int minutes = (action.Timestamp - DateTime.Now).Minutes;
                             currentSongDetails.TotalMinutesListened += minutes;
                             currentSongDetails.TotalPlays++;
