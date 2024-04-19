@@ -24,7 +24,7 @@ namespace TechTitans.Views
             // Clear existing children from SongsGrid
             SongsGrid.Children.Clear();
             string song_to_find=((SearchBar)sender).Text;
-            var songs = new ObservableCollection<SongBasicInfo>(GetSongs(song_to_find));
+            var songs = new ObservableCollection<SongBasicInformation>(GetSongs(song_to_find));
             SongsGrid.RowDefinitions.Add(new RowDefinition());
             foreach (var song in songs)
             {
@@ -52,20 +52,20 @@ namespace TechTitans.Views
             }
 
         }
-        public ObservableCollection<SongBasicInfo> GetSongs(string song_to_find)
+        public ObservableCollection<SongBasicInformation> GetSongs(string song_to_find)
         {
 
             //here a more complexe function should be implemented with the sont_to_find parameter that returns only songs that match 
-            return new ObservableCollection<SongBasicInfo>
+            return new ObservableCollection<SongBasicInformation>
             {
 
 
-                new SongBasicInfo { SongId = 0, Name = "Song 1", Artist = "Artist 1", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album"},
-                new SongBasicInfo { SongId = 1, Name = "Song 2", Artist = "Artist 2", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album"},
-                new SongBasicInfo { SongId = 2, Name = "Song 3", Artist = "Artist 3", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album" },
-                new SongBasicInfo {SongId = 3, Name = "Song 4", Artist = "Artist 4", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album"},
-                new SongBasicInfo { SongId = 4, Name = "Song 5", Artist = "Artist 5", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album" },
-                new SongBasicInfo {SongId = 5, Name = "Song 6", Artist = "Artist 6", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album"},
+                new SongBasicInformation { SongId = 0, Name = "Song 1", Artist = "Artist 1", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album"},
+                new SongBasicInformation { SongId = 1, Name = "Song 2", Artist = "Artist 2", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album"},
+                new SongBasicInformation { SongId = 2, Name = "Song 3", Artist = "Artist 3", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album" },
+                new SongBasicInformation {SongId = 3, Name = "Song 4", Artist = "Artist 4", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album"},
+                new SongBasicInformation { SongId = 4, Name = "Song 5", Artist = "Artist 5", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album" },
+                new SongBasicInformation {SongId = 5, Name = "Song 6", Artist = "Artist 6", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album"},
             };
 
         }
@@ -73,7 +73,7 @@ namespace TechTitans.Views
         {
             // open ArtistSongDashboard page with song details
             var songItem = (SongItem)sender;
-            var songInfo = songItem.BindingContext as SongBasicInfo;
+            var songInfo = songItem.BindingContext as SongBasicInformation;
             Navigation.PushAsync(new UserSongDashboard(songInfo));
         }
     }

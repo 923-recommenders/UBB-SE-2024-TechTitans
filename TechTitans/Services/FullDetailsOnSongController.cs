@@ -3,36 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.Enums;
 
 namespace TechTitans.Services
 {
+    /// <summary>
+    /// Provides functionality for retrieving detailed information about songs,
+    /// including playback behavior and ad distribution data.
+    /// </summary>
     internal class FullDetailsOnSongController
     {
-        //private readonly Repository<SongBasicDetails> SongRepo = new();
-        //private readonly Repository<SongRecommendationDetails> SongRecommendationRepo = new();
         private readonly Repository<UserPlaybackBehaviour> UserPlaybackBehaviourRepo = new();
         private readonly Repository<AdDistributionData> AdDistributionDataRepo = new();
+
+        /// <summary>
+        /// Retrieves full details on a song, including total minutes listened,
+        /// total plays, likes, dislikes, and skips.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>A <see cref="FullDetailsOnSong"/> object containing the detailed 
+        /// information about the song, or null if the song is not found.</returns>
         public FullDetailsOnSong GetFullDetailsOnSong(int songId) {
             FullDetailsOnSong currentSongDetails = new();
             DateTime start = new(); 
-            bool found = false;
-            foreach (UserPlaybackBehaviour action in UserPlaybackBehaviourRepo.GetAll()) {
+            bool foundSongCheck = false;
+            foreach (UserPlaybackBehaviour action in UserPlaybackBehaviourRepo.GetAll())
+            {
 
-                if (action.Song_Id == songId) {
-                    found = true;
-                    // string message;
-                    // message = action.Event_Type.ToString() + " " + action.Timestamp.ToString() + " " + action.Song_Id.ToString() + " " + action.User_Id.ToString() + "\n";
-                    // MessageBox.Show(message);
+                if (action.Song_Id == songId)
+                {
+                    foundSongCheck = true;
 
-                    switch (action.Event_Type) {
-                        case PlaybackEventType.start_play:
+                    switch (action.Event_Type)
+                    {
+                        case PlaybackEventType.startSongPlayback:
                             start = action.Timestamp;
                             break;
-                        case PlaybackEventType.end_play:
+                        case PlaybackEventType.endSongPlayback:
                             int minutes = (action.Timestamp - start).Minutes;
                             currentSongDetails.TotalMinutesListened += minutes;
                             currentSongDetails.TotalPlays++;
@@ -46,25 +55,33 @@ namespace TechTitans.Services
                         case PlaybackEventType.skip:
                             currentSongDetails.TotalSkips++;
                             break;
-                        
+
                     }
                 }
             }
-            // MessageBox.Show(currentSongDetails.TotalMinutesListened.ToString());
-            if (!found) {
-                // MessageBox.Show("Song not found");
+            if (!foundSongCheck) {
+                
                 return null;
             }
             return currentSongDetails;
         }
+
+        /// <summary>
+        /// Retrieves the details of a song for the current month,
+        /// including total minutes listened, total plays, likes, dislikes,
+        /// and skips.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>A <see cref="FullDetailsOnSong"/> object containing the 
+        /// detailed information about the song for the current month.</returns>
         public FullDetailsOnSong GetCurrentMonthDetails(int songId) {
             FullDetailsOnSong currentSongDetails = new();
             foreach (UserPlaybackBehaviour action in UserPlaybackBehaviourRepo.GetAll()) {
                 if (action.Song_Id == songId && action.Timestamp.Month == DateTime.Now.Month && action.Timestamp.Year == DateTime.Now.Year) {
                     switch (action.Event_Type) {
-                        case PlaybackEventType.start_play:
+                        case PlaybackEventType.startSongPlayback:
                             break;
-                        case PlaybackEventType.end_play:
+                        case PlaybackEventType.endSongPlayback:
                             int minutes = (action.Timestamp - DateTime.Now).Minutes;
                             currentSongDetails.TotalMinutesListened += minutes;
                             currentSongDetails.TotalPlays++;
@@ -83,6 +100,14 @@ namespace TechTitans.Services
             }
             return currentSongDetails;
         }
+
+        /// <summary>
+        /// Retrieves the active ad distribution data for a specific song.
+        /// </summary>
+        /// <param name="songId">The ID of the song.</param>
+        /// <returns>An <see cref="AdDistributionData"/> object containing
+        /// the active ad distribution data for the song, or null
+        /// if no active ad is found.</returns>
         public AdDistributionData GetActiveAd(int songId) {
             foreach (AdDistributionData ad in AdDistributionDataRepo.GetAll()) {
                 if (ad.Song_Id == songId && ad.Month == DateTime.Now.Month && ad.Year == DateTime.Now.Year) {

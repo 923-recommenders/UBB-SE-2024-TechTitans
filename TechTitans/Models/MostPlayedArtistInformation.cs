@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace TechTitans.Models
 {
-    internal class MostPlayedArtistInfo
+    /// <summary>
+    /// Represents information about the most played artist, including their
+    /// unique identifier and the number of start listen events.
+    /// </summary>
+
+    internal class MostPlayedArtistInformation
     {
         [Column("artist_id")]
         public int Artist_Id { get; set; }

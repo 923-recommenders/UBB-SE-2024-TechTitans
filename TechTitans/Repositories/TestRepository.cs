@@ -13,82 +13,81 @@ namespace TechTitans.Repositories
     {
         public Test TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM Test");
-            return _connection.Query<Test>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM Test");
+            return _connection.Query<Test>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestDemographicDetails : Repository<UserDemographicsDetails>
     {
         public UserDemographicsDetails TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM UserDemographicsDetails");
-            return _connection.Query<UserDemographicsDetails>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM UserDemographicsDetails");
+            return _connection.Query<UserDemographicsDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
-    public class TestAuthorDetails : Repository<AuthorDetails>
+    public class TestAuthorDetails : Repository<ArtistDetails>
     {
-        public AuthorDetails TestMethod()
+        public ArtistDetails TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM AuthorDetails");
-            // return _connection.Query<Test>(cmd.ToString()).FirstOrDefault();
-            return _connection.Query<AuthorDetails>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM AuthorDetails");
+            return _connection.Query<ArtistDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestAdDistributionData : Repository<AdDistributionData>
     {
         public AdDistributionData TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM AdDistributionData");
-            return _connection.Query<AdDistributionData>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM AdDistributionData");
+            return _connection.Query<AdDistributionData>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
-    public class TestSongBasicDetails : Repository<SongBasicDetails>
+    public class TestSongBasicDetails : Repository<SongDataBaseModel>
     {
-        public SongBasicDetails TestMethod()
+        public SongDataBaseModel TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM SongBasicDetails");
-            return _connection.Query<SongBasicDetails>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM SongBasicDetails");
+            return _connection.Query<SongDataBaseModel>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestUserPlaybackBehaviour : Repository<UserPlaybackBehaviour>
     {
         public UserPlaybackBehaviour TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM UserPlaybackBehaviour");
-            return _connection.Query<UserPlaybackBehaviour>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM UserPlaybackBehaviour");
+            return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestSongRecommendationDetails : Repository<SongRecommendationDetails>
     {
         public SongRecommendationDetails TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM SongRecommendationDetails");
-            return _connection.Query<SongRecommendationDetails>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM SongRecommendationDetails");
+            return _connection.Query<SongRecommendationDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestSongFeatures : Repository<SongFeatures>
     {
         public SongFeatures TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM SongFeatures");
-            return _connection.Query<SongFeatures>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM SongFeatures");
+            return _connection.Query<SongFeatures>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestTrends : Repository<Trends>
     {
         public Trends TestMethod()
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM Trends");
-            return _connection.Query<Trends>(cmd.ToString()).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM Trends");
+            return _connection.Query<Trends>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
 }

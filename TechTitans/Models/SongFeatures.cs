@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace TechTitans.Models
 {
+    /// <summary>
+    /// Represents the features of a song stored in the database, including its 
+    /// unique identifier and the artist's unique identifier.
+    /// </summary>
+
     [Table("SongFeatures")]
     public class SongFeatures
     {
