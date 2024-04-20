@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,27 +9,47 @@ using TechTitans.Models;
 
 namespace TechTitans.Repositories
 {
+    /// <summary>
+    /// Represents a repository for managing user playback behavior data, 
+    /// including operations for retrieving playback behavior records.
+    /// </summary>
     internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
     {
-        public UserPlaybackBehaviour GetUserPlaybackBehaviour(int userId, int songId, DateTime timestamp)
+
+        /// <summary>
+        /// Retrieves a specific user's playback behavior record 
+        /// based on the provided criteria.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="songId">The optional ID of the song.</param>
+        /// <param name="timestamp">The optional timestamp.</param>
+        /// <returns>The user's playback behavior record matching
+        /// the specified criteria, or null if no match is found.</returns>
+        public UserPlaybackBehaviour GetUserPlaybackBehaviour(int userId, int? songId = null, DateTime? timestamp = null)
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM UserPlaybackBehaviour WHERE user_id = @userId AND song_id = @songId AND timestamp = @timestamp");
-            return _connection.Query<UserPlaybackBehaviour>(cmd.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT * FROM UserPlaybackBehaviour WHERE user_id = @userId");
+            if (songId.HasValue)
+            {
+                queryBuilder.Append(" AND song_id = @songId");
+            }
+            if (timestamp.HasValue)
+            {
+                queryBuilder.Append(" AND timestamp = @timestamp");
+            }
+            return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
         }
 
-        public List<UserPlaybackBehaviour> GetUserPlaybackBehaviour(int userId, int songId)
-        {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT * FROM UserPlaybackBehaviour WHERE user_id = @userId AND song_id = @songId");
-            return _connection.Query<UserPlaybackBehaviour>(cmd.ToString(), new { userId, songId }).ToList();
-        }
-
+        /// <summary>
+        /// Retrieves all playback behavior records for a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>A list of playback behavior records for the specified user.</returns>
         public List<UserPlaybackBehaviour> GetUserPlaybackBehaviour(int userId)
         {
-            var cmd = new StringBuilder();
-            cmd.Append("SELECT user_id as User_Id, song_id as Song_Id, event_type as Event_Type, timestamp as Timestamp FROM UserPlaybackBehaviour WHERE user_id = @userId");
-            return _connection.Query<UserPlaybackBehaviour>(cmd.ToString(), new { userId }).ToList();
+            var queryBuilder = new StringBuilder();
+            queryBuilder.Append("SELECT user_id as User_Id, song_id as Song_Id, event_type as Event_Type, timestamp as Timestamp FROM UserPlaybackBehaviour WHERE user_id = @userId");
+            return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId }).ToList();
         }
     }
 }

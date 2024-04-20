@@ -1,7 +1,12 @@
 ﻿
 namespace TechTitans.Models
 {
-    public class SongBasicInfo
+    /// <summary>
+    /// Represents basic information about a song, including its ID, name, 
+    /// genre, subgenre, artist, features, language, country, album, and image.
+    /// </summary>
+
+    public class SongBasicInformation
     {
         public int SongId { get; set; } = 0;
         public string Name { get; set; } = "DefaultName";

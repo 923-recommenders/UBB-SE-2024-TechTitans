@@ -1,5 +1,9 @@
 namespace TechTitans.Models
 {
+    /// <summary>
+    /// Represents the full details of a song, including total minutes listened,
+    /// total plays, likes, dislikes, and skips.
+    /// </summary>
     public class FullDetailsOnSong {
         public int TotalMinutesListened  { get; set; }
         public int TotalPlays { get; set; }

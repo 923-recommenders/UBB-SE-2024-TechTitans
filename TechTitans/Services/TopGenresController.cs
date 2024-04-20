@@ -7,15 +7,23 @@ using TechTitans.Models;
 using TechTitans.Repositories;
 namespace TechTitans.Services
 {
+    /// <summary>
+    /// Provides functionality for retrieving the top genres and subgenres based on song recommendations and playback details.
+    /// </summary>
     public class TopGenresController
     {
-        private Repository<SongBasicDetails> SongRepo = new Repository<SongBasicDetails>();
+        private Repository<SongDataBaseModel> SongRepo = new Repository<SongDataBaseModel>();
         private Repository<SongRecommendationDetails> SongRecommendationRepo= new Repository<SongRecommendationDetails>();
 
-        public void getTop3Genres(int month,int year,Label genre1,Label minutes1,Label percentage1 , Label genre2, Label minutes2,Label percentage2, Label genre3 ,Label minutes3, Label percentage3) {
+        /// <summary>
+        /// Retrieves the top 3 genres for a specified month and year,
+        /// updating the provided labels with genre names, minutes listened, 
+        /// and percentages.
+        /// </summary>
+        public void GetTop3Genres(int month,int year,Label genre1,Label minutes1,Label percentage1 , Label genre2, Label minutes2,Label percentage2, Label genre3 ,Label minutes3, Label percentage3) {
             int totalMinutes = 0;
             Dictionary<String, int> genreCount = new Dictionary<String, int>();
-            foreach (SongBasicDetails song in SongRepo.GetAll()) { 
+            foreach (SongDataBaseModel song in SongRepo.GetAll()) { 
                 foreach (SongRecommendationDetails songDetails in SongRecommendationRepo.GetAll())
                 {
                     if (songDetails.Song_Id == song.Song_Id && songDetails.Month == month && songDetails.Year == year)
@@ -33,9 +41,9 @@ namespace TechTitans.Services
                 }
             }
 
-            var sortedDict = from entry in genreCount orderby entry.Value descending select entry;
+            var sortedGenres = from entry in genreCount orderby entry.Value descending select entry;
             int count = 0;
-            foreach (KeyValuePair<String, int> entry in sortedDict)
+            foreach (KeyValuePair<String, int> entry in sortedGenres)
             {
                 switch(count)
                 {
@@ -63,10 +71,15 @@ namespace TechTitans.Services
             }
         }
 
-        public void top3SubGenres(int month, int year, Label genre1, Label minutes1, Label percentage1, Label genre2, Label minutes2, Label percentage2, Label genre3, Label minutes3, Label percentage3) { 
+        /// <summary>
+        /// Retrieves the top 3 subgenres for a specified month and year, 
+        /// updating the provided labels with subgenre names, minutes listened, 
+        /// and percentages.
+        /// </summary>
+        public void GetTop3SubGenres(int month, int year, Label genre1, Label minutes1, Label percentage1, Label genre2, Label minutes2, Label percentage2, Label genre3, Label minutes3, Label percentage3) { 
                Dictionary<String, int> subgenreCount = new Dictionary<String, int>();
             int totalMinutes = 0;
-            foreach (SongBasicDetails song in SongRepo.GetAll())
+            foreach (SongDataBaseModel song in SongRepo.GetAll())
             {
                 foreach (SongRecommendationDetails songDetails in SongRecommendationRepo.GetAll())
                 {
@@ -86,9 +99,9 @@ namespace TechTitans.Services
                 }
             }
 
-            var sortedDict = from entry in subgenreCount orderby entry.Value descending select entry;
+            var sortedSubGenres = from entry in subgenreCount orderby entry.Value descending select entry;
             int count = 0;
-            foreach (KeyValuePair<String, int> entry in sortedDict)
+            foreach (KeyValuePair<String, int> entry in sortedSubGenres)
             {
                 switch (count)
                 {
