@@ -1,8 +1,14 @@
 {
   "profiles": {
-    "Windows Machine": {
-      "commandName": "MsixPackage",
-      "nativeDebugging": false
+    "TechTitans": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DB_IP": "34.65.109.121",
+        "DB_USER": "sqlserver",
+        "DB_PASS": "1OG9iMXKcutz<0eU",
+        "DB_SCHEMA": "TechTitansDev"
+      },
+      "remoteDebugEnabled": false
     }
   }
 }

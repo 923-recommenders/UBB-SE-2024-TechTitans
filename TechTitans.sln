@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechTitans", "TechTitans\TechTitans.csproj", "{29F15AA2-793A-43C6-B33B-D32F76EE30DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechTitans.Test", "TechTitans.Test\TechTitans.Test.csproj", "{90B2D3E5-367D-402C-8CD5-8ED891CBEACE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Android Emulator|Any CPU = Android Emulator|Any CPU
@@ -21,6 +23,12 @@ Global
 		{29F15AA2-793A-43C6-B33B-D32F76EE30DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29F15AA2-793A-43C6-B33B-D32F76EE30DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{29F15AA2-793A-43C6-B33B-D32F76EE30DC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{90B2D3E5-367D-402C-8CD5-8ED891CBEACE}.Android Emulator|Any CPU.ActiveCfg = Debug|Any CPU
+		{90B2D3E5-367D-402C-8CD5-8ED891CBEACE}.Android Emulator|Any CPU.Build.0 = Debug|Any CPU
+		{90B2D3E5-367D-402C-8CD5-8ED891CBEACE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90B2D3E5-367D-402C-8CD5-8ED891CBEACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90B2D3E5-367D-402C-8CD5-8ED891CBEACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90B2D3E5-367D-402C-8CD5-8ED891CBEACE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
