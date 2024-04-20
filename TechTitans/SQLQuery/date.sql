@@ -1,4 +1,5 @@
 -- connect to the database SongBasicDetails
+SELECT * FROM AuthorDetails;
 insert into AuthorDetails values(1, 'Dumiyei')
 insert into AuthorDetails values(2, 'Dobu')
 insert into AuthorDetails values(3, 'Danilica')
