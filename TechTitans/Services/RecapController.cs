@@ -8,6 +8,7 @@ using TechTitans.Models;
 using Dapper;
 using TechTitans.ViewModels;
 using TechTitans.Enums;
+using Microsoft.Extensions.Configuration;
 
 namespace TechTitans.Services
 {
@@ -17,9 +18,13 @@ namespace TechTitans.Services
     /// </summary>
     internal class RecapController
     {
-        SongBasicDetailsRepository songBasicDetailsRepository = new SongBasicDetailsRepository();
-        UserPlaybackBehaviourRepository userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository();
-
+        SongBasicDetailsRepository songBasicDetailsRepository;
+        UserPlaybackBehaviourRepository userPlaybackBehaviourRepository;
+        public RecapController(IConfiguration configuration)
+        {
+            songBasicDetailsRepository = new SongBasicDetailsRepository(configuration);
+            userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository(configuration);
+        }
         /// <summary>
         /// Retrieves the top 5 most listened songs for a user.
         /// </summary>

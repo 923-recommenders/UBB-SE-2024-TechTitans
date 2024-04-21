@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.Enums;
+using Microsoft.Extensions.Configuration;
 
 namespace TechTitans.Services
 {
@@ -15,9 +16,13 @@ namespace TechTitans.Services
     /// </summary>
     internal class FullDetailsOnSongController
     {
-        private readonly Repository<UserPlaybackBehaviour> UserPlaybackBehaviourRepo = new();
-        private readonly Repository<AdDistributionData> AdDistributionDataRepo = new();
-
+        private readonly Repository<UserPlaybackBehaviour> UserPlaybackBehaviourRepo;
+        private readonly Repository<AdDistributionData> AdDistributionDataRepo;
+        public FullDetailsOnSongController(IConfiguration configuration)
+        {
+            UserPlaybackBehaviourRepo = new Repository<UserPlaybackBehaviour>(configuration);
+            AdDistributionDataRepo = new Repository<AdDistributionData>(configuration);
+        }
         /// <summary>
         /// Retrieves full details on a song, including total minutes listened,
         /// total plays, likes, dislikes, and skips.

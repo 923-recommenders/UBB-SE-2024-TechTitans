@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using TechTitans.Models;
 using TechTitans.Repositories;
 
@@ -6,6 +7,8 @@ namespace TechTitans.Views;
 public partial class MainPage : ContentPage
 {
     int count = 0;
+
+    IConfiguration _configuration;
     public TestRepository Repository { get; set; }
     public TestDemographicDetails RepositoryDemographic { get; set; }
     public TestAuthorDetails RepositoryAuthorDetails { get; set; }
@@ -17,8 +20,9 @@ public partial class MainPage : ContentPage
     public TestSongFeatures RepositorySongFeatures { get; set; }
     // public TestRepositoryDemographic Repository { get; set; }
 
-    public MainPage()
+    public MainPage(IConfiguration configuration)
     {
+        _configuration = configuration;
         InitializeComponent();
         //Repository = new TestRepository();
         //var dbData = Repository.TestMethod();
@@ -66,8 +70,8 @@ public partial class MainPage : ContentPage
 
     }
 
-    private void OnUserCLicked(object sender, EventArgs e) => Navigation.PushAsync(new UserPage());
-    private void OnArtistClicked(object sender, EventArgs e) => Navigation.PushAsync(new ArtistPage());
-    private void OnAnalystClicked(object sender, EventArgs e) => Navigation.PushAsync(new AnalystPage());
-    private void OnEndOfYearRecapClicked(object sender, EventArgs e) => Navigation.PushAsync(new EndOfYearRecap());
+    private void OnUserCLicked(object sender, EventArgs e) => Navigation.PushAsync(new UserPage(_configuration));
+    private void OnArtistClicked(object sender, EventArgs e) => Navigation.PushAsync(new ArtistPage(_configuration));
+    private void OnAnalystClicked(object sender, EventArgs e) => Navigation.PushAsync(new AnalystPage(_configuration));
+    private void OnEndOfYearRecapClicked(object sender, EventArgs e) => Navigation.PushAsync(new EndOfYearRecap(_configuration));
 }

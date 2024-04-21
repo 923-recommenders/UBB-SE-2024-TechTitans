@@ -3,13 +3,17 @@ using TechTitans.Views.Components.Artist;
 using TechTitans.Views.Components;
 using TechTitans.Models;
 using TechTitans.Services;
+using Microsoft.Extensions.Configuration;
 
 public partial class ArtistPage : ContentPage
 {
-    public ArtistSongDashboardController service = new();
-	public ArtistPage()
+    IConfiguration _configuration;
+    public ArtistSongDashboardController service;
+	public ArtistPage(IConfiguration configuration)
 	{
+        _configuration = configuration;
 		InitializeComponent();
+        service = new ArtistSongDashboardController(configuration);
         LoadSongs();
 	}
 
@@ -55,7 +59,7 @@ public partial class ArtistPage : ContentPage
         // open ArtistSongDashboard page with song details
         var songItem = (SongItem)sender;
         var songInfo = songItem.BindingContext as SongBasicInformation;
-        Navigation.PushAsync(new ArtistSongDashboard(songInfo));
+        Navigation.PushAsync(new ArtistSongDashboard(songInfo,_configuration));
     }
 
     // Sample method to get list of songs (replace this with your actual method)

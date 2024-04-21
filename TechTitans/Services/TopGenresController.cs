@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,14 @@ namespace TechTitans.Services
     /// </summary>
     public class TopGenresController
     {
-        private Repository<SongDataBaseModel> SongRepo = new Repository<SongDataBaseModel>();
-        private Repository<SongRecommendationDetails> SongRecommendationRepo= new Repository<SongRecommendationDetails>();
+        private Repository<SongDataBaseModel> SongRepo;
+        private Repository<SongRecommendationDetails> SongRecommendationRepo;
 
+        public TopGenresController(IConfiguration configuration)
+        {
+            SongRepo = new Repository<SongDataBaseModel>(configuration);
+            SongRecommendationRepo = new Repository<SongRecommendationDetails>(configuration);
+        }
         /// <summary>
         /// Retrieves the top 3 genres for a specified month and year,
         /// updating the provided labels with genre names, minutes listened, 

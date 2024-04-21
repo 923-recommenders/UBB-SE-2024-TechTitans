@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace TechTitans.Repositories
     /// </summary>
     internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
     {
+        public UserPlaybackBehaviourRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
 
         /// <summary>
         /// Retrieves a specific user's playback behavior record 
@@ -27,17 +31,23 @@ namespace TechTitans.Repositories
         /// the specified criteria, or null if no match is found.</returns>
         public UserPlaybackBehaviour GetUserPlaybackBehaviour(int userId, int? songId = null, DateTime? timestamp = null)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT * FROM UserPlaybackBehaviour WHERE user_id = @userId");
-            if (songId.HasValue)
+            UserPlaybackBehaviour playbackBehaviour;
+            using (var connection = _databaseHelper.GetConnection())
             {
-                queryBuilder.Append(" AND song_id = @songId");
+                connection.Open();
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT * FROM UserPlaybackBehaviour WHERE user_id = @userId");
+                if (songId.HasValue)
+                {
+                    queryBuilder.Append(" AND song_id = @songId");
+                }
+                if (timestamp.HasValue)
+                {
+                    queryBuilder.Append(" AND timestamp = @timestamp");
+                }
+                playbackBehaviour = connection.QueryFirstOrDefault<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp });
             }
-            if (timestamp.HasValue)
-            {
-                queryBuilder.Append(" AND timestamp = @timestamp");
-            }
-            return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
+            return playbackBehaviour;
         }
 
         /// <summary>
@@ -47,9 +57,15 @@ namespace TechTitans.Repositories
         /// <returns>A list of playback behavior records for the specified user.</returns>
         public List<UserPlaybackBehaviour> GetUserPlaybackBehaviour(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT user_id as User_Id, song_id as Song_Id, event_type as Event_Type, timestamp as Timestamp FROM UserPlaybackBehaviour WHERE user_id = @userId");
-            return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId }).ToList();
+            List<UserPlaybackBehaviour> playbackBehaviourList;
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT user_id as User_Id, song_id as Song_Id, event_type as Event_Type, timestamp as Timestamp FROM UserPlaybackBehaviour WHERE user_id = @userId");
+                playbackBehaviourList = connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId }).ToList();
+            }
+            return playbackBehaviourList;
         }
     }
 }

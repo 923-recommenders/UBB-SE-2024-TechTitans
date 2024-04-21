@@ -1,18 +1,20 @@
 using TechTitans.Models;
 using TechTitans.ViewModels;
 using TechTitans.Services;
+using Microsoft.Extensions.Configuration;
 namespace TechTitans.Views.Components.Artist;
 
 public partial class ArtistSongDashboard : ContentPage
 {
-	public ArtistSongDashboardController service = new ();
+	public ArtistSongDashboardController service;
 	// alt domain song type cu mai multe detalii
 	int songId;
 	ArtistSongDashboardViewModel viewModel;
-	public ArtistSongDashboard(SongBasicInformation song)
+	public ArtistSongDashboard(SongBasicInformation song, IConfiguration configuration)
 	{
 		songId = song.SongId;
-		InitializeComponent();
+        service = new ArtistSongDashboardController(configuration);
+        InitializeComponent();
 		populateViewModel(songId);
 		LoadPage();
 	}

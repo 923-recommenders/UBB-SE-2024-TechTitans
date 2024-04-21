@@ -2,24 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+
 
 
 namespace TechTitans.Database
 {
-    internal class ApplicationDatabaseContext
+    public class ApplicationDatabaseContext
     {
         private readonly string _connectionString;
 
-        public ApplicationDatabaseContext()
+        public ApplicationDatabaseContext(IConfiguration configuration)
         {
-            _connectionString = $"Data Source=tcp:{Environment.GetEnvironmentVariable("DB_IP")},1433;User ID={Environment.GetEnvironmentVariable("DB_USER")};" +
-                                $"Password={Environment.GetEnvironmentVariable("DB_PASS")};Initial Catalog={Environment.GetEnvironmentVariable("DB_SCHEMA")};TrustServerCertificate=True"
-;
+            var dbIp = configuration.GetSection("Database:IP").Value;
+            var dbUser = configuration.GetSection("Database:User").Value;
+            var dbPass = configuration.GetSection("Database:Password").Value;
+            var dbSchema = configuration.GetSection("Database:Schema").Value;
+
+            _connectionString = $"Data Source=tcp:{dbIp},1433;User ID={dbUser};" +
+                                $"Password={dbPass};Initial Catalog={dbSchema};TrustServerCertificate=True";
         }
 
         public SqlConnection GetConnection()
         {
             return new SqlConnection(_connectionString);
         }
+
+        public string getConnectionString() { return _connectionString; }
     }
 }

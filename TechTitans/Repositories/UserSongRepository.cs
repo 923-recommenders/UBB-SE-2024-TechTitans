@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TechTitans.Repositories;
 using TechTitans.Models;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace TechTitans.Repositories
 {
@@ -16,6 +17,9 @@ namespace TechTitans.Repositories
     /// </summary>
     internal class UserSongRepository : Repository<SongDataBaseModel>
     {
+        public UserSongRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
         /// <summary>
         /// Converts a song database model to a simplified song information model,
         /// including retrieving the artist's name.
@@ -24,12 +28,17 @@ namespace TechTitans.Repositories
         /// <returns>A simplified song information model with
         /// the artist's name included.</returns>
         public SongBasicInformation ConvertSongDataBaseModelToSongInfo(SongDataBaseModel songBasicDetails)
+        {
+            SongBasicInformation songInfo;
+            using (var connection = _databaseHelper.GetConnection())
             {
+                connection.Open();
                 var artistId = songBasicDetails.Artist_Id;
                 var queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
-                var artistName = _connection.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
-                return new SongBasicInformation
+                var artistName = connection.QueryFirstOrDefault<string>(queryBuilder.ToString(), new { artistId });
+
+                songInfo = new SongBasicInformation
                 {
                     SongId = songBasicDetails.Song_Id,
                     Name = songBasicDetails.Name,
@@ -42,6 +51,9 @@ namespace TechTitans.Repositories
                     Image = songBasicDetails.Image
                 };
             }
+            return songInfo;
         }
+
     }
+}
 

@@ -1,4 +1,6 @@
-﻿using TechTitans.Models;
+﻿using Microsoft.Extensions.Configuration;
+using TechTitans.Database;
+using TechTitans.Models;
 using TechTitans.Repositories;
 
 namespace TechTitans.Services
@@ -9,10 +11,20 @@ namespace TechTitans.Services
     /// </summary>
     public class ArtistSongDashboardController
     {
-        private Repository<SongDataBaseModel> SongRepository = new Repository<SongDataBaseModel>();
-        private Repository<SongFeatures> FeatureRepository = new Repository<SongFeatures>();
-        private Repository<SongRecommendationDetails> SongRecommendationRepository = new Repository<SongRecommendationDetails>();
-        private Repository<ArtistDetails> ArtistRepository = new Repository<ArtistDetails>();
+        ApplicationDatabaseContext applicationDatabaseContext;
+        private Repository<SongDataBaseModel> SongRepository;
+        private Repository<SongFeatures> FeatureRepository;
+        private Repository<SongRecommendationDetails> SongRecommendationRepository;
+        private Repository<ArtistDetails> ArtistRepository;
+
+        public ArtistSongDashboardController(IConfiguration configuration)
+        {
+            applicationDatabaseContext = new ApplicationDatabaseContext(configuration);
+            SongRepository = new Repository<SongDataBaseModel>(configuration);
+            FeatureRepository = new Repository<SongFeatures>(configuration);
+            SongRecommendationRepository = new Repository<SongRecommendationDetails>(configuration);
+            ArtistRepository = new Repository<ArtistDetails>(configuration);
+        }
 
         /// <summary>
         /// Transforms a song database model to a simplified song information model, 

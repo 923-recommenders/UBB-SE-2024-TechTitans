@@ -16,7 +16,13 @@ namespace TechTitans.Services
     /// </summary>
     internal class UserController
     {
-        private UserSongRepository SongRepository= new UserSongRepository();
+        private UserSongRepository SongRepository;
+
+        public UserController(IConfiguration configuration)
+        {
+            SongRepository = new UserSongRepository(configuration);
+        }
+
 
         /// <summary>
         /// Retrieves a list of the most recently played songs for the user.

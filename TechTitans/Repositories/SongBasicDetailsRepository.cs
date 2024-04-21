@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -16,29 +17,35 @@ namespace TechTitans.Repositories
     /// </summary>
     internal class SongBasicDetailsRepository : Repository<SongDataBaseModel>
     {
+
+        public SongBasicDetailsRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
         /// <summary>
         /// Converts song basic details to a simplified song information model.
         /// </summary>
         /// <param name="songBasicDetails">The song basic details to convert.</param>
         /// <returns>A simplified song information model.</returns>
         public SongBasicInformation SongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
-        {   
+        {
             var artistId = songBasicDetails.Artist_Id;
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
-            var artistName = _connection.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
-            return new SongBasicInformation
+            using (var connection = _databaseHelper.GetConnection())
             {
-                SongId = songBasicDetails.Song_Id,
-                Name = songBasicDetails.Name,
-                Genre = songBasicDetails.Genre,
-                Subgenre = songBasicDetails.Subgenre,
-                Artist = artistName,
-                Language = songBasicDetails.Language,
-                Country = songBasicDetails.Country,
-                Album = songBasicDetails.Album,
-                Image = songBasicDetails.Image
-            };
+                connection.Open();
+                var artistName = connection.QueryFirstOrDefault<string>("SELECT name FROM AuthorDetails WHERE artist_id = @artistId", new { artistId });
+                return new SongBasicInformation
+                {
+                    SongId = songBasicDetails.Song_Id,
+                    Name = songBasicDetails.Name,
+                    Genre = songBasicDetails.Genre,
+                    Subgenre = songBasicDetails.Subgenre,
+                    Artist = artistName,
+                    Language = songBasicDetails.Language,
+                    Country = songBasicDetails.Country,
+                    Album = songBasicDetails.Album,
+                    Image = songBasicDetails.Image
+                };
+            }
         }
 
         /// <summary>
@@ -48,9 +55,11 @@ namespace TechTitans.Repositories
         /// <returns>The song basic details.</returns>
         public SongDataBaseModel GetSongBasicDetails(int songId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id = @songId");
-            return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { songId }).FirstOrDefault();
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                return connection.QueryFirstOrDefault<SongDataBaseModel>("SELECT * FROM SongBasicDetails WHERE song_id = @songId", new { songId });
+            }
         }
 
         /// <summary>
@@ -58,11 +67,15 @@ namespace TechTitans.Repositories
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>A list of the top 5 most listened songs.</returns>
-        public List<SongDataBaseModel> GetTop5MostListenedSongs(int userId)
+         public List<SongDataBaseModel> GetTop5MostListenedSongs(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id IN (SELECT TOP 5 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).ToList();
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                return connection.Query<SongDataBaseModel>(@"SELECT * FROM SongBasicDetails WHERE song_id IN (
+                    SELECT TOP 5 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 
+                    GROUP BY song_id ORDER BY COUNT(song_id) DESC)", new { userId }).AsList();
+            }
         }
 
         /// <summary>
@@ -70,12 +83,19 @@ namespace TechTitans.Repositories
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>A tuple containing the most played song and its percentile.</returns>
-        public Tuple<SongDataBaseModel, decimal> GetMostPlayedSongPercentile(int userId)
+       public Tuple<SongDataBaseModel, decimal> GetMostPlayedSongPercentile(int userId)
         {
-            var mostPlayedSong = GetMostPlayedSong(userId);
-            var totalSongs = GetTotalSongsPlayedByUser(userId);
-            var mostListenedSongCount = GetMostListenedSongCount(userId);
-            return new Tuple<SongDataBaseModel, decimal>(mostPlayedSong, (decimal)mostListenedSongCount / totalSongs);
+            SongDataBaseModel mostPlayedSong;
+            decimal percentile;
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                mostPlayedSong = GetMostPlayedSong(userId);
+                int totalSongs = GetTotalSongsPlayedByUser(userId);
+                int mostListenedSongCount = GetMostListenedSongCount(userId);
+                percentile = (decimal)mostListenedSongCount / totalSongs;
+            }
+            return Tuple.Create(mostPlayedSong, percentile);
         }
 
         /// <summary>
@@ -85,9 +105,13 @@ namespace TechTitans.Repositories
         /// <returns>The most played song.</returns>
         private SongDataBaseModel GetMostPlayedSong(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id IN (SELECT TOP 1 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _connection.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                return connection.QueryFirstOrDefault<SongDataBaseModel>(@"SELECT * FROM SongBasicDetails WHERE song_id IN (
+                    SELECT TOP 1 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) 
+                    GROUP BY song_id ORDER BY COUNT(song_id) DESC)", new { userId });
+            }
         }
 
         /// <summary>
@@ -97,9 +121,12 @@ namespace TechTitans.Repositories
         /// <returns>The total number of songs played.</returns>
         private int GetTotalSongsPlayedByUser(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE());");
-            return _connection.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                return connection.QueryFirstOrDefault<int>(@"SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId 
+                AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE())", new { userId });
+            }
         }
 
         /// <summary>
@@ -109,9 +136,14 @@ namespace TechTitans.Repositories
         /// <returns>The count of the most listened song.</returns>
         private int GetMostListenedSongCount(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) AND song_id IN (SELECT TOP 1 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _connection.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                return connection.QueryFirstOrDefault<int>(@"SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId 
+                AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) AND song_id IN (
+                SELECT TOP 1 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 
+                AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id ORDER BY COUNT(song_id) DESC)", new { userId });
+            }
         }
 
         /// <summary>
@@ -137,9 +169,20 @@ namespace TechTitans.Repositories
         /// <returns>Information about the most played artist.</returns>
         private MostPlayedArtistInformation GetMostPlayedArtistInfo(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT TOP 1 sd.artist_id as Artist_Id, COUNT(*) AS Start_Listen_Events FROM UserPlaybackBehaviour ub JOIN SongBasicDetails sd ON ub.song_id = sd.song_id WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY sd.artist_id ORDER BY COUNT(*) DESC;");
-            return _connection.Query<MostPlayedArtistInformation>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            MostPlayedArtistInformation mostPlayedArtistInfo;
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append(@"SELECT TOP 1 sd.artist_id as Artist_Id, COUNT(*) AS Start_Listen_Events 
+                                      FROM UserPlaybackBehaviour ub 
+                                      JOIN SongBasicDetails sd ON ub.song_id = sd.song_id 
+                                      WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) 
+                                      GROUP BY sd.artist_id 
+                                      ORDER BY COUNT(*) DESC");
+                mostPlayedArtistInfo = connection.QueryFirstOrDefault<MostPlayedArtistInformation>(queryBuilder.ToString(), new { userId });
+            }
+            return mostPlayedArtistInfo;
         }
 
         /// <summary>
@@ -150,9 +193,11 @@ namespace TechTitans.Repositories
         /// <returns>The name of the most played artist.</returns>
         private string GetMostPlayedArtist(int userId, MostPlayedArtistInformation mostPlayedArtistInfo)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artist_Id");
-            return _connection.Query<string>(queryBuilder.ToString(), new { mostPlayedArtistInfo.Artist_Id }).FirstOrDefault();
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                return connection.QueryFirstOrDefault<string>("SELECT name FROM AuthorDetails WHERE artist_id = @artist_Id", new { mostPlayedArtistInfo.Artist_Id });
+            }
         }
 
         /// <summary>
@@ -162,9 +207,17 @@ namespace TechTitans.Repositories
         /// <returns>The total number of songs.</returns>
         private int GetTotalNumberOfSongs(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE());");
-            return _connection.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            int totalSongs;
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append(@"SELECT COUNT(*) 
+                                      FROM UserPlaybackBehaviour 
+                                      WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE())");
+                totalSongs = connection.QueryFirstOrDefault<int>(queryBuilder.ToString(), new { userId });
+            }
+            return totalSongs;
         }
 
         /// <summary>
@@ -174,9 +227,20 @@ namespace TechTitans.Repositories
         /// <returns>A list of the top 5 genres.</returns>
         public List<string> GetTop5Genres(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT TOP 5 sb.genre FROM UserPlaybackBehaviour ub JOIN SongBasicDetails sb ON ub.song_id = sb.song_id WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(ub.timestamp) = YEAR(GETDATE()) GROUP BY sb.genre ORDER BY COUNT(*) DESC;");
-            return _connection.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
+            List<string> topGenres;
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append(@"SELECT TOP 5 sb.genre 
+                                      FROM UserPlaybackBehaviour ub 
+                                      JOIN SongBasicDetails sb ON ub.song_id = sb.song_id 
+                                      WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(ub.timestamp) = YEAR(GETDATE()) 
+                                      GROUP BY sb.genre 
+                                      ORDER BY COUNT(*) DESC");
+                topGenres = connection.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
+            }
+            return topGenres;
         }
 
         /// <summary>
@@ -186,9 +250,18 @@ namespace TechTitans.Repositories
         /// <returns>A list of strings representing the new genres discovered by the user in the current year.</returns>
         public List<string> GetAllNewGenresDiscovered(int userId)
         {
-            var queryBuilder = new StringBuilder();
-            queryBuilder.Append("SELECT DISTINCT genre FROM SongBasicDetails WHERE song_id IN (SELECT song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id) AND genre NOT IN (SELECT genre FROM SongBasicDetails WHERE song_id IN (SELECT song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) - 1 GROUP BY song_id));");
-            return _connection.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
+            List<string> newGenres;
+            using (var connection = _databaseHelper.GetConnection())
+            {
+                connection.Open();
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append(@"SELECT DISTINCT genre 
+                                      FROM SongBasicDetails 
+                                      WHERE song_id IN (SELECT song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id) 
+                                      AND genre NOT IN (SELECT genre FROM SongBasicDetails WHERE song_id IN (SELECT song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) - 1 GROUP BY song_id))");
+                newGenres = connection.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
+            }
+            return newGenres;
         }
     }
 }

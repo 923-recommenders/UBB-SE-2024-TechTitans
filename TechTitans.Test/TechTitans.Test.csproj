@@ -41,12 +41,9 @@
     <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.7" />
     <PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.7" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
     <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
     <GlobalPackageReference Include="Microsoft.NETCore.App" Version="8.0.200" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\TechTitans\TechTitans.csproj" />
   </ItemGroup>
 
   <ItemGroup>

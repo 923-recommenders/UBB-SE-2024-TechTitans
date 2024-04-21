@@ -4,15 +4,17 @@ using TechTitans.Views.Components;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.Services;
+using Microsoft.Extensions.Configuration;
 
     public partial class UserPage : ContentPage
     {
-        UserController userService=new UserController();
-        public UserPage()
+        UserController userService;
+        public UserPage(IConfiguration configuration)
         {
 
             InitializeComponent();
-            LoadSongs();
+        userService = new UserController(configuration);
+        LoadSongs();
             LoadSongRecommandation();
             LoadAdvertisedSongs();
         }

@@ -1,6 +1,7 @@
 using TechTitans.Models;
 using TechTitans.Services;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 
 namespace TechTitans.Views;
@@ -11,10 +12,10 @@ public partial class AnalystPage : ContentPage
 	private TopGenresController topGenresController;
 	private Dictionary<String, int> genreCount = new Dictionary<String, int>();
 	private Dictionary<String, int> subgenreCount = new Dictionary<String, int>();
-	public AnalystPage()
+	public AnalystPage(IConfiguration configuration)
 	{
 		InitializeComponent();
-		topGenresController = new TopGenresController();
+		topGenresController = new TopGenresController(configuration);
 		
 	}
 

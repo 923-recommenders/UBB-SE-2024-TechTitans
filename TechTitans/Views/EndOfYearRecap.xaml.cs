@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using TechTitans.Enums;
 using TechTitans.Models;
 using TechTitans.Services;
@@ -11,7 +12,7 @@ public partial class EndOfYearRecap : ContentPage
     private int _pageIndex = 0;
     private List<ProgressBar> _progressBar;
     private EndOfYearRecapViewModel _viewModel;
-	public EndOfYearRecap()
+	public EndOfYearRecap(IConfiguration configuration)
 	{
 		var mockSongs = new List<SongBasicInformation>()
 		{
@@ -93,7 +94,7 @@ public partial class EndOfYearRecap : ContentPage
             ListenerPersonality = ListenerPersonality.Explorer
         };
 
-        viewModel = new RecapController().GenerateEndOfYearRecap(1001);
+        viewModel = new RecapController(configuration).GenerateEndOfYearRecap(1001);
 
         BindingContext = viewModel;
         _viewModel = viewModel;

@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Dapper;
 using static Dapper.SqlMapper;
 using Microsoft.Extensions.Configuration;
+using TechTitans.Database;
+using System.Runtime.CompilerServices;
 
 namespace TechTitans.Repositories
 {
@@ -19,15 +21,17 @@ namespace TechTitans.Repositories
     public class Repository<T> : IRepository<T> where T : class
     {
         public IDbConnection _connection;
+        public readonly ApplicationDatabaseContext _databaseHelper;
         private readonly IConfiguration _configuration = MauiProgram.Configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{T}"/> class.
         /// </summary>
-        public Repository()
+        public Repository(IConfiguration configuration)
         {
-
-            _connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+            //_databaseHelper = databaseHelper;
+            _databaseHelper = new ApplicationDatabaseContext(configuration);
+            _connection = new Microsoft.Data.SqlClient.SqlConnection(_databaseHelper.getConnectionString());
         }
 
 
@@ -41,13 +45,28 @@ namespace TechTitans.Repositories
             int rowsAffectedByQueryExecution = 0;
             try
             {
-                string tableName = GetTableName();
-                string columns = GetColumns(excludeKey: true);
-                string properties = GetPropertyNames(excludeKey: true);
-                string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
+                using (var connection = _databaseHelper.GetConnection())
+                {
+                    connection.Open();
+                    string tableName = GetTableName();
+                    string columns = GetColumns(excludeKey: true);
+                    string properties = GetPropertyNames(excludeKey: true);
 
-                rowsAffectedByQueryExecution = _connection.Execute(query, entity);
-            }
+                    string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        // Set parameters for each property
+                        foreach (var property in GetProperties(excludeKey: true))
+                        {
+                            var parameter = new SqlParameter($"@{property.Name}", property.GetValue(entity) ?? DBNull.Value);
+                            command.Parameters.Add(parameter);
+                        }
+
+                        rowsAffectedByQueryExecution = command.ExecuteNonQuery();
+                    }
+                }
+             }
             catch (Exception ex) { }
 
             return rowsAffectedByQueryExecution > 0 ? true : false;
@@ -63,12 +82,21 @@ namespace TechTitans.Repositories
             int rowsAffectedByQueryExecution = 0;
             try
             {
-                string tableName = GetTableName();
-                string keyColumn = GetKeyColumnName();
-                string keyProperty = GetKeyPropertyName();
-                string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
+                using (var connection = _databaseHelper.GetConnection())
+                {
+                    connection.Open();
+                    string tableName = GetTableName();
+                    string keyColumn = GetKeyColumnName();
+                    string keyProperty = GetKeyPropertyName();
 
-                rowsAffectedByQueryExecution = _connection.Execute(query, entity);
+                    string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue($"@{keyProperty}", entity.GetType().GetProperty(keyProperty).GetValue(entity));
+                        rowsAffectedByQueryExecution = command.ExecuteNonQuery();
+                    }
+                }
             }
             catch (Exception ex) { }
 
@@ -84,10 +112,43 @@ namespace TechTitans.Repositories
             IEnumerable<T> result = null;
             try
             {
-                string tableName = GetTableName();
-                string query = $"SELECT * FROM {tableName}";
+                using (var connection = _databaseHelper.GetConnection())
+                {
+                    //Console.WriteLine($"Connection String: {connection.ConnectionString}");
+                    // Log the state of the connection
+                    //Console.WriteLine($"Connection State: {connection.State}");
+                    // Log the database name
+                    //Console.WriteLine($"Database: {connection.Database}");
+                    connection.Open();
+                    string tableName = GetTableName();
+                    string query = $"SELECT * FROM {tableName}";
 
-                result = _connection.Query<T>(query);
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                var entities = new List<T>();
+                                while (reader.Read())
+                                {
+                                    var entity = Activator.CreateInstance<T>();
+                                    foreach (var property in GetProperties())
+                                    {
+                                        var columnName = property.GetCustomAttribute<ColumnAttribute>()?.Name ?? property.Name;
+                                        var value = reader[columnName];
+                                        if (value != DBNull.Value)
+                                        {
+                                            property.SetValue(entity, value);
+                                        }
+                                    }
+                                    entities.Add(entity);
+                                }
+                                result = entities;
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex) { }
 
@@ -105,11 +166,39 @@ namespace TechTitans.Repositories
             IEnumerable<T> resultOfQueryExecution = null;
             try
             {
-                string tableName = GetTableName();
-                string keyColumn = GetKeyColumnName();
-                string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{Id}'";
+                using (var connection = _databaseHelper.GetConnection())
+                {
+                    connection.Open();
+                    string tableName = GetTableName();
+                    string keyColumn = GetKeyColumnName();
+                    string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{Id}'";
 
-                resultOfQueryExecution = _connection.Query<T>(query);
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                var entities = new List<T>();
+                                while (reader.Read())
+                                {
+                                    var entity = Activator.CreateInstance<T>();
+                                    foreach (var property in GetProperties())
+                                    {
+                                        var columnName = property.GetCustomAttribute<ColumnAttribute>()?.Name ?? property.Name;
+                                        var value = reader[columnName];
+                                        if (value != DBNull.Value)
+                                        {
+                                            property.SetValue(entity, value);
+                                        }
+                                    }
+                                    entities.Add(entity);
+                                }
+                                resultOfQueryExecution = entities;
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex) { }
 
@@ -126,28 +215,43 @@ namespace TechTitans.Repositories
             int rowsAffectedByQueryExecution = 0;
             try
             {
-                string tableName = GetTableName();
-                string keyColumn = GetKeyColumnName();
-                string keyProperty = GetKeyPropertyName();
-
-                StringBuilder query = new StringBuilder();
-                query.Append($"UPDATE {tableName} SET ");
-
-                foreach (var property in GetProperties(true))
+                using (var connection = _databaseHelper.GetConnection())
                 {
-                    var columnAttribute = property.GetCustomAttribute<ColumnAttribute>();
+                    connection.Open();
+                    string tableName = GetTableName();
+                    string keyColumn = GetKeyColumnName();
+                    string keyProperty = GetKeyPropertyName();
 
-                    string propertyName = property.Name;
-                    string columnName = columnAttribute.Name;
+                    var properties = GetProperties(excludeKey: true);
 
-                    query.Append($"{columnName} = @{propertyName},");
+                    var updateColumns = properties.Select(property =>
+                    {
+                        var columnAttribute = property.GetCustomAttribute<ColumnAttribute>();
+                        var columnName = columnAttribute != null ? columnAttribute.Name : property.Name;
+                        return $"{columnName} = @{property.Name}";
+                    });
+
+                    string updateColumnsString = string.Join(", ", updateColumns);
+
+                    string query = $"UPDATE {tableName} SET {updateColumnsString} WHERE {keyColumn} = @{keyProperty}";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        // Set parameters for each property
+                        foreach (var property in properties)
+                        {
+                            var parameter = new SqlParameter($"@{property.Name}", property.GetValue(entity) ?? DBNull.Value);
+                            command.Parameters.Add(parameter);
+                        }
+
+                        // Set parameter for the key property
+                        var keyPropertyValue = entity.GetType().GetProperty(keyProperty).GetValue(entity) ?? DBNull.Value;
+                        var keyParameter = new SqlParameter($"@{keyProperty}", keyPropertyValue);
+                        command.Parameters.Add(keyParameter);
+
+                        rowsAffectedByQueryExecution = command.ExecuteNonQuery();
+                    }
                 }
-
-                query.Remove(query.Length - 1, 1);
-
-                query.Append($" WHERE {keyColumn} = @{keyProperty}");
-
-                rowsAffectedByQueryExecution = _connection.Execute(query.ToString(), entity);
             }
             catch (Exception ex) { }
 
