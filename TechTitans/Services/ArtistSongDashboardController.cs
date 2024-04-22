@@ -1,6 +1,4 @@
-﻿using System.Data;
-using Microsoft.Extensions.Configuration;
-using TechTitans.Models;
+﻿using TechTitans.Models;
 using TechTitans.Repositories;
 
 namespace TechTitans.Services
@@ -11,13 +9,10 @@ namespace TechTitans.Services
     /// </summary>
     public class ArtistSongDashboardController
     {
-        private static readonly IConfiguration _configuration = MauiProgram.Configuration;
-        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
-        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        private Repository<SongDataBaseModel> SongRepository = new Repository<SongDataBaseModel>(databaseOperations);
-        private Repository<SongFeatures> FeatureRepository = new Repository<SongFeatures>(databaseOperations);
-        private Repository<SongRecommendationDetails> SongRecommendationRepository = new Repository<SongRecommendationDetails>(databaseOperations);
-        private Repository<ArtistDetails> ArtistRepository = new Repository<ArtistDetails>(databaseOperations);
+        private IRepository<SongDataBaseModel> SongRepository;
+        private IRepository<SongFeatures> FeatureRepository;
+        private IRepository<SongRecommendationDetails> SongRecommendationRepository;
+        private IRepository<ArtistDetails> ArtistRepository;
 
         /// <summary>
         /// Transforms a song database model to a simplified song information model, 
@@ -26,6 +21,16 @@ namespace TechTitans.Services
         /// <param name="song">The song database model to transform.</param>
         /// <returns>A simplified song information model with the artist's name 
         /// and song features included.</returns>
+        /// 
+
+        public ArtistSongDashboardController(IRepository<SongDataBaseModel> SongRepository, IRepository<SongFeatures> FeatureRepository, IRepository<SongRecommendationDetails> SongRecommendationRepository, IRepository<ArtistDetails> ArtistRepository)
+        {
+            this.SongRepository = SongRepository;
+            this.FeatureRepository = FeatureRepository;
+            this.SongRecommendationRepository = SongRecommendationRepository;
+            this.ArtistRepository = ArtistRepository;
+        }
+
         public SongBasicInformation TransformSongDataBaseModelToSongInfo(SongDataBaseModel song)
         {
             SongBasicInformation songInfo = new SongBasicInformation();
@@ -129,7 +134,7 @@ namespace TechTitans.Services
             }
 
             return new SongRecommendationDetails();
-            
+
         }
 
         /// <summary>
@@ -203,7 +208,9 @@ namespace TechTitans.Services
         public List<SongBasicInformation> GetSongsByMostPublishedArtistForMainPage()
         {
             List<SongBasicInformation> songsOfMostPublishedArtist = new List<SongBasicInformation>();
-            int artistId = GetMostPublishedArtist().Artist_Id;
+            var mostPublishedArtist = GetMostPublishedArtist();
+            int artistId = mostPublishedArtist != null ? mostPublishedArtist.Artist_Id : -1;
+
             foreach (SongDataBaseModel song in SongRepository.GetAll())
             {
                 if (song.Artist_Id == artistId)
@@ -213,6 +220,6 @@ namespace TechTitans.Services
                 }
             }
             return songsOfMostPublishedArtist;
-        }   
+        }
     }
 }

@@ -3,10 +3,16 @@ using TechTitans.Views.Components.Artist;
 using TechTitans.Views.Components;
 using TechTitans.Models;
 using TechTitans.Services;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using TechTitans.Repositories;
 
 public partial class ArtistPage : ContentPage
 {
-    public ArtistSongDashboardController service = new();
+    private static readonly IConfiguration _configuration = MauiProgram.Configuration;
+    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+    private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+    public ArtistSongDashboardController service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
 	public ArtistPage()
 	{
 		InitializeComponent();

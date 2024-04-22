@@ -1,13 +1,20 @@
 using TechTitans.Models;
 using TechTitans.ViewModels;
 using TechTitans.Services;
+using TechTitans.Repositories;
+using System.Data;
+using Microsoft.Extensions.Configuration;
 namespace TechTitans.Views.Components.Artist;
+
 
 public partial class ArtistSongDashboard : ContentPage
 {
-	public ArtistSongDashboardController service = new ();
-	// alt domain song type cu mai multe detalii
-	int songId;
+    private static readonly IConfiguration _configuration = MauiProgram.Configuration;
+    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+    private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+    public ArtistSongDashboardController service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
+    // alt domain song type cu mai multe detalii
+    int songId;
 	ArtistSongDashboardViewModel viewModel;
 	public ArtistSongDashboard(SongBasicInformation song)
 	{
