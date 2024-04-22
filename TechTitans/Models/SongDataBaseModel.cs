@@ -10,10 +10,10 @@ namespace TechTitans.Models
 {
     /// <summary>
     /// Represents basic details of a song stored in the database,
-    /// including its ID, name, genre, subgenre, artist ID, language, country, 
+    /// including its ID, name, genre, subgenre, artist ID, language, country,
     /// album, and image.
     /// </summary>
-    [Table ("SongBasicDetails")]
+    [Table("SongBasicDetails")]
     public class SongDataBaseModel
     {
         [Key]
