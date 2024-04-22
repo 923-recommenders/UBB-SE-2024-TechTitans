@@ -46,7 +46,7 @@ public partial class ArtistPage : ContentPage
             // Add the SongItem to the grid
             SongsGrid.Children.Add(songItem);
             columnIndex++;
-            if (columnIndex == 2) // bun cod
+            if (columnIndex == 2)
             {
                 columnIndex = 0;
                 rowIndex++;
