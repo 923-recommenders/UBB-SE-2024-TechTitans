@@ -1,4 +1,6 @@
-﻿using TechTitans.Models;
+﻿using System.Data;
+using Microsoft.Extensions.Configuration;
+using TechTitans.Models;
 using TechTitans.Repositories;
 
 namespace TechTitans.Services
@@ -9,10 +11,13 @@ namespace TechTitans.Services
     /// </summary>
     public class ArtistSongDashboardController
     {
-        private Repository<SongDataBaseModel> SongRepository = new Repository<SongDataBaseModel>();
-        private Repository<SongFeatures> FeatureRepository = new Repository<SongFeatures>();
-        private Repository<SongRecommendationDetails> SongRecommendationRepository = new Repository<SongRecommendationDetails>();
-        private Repository<ArtistDetails> ArtistRepository = new Repository<ArtistDetails>();
+        private static readonly IConfiguration _configuration = MauiProgram.Configuration;
+        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+        private Repository<SongDataBaseModel> SongRepository = new Repository<SongDataBaseModel>(databaseOperations);
+        private Repository<SongFeatures> FeatureRepository = new Repository<SongFeatures>(databaseOperations);
+        private Repository<SongRecommendationDetails> SongRecommendationRepository = new Repository<SongRecommendationDetails>(databaseOperations);
+        private Repository<ArtistDetails> ArtistRepository = new Repository<ArtistDetails>(databaseOperations);
 
         /// <summary>
         /// Transforms a song database model to a simplified song information model, 

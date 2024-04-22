@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.Enums;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace TechTitans.Services
 {
@@ -15,8 +17,11 @@ namespace TechTitans.Services
     /// </summary>
     internal class FullDetailsOnSongController
     {
-        private readonly Repository<UserPlaybackBehaviour> UserPlaybackBehaviourRepo = new();
-        private readonly Repository<AdDistributionData> AdDistributionDataRepo = new();
+        private static readonly IConfiguration _configuration = MauiProgram.Configuration;
+        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+        private readonly Repository<UserPlaybackBehaviour> UserPlaybackBehaviourRepo = new Repository<UserPlaybackBehaviour>(databaseOperations);
+        private readonly Repository<AdDistributionData> AdDistributionDataRepo = new Repository<AdDistributionData>(databaseOperations);
 
         /// <summary>
         /// Retrieves full details on a song, including total minutes listened,

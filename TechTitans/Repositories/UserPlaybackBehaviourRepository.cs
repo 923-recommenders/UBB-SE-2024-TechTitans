@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,9 @@ namespace TechTitans.Repositories
     /// </summary>
     internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
     {
+        public UserPlaybackBehaviourRepository(IDatabaseOperations databaseOperations) : base(databaseOperations)
+        {
+        }
 
         /// <summary>
         /// Retrieves a specific user's playback behavior record 
@@ -37,7 +41,7 @@ namespace TechTitans.Repositories
             {
                 queryBuilder.Append(" AND timestamp = @timestamp");
             }
-            return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
+            return _databaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT user_id as User_Id, song_id as Song_Id, event_type as Event_Type, timestamp as Timestamp FROM UserPlaybackBehaviour WHERE user_id = @userId");
-            return _connection.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId }).ToList();
+            return _databaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId }).ToList();
         }
     }
 }
