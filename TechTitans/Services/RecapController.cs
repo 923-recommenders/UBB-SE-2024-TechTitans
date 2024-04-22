@@ -36,7 +36,7 @@ namespace TechTitans.Services
             List<SongBasicInformation> top5SongsInformation = new List<SongBasicInformation>();
             foreach (var song in top5Songs)
             {
-                top5SongsInformation.Add(songBasicDetailsRepository.SongBasicDetailsToSongBasicInfo(song));
+                top5SongsInformation.Add(songBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(song));
             }
             return top5SongsInformation;
         }
@@ -50,7 +50,7 @@ namespace TechTitans.Services
         public Tuple<SongBasicInformation, decimal> GetTheMostPlayedSongPercentile(int userId)
         {
             var mostPlayedSong = songBasicDetailsRepository.GetMostPlayedSongPercentile(userId);
-            return new Tuple<SongBasicInformation, decimal>(songBasicDetailsRepository.SongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
+            return new Tuple<SongBasicInformation, decimal>(songBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace TechTitans.Repositories
     /// including operations for retrieving song information, top listened songs, 
     /// and user playback behavior analysis.
     /// </summary>
-    internal class SongBasicDetailsRepository : Repository<SongDataBaseModel>
+    public class SongBasicDetailsRepository : Repository<SongDataBaseModel>
     {
         public SongBasicDetailsRepository(IDatabaseOperations databaseOperations) : base(databaseOperations)
         {
@@ -26,7 +26,7 @@ namespace TechTitans.Repositories
         /// </summary>
         /// <param name="songBasicDetails">The song basic details to convert.</param>
         /// <returns>A simplified song information model.</returns>
-        public SongBasicInformation SongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
+        public SongBasicInformation TransformSongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
         {   
             var artistId = songBasicDetails.Artist_Id;
             var queryBuilder = new StringBuilder();
