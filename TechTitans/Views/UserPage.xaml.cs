@@ -7,7 +7,7 @@ using TechTitans.Services;
 
     public partial class UserPage : ContentPage
     {
-        UserController userService=new UserController();
+        UserController userService=new UserController(new UserSongRepository());
         public UserPage()
         {
 

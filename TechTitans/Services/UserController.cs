@@ -14,10 +14,18 @@ namespace TechTitans.Services
     /// Provides functionality for managing user-related data, 
     /// including retrieving recently played songs.
     /// </summary>
-    internal class UserController
+    public class UserController
     {
-        private UserSongRepository SongRepository= new UserSongRepository();
+        private readonly IUserSongRepository _songRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
+        /// <param name="songRepository">The song repository.</param>
+        public UserController(IUserSongRepository songRepository)
+        {
+            _songRepository = songRepository;
+        }
         /// <summary>
         /// Retrieves a list of the most recently played songs for the user.
         /// </summary>
@@ -25,8 +33,8 @@ namespace TechTitans.Services
         /// representing the most recently played songs.</returns>
         public List<SongBasicInformation> GetRecentlyPlayed() {
             List<SongBasicInformation> groupOfSongsInformation=new List<SongBasicInformation>();
-            foreach (SongDataBaseModel song in SongRepository.GetAll()){ 
-                SongBasicInformation song_info = SongRepository.ConvertSongDataBaseModelToSongInfo(song);
+            foreach (SongDataBaseModel song in _songRepository.GetAll()){ 
+                SongBasicInformation song_info = _songRepository.ConvertSongDataBaseModelToSongInfo(song);
                 groupOfSongsInformation.Add(song_info);
             }
             return groupOfSongsInformation.Take(6).ToList();

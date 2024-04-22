@@ -14,7 +14,7 @@ namespace TechTitans.Repositories
     /// including operations for converting song database models
     /// to simplified song information.
     /// </summary>
-    internal class UserSongRepository : Repository<SongDataBaseModel>
+    internal class UserSongRepository : Repository<SongDataBaseModel>, IUserSongRepository
     {
         /// <summary>
         /// Converts a song database model to a simplified song information model,
