@@ -9,10 +9,10 @@ using TechTitans.Repositories;
 
 public partial class ArtistPage : ContentPage
 {
-    private static readonly IConfiguration _configuration = MauiProgram.Configuration;
-    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+    private static readonly IConfiguration Configuration = MauiProgram.Configuration;
+    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
     private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-    public ArtistSongDashboardController service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
+    public ArtistSongDashboardController Service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
 	public ArtistPage()
 	{
 		InitializeComponent();
@@ -21,11 +21,10 @@ public partial class ArtistPage : ContentPage
 
     private void LoadSongs()
     {
-        var songs = service.GetSongsByMostPublishedArtistForMainPage(); // Get your list of songs from somewhere (e.g., database, API, local storage)
+        var songs = Service.GetSongsByMostPublishedArtistForMainPage(); // Get your list of songs from somewhere (e.g., database, API, local storage)
 
         // initial row
         SongsGrid.RowDefinitions.Add(new RowDefinition());
-
 
         // Loop through each song and dynamically create SongItem controls
         int rowIndex = 0;
@@ -135,5 +134,4 @@ public partial class ArtistPage : ContentPage
             },
         };
     }
-
 }

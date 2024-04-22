@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 namespace TechTitans.Models
 {
     /// <summary>
-    /// Represents the data distribution of ads across different songs, 
+    /// Represents the data distribution of ads across different songs,
     /// genres, languages, and time periods.
     /// </summary>
-
     [Table("AdDistributionData")]
     public class AdDistributionData
     {

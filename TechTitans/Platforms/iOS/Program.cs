@@ -5,7 +5,7 @@ namespace TechTitans
 {
     public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             UIApplication.Main(args, null, typeof(AppDelegate));
         }
