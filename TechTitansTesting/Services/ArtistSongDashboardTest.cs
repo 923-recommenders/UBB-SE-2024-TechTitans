@@ -385,7 +385,7 @@ namespace TechTitansTesting.Services
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
 
-            var controller = new ArtistSongDashboardController(
+            var controller = new ArtistSongDashboardController( 
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,

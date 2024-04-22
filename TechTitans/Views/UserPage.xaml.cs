@@ -9,13 +9,12 @@ using System.Data;
 
     public partial class UserPage : ContentPage
     {
-    private static readonly IConfiguration _configuration = MauiProgram.Configuration;
-    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+    private static readonly IConfiguration Configuration = MauiProgram.Configuration;
+    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
     private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-    UserController userService=new UserController(new UserSongRepository(databaseOperations));
+    public UserController UserService = new UserController(new UserSongRepository(databaseOperations));
         public UserPage()
         {
-
             InitializeComponent();
             LoadSongs();
             LoadSongRecommandation();
@@ -23,14 +22,14 @@ using System.Data;
         }
     private void LoadSongs()
     {
-        var recentlyPlayedSongs = userService.GetRecentlyPlayed(); 
+        var recentlyPlayedSongs = UserService.GetRecentlyPlayed();
 
         int rowIndex = 0;
         int columnIndex = 0;
         SongsGrid.RowDefinitions.Add(new RowDefinition());
         foreach (var song in recentlyPlayedSongs)
         {
-            var songGuiItem = new SongItem(); 
+            var songGuiItem = new SongItem();
             songGuiItem.BindingContext = song;
             songGuiItem.Margin = new Thickness(0, 5, 0, 5);
 
@@ -40,7 +39,6 @@ using System.Data;
 
             Grid.SetRow(songGuiItem, rowIndex);
             Grid.SetColumn(songGuiItem, columnIndex);
-            
             SongsGrid.Children.Add(songGuiItem);
             columnIndex++;
             if (columnIndex == 2)
@@ -53,15 +51,15 @@ using System.Data;
     }
         private void LoadAdvertisedSongs()
         {
-            var songs = GetMockedSongs(); 
+            var songs = GetMockedSongs();
             int rowIndex = 0;
             int columnIndex = 0;
             SongsAdvertisedGrid.RowDefinitions.Add(new RowDefinition());
             foreach (var song in songs)
             {
-                var songItem = new SongItem(); 
+                var songItem = new SongItem();
                 songItem.BindingContext = song;
-                songItem.Margin = new Thickness(0, 5, 0, 5); 
+                songItem.Margin = new Thickness(0, 5, 0, 5);
 
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += SongItem_Tapped;
@@ -69,7 +67,6 @@ using System.Data;
 
                 Grid.SetRow(songItem, rowIndex);
                 Grid.SetColumn(songItem, columnIndex);
-              
                 SongsAdvertisedGrid.Children.Add(songItem);
                 columnIndex++;
                 if (columnIndex == 2)
@@ -82,14 +79,14 @@ using System.Data;
         }
     private void LoadSongRecommandation()
     {
-        var songs = GetMockedSongs(); 
+        var songs = GetMockedSongs();
         int rowIndex = 0;
         int columnIndex = 0;
         SongsRecommandationGrid.RowDefinitions.Add(new RowDefinition());
         foreach (var song in songs)
         {
-            var songItem = new SongItem(); 
-            songItem.BindingContext = song; 
+            var songItem = new SongItem();
+            songItem.BindingContext = song;
             songItem.Margin = new Thickness(0, 5, 0, 5);
 
             var tapGestureRecognizer = new TapGestureRecognizer();
@@ -98,7 +95,6 @@ using System.Data;
 
             Grid.SetRow(songItem, rowIndex);
             Grid.SetColumn(songItem, columnIndex);
-           
             SongsRecommandationGrid.Children.Add(songItem);
             columnIndex++;
             if (columnIndex == 2)
@@ -109,8 +105,6 @@ using System.Data;
             }
         }
     }
-
-
 
     private void SongItem_Tapped(object sender, System.EventArgs e)
     {
@@ -127,15 +121,12 @@ using System.Data;
 
         return new List<SongBasicInformation>
             {
-                
-                new SongBasicInformation { SongId = 0, Name = "Song 1", Artist = "Artist 1", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album", Features=features },
-                new SongBasicInformation { SongId = 1, Name = "Song 2", Artist = "Artist 2", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album", Features=features },
-                new SongBasicInformation { SongId = 2, Name = "Song 3", Artist = "Artist 3", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album", Features=features },
-                new SongBasicInformation {SongId = 3, Name = "Song 4", Artist = "Artist 4", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features},
-                new SongBasicInformation { SongId = 4, Name = "Song 5", Artist = "Artist 5", Image = "song_img_default.png", Genre="genre", Subgenre="subgenre", Country="country", Language="language", Album="album", Features=features },
-                new SongBasicInformation {SongId = 5, Name = "Song 6", Artist = "Artist 6", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features},
+                new SongBasicInformation { SongId = 0, Name = "Song 1", Artist = "Artist 1", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features },
+                new SongBasicInformation { SongId = 1, Name = "Song 2", Artist = "Artist 2", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features },
+                new SongBasicInformation { SongId = 2, Name = "Song 3", Artist = "Artist 3", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features },
+                new SongBasicInformation { SongId = 3, Name = "Song 4", Artist = "Artist 4", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features },
+                new SongBasicInformation { SongId = 4, Name = "Song 5", Artist = "Artist 5", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features },
+                new SongBasicInformation { SongId = 5, Name = "Song 6", Artist = "Artist 6", Image = "song_img_default.png", Genre = "genre", Subgenre = "subgenre", Country = "country", Language = "language", Album = "album", Features = features },
             };
     }
-
 }
-

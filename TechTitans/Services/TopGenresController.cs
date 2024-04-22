@@ -14,22 +14,24 @@ namespace TechTitans.Services
     /// </summary>
     public class TopGenresController
     {
-        private static readonly IConfiguration _configuration = MauiProgram.Configuration;
-        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+        private static readonly IConfiguration Configuration = MauiProgram.Configuration;
+        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
         private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        private Repository<SongDataBaseModel> SongRepo = new Repository<SongDataBaseModel>(databaseOperations);
-        private Repository<SongRecommendationDetails> SongRecommendationRepo= new Repository<SongRecommendationDetails>(databaseOperations);
+        private Repository<SongDataBaseModel> songRepo = new Repository<SongDataBaseModel>(databaseOperations);
+        private Repository<SongRecommendationDetails> songRecommendationRepo = new Repository<SongRecommendationDetails>(databaseOperations);
 
         /// <summary>
         /// Retrieves the top 3 genres for a specified month and year,
-        /// updating the provided labels with genre names, minutes listened, 
+        /// updating the provided labels with genre names, minutes listened,
         /// and percentages.
         /// </summary>
-        public void GetTop3Genres(int month,int year,Label genre1,Label minutes1,Label percentage1 , Label genre2, Label minutes2,Label percentage2, Label genre3 ,Label minutes3, Label percentage3) {
+        public void GetTop3Genres(int month, int year, Label genre1, Label minutes1, Label percentage1, Label genre2, Label minutes2, Label percentage2, Label genre3, Label minutes3, Label percentage3)
+        {
             int totalMinutes = 0;
-            Dictionary<String, int> genreCount = new Dictionary<String, int>();
-            foreach (SongDataBaseModel song in SongRepo.GetAll()) { 
-                foreach (SongRecommendationDetails songDetails in SongRecommendationRepo.GetAll())
+            Dictionary<string, int> genreCount = new Dictionary<string, int>();
+            foreach (SongDataBaseModel song in songRepo.GetAll())
+            {
+                foreach (SongRecommendationDetails songDetails in songRecommendationRepo.GetAll())
                 {
                     if (songDetails.Song_Id == song.Song_Id && songDetails.Month == month && songDetails.Year == year)
                     {
@@ -48,9 +50,9 @@ namespace TechTitans.Services
 
             var sortedGenres = from entry in genreCount orderby entry.Value descending select entry;
             int count = 0;
-            foreach (KeyValuePair<String, int> entry in sortedGenres)
+            foreach (KeyValuePair<string, int> entry in sortedGenres)
             {
-                switch(count)
+                switch (count)
                 {
                     case 0:
                         genre1.Text = entry.Key;
@@ -68,7 +70,7 @@ namespace TechTitans.Services
                         percentage3.Text = ((entry.Value / totalMinutes) * 100).ToString();
                         break;
                 }
-                if(count ==2)
+                if (count == 2)
                 {
                     break;
                 }
@@ -77,18 +79,18 @@ namespace TechTitans.Services
         }
 
         /// <summary>
-        /// Retrieves the top 3 subgenres for a specified month and year, 
-        /// updating the provided labels with subgenre names, minutes listened, 
+        /// Retrieves the top 3 subgenres for a specified month and year,
+        /// updating the provided labels with subgenre names, minutes listened,
         /// and percentages.
         /// </summary>
-        public void GetTop3SubGenres(int month, int year, Label genre1, Label minutes1, Label percentage1, Label genre2, Label minutes2, Label percentage2, Label genre3, Label minutes3, Label percentage3) { 
-               Dictionary<String, int> subgenreCount = new Dictionary<String, int>();
+        public void GetTop3SubGenres(int month, int year, Label genre1, Label minutes1, Label percentage1, Label genre2, Label minutes2, Label percentage2, Label genre3, Label minutes3, Label percentage3)
+        {
+               Dictionary<string, int> subgenreCount = new Dictionary<string, int>();
             int totalMinutes = 0;
-            foreach (SongDataBaseModel song in SongRepo.GetAll())
+            foreach (SongDataBaseModel song in songRepo.GetAll())
             {
-                foreach (SongRecommendationDetails songDetails in SongRecommendationRepo.GetAll())
+                foreach (SongRecommendationDetails songDetails in songRecommendationRepo.GetAll())
                 {
-
                     if (songDetails.Song_Id == song.Song_Id && songDetails.Month == month && songDetails.Year == year)
                     {
                         totalMinutes += songDetails.Minutes_Listened;
@@ -106,7 +108,7 @@ namespace TechTitans.Services
 
             var sortedSubGenres = from entry in subgenreCount orderby entry.Value descending select entry;
             int count = 0;
-            foreach (KeyValuePair<String, int> entry in sortedSubGenres)
+            foreach (KeyValuePair<string, int> entry in sortedSubGenres)
             {
                 switch (count)
                 {
@@ -134,9 +136,5 @@ namespace TechTitans.Services
                 count++;
             }
         }
-          
-
     }
-
-    
 }

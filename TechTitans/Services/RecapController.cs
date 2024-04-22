@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TechTitans.Repositories;
+﻿using System.Data;
+using Microsoft.Extensions.Configuration;
+using TechTitans.Enums;
 using TechTitans.Models;
-using Dapper;
+using TechTitans.Repositories;
 using TechTitans.ViewModels;
 using TechTitans.Enums;
 using Microsoft.Extensions.Configuration;
@@ -17,13 +14,13 @@ using System.Runtime.CompilerServices;
 namespace TechTitans.Services
 {
     /// <summary>
-    /// Provides functionality for generating recaps based on 
+    /// Provides functionality for generating recaps based on
     /// user playback behavior and song details.
     /// </summary>
     internal class RecapController
     {
-        private static readonly IConfiguration _configuration;
-        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+        private static readonly IConfiguration Configuration = MauiProgram.Configuration;
+        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
         private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
         ISongBasicDetailsRepository songBasicDetailsRepository;
         IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository;
@@ -47,11 +44,11 @@ namespace TechTitans.Services
         /// <returns>A list of the top 5 most listened songs.</returns>
         public List<SongBasicInformation> GetTheTop5MostListenedSongs(int userId)
         {
-            var top5Songs = songBasicDetailsRepository.GetTop5MostListenedSongs(userId);
+            var top5Songs = SongBasicDetailsRepository.GetTop5MostListenedSongs(userId);
             List<SongBasicInformation> top5SongsInformation = new List<SongBasicInformation>();
             foreach (var song in top5Songs)
             {
-                top5SongsInformation.Add(songBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(song));
+                top5SongsInformation.Add(SongBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(song));
             }
             return top5SongsInformation;
         }
@@ -64,8 +61,8 @@ namespace TechTitans.Services
         /// and its percentile.</returns>
         public Tuple<SongBasicInformation, decimal> GetTheMostPlayedSongPercentile(int userId)
         {
-            var mostPlayedSong = songBasicDetailsRepository.GetMostPlayedSongPercentile(userId);
-            return new Tuple<SongBasicInformation, decimal>(songBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
+            var mostPlayedSong = SongBasicDetailsRepository.GetMostPlayedSongPercentile(userId);
+            return new Tuple<SongBasicInformation, decimal>(SongBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
         }
 
         /// <summary>
@@ -75,7 +72,7 @@ namespace TechTitans.Services
         /// <returns>A tuple containing the most played artist and its percentile.</returns>
         public Tuple<string, decimal> GetTheMostPlayedArtistPercentile(int userId)
         {
-            return songBasicDetailsRepository.GetMostPlayedArtistPercentile(userId);
+            return SongBasicDetailsRepository.GetMostPlayedArtistPercentile(userId);
         }
 
         /// <summary>
@@ -85,15 +82,15 @@ namespace TechTitans.Services
         /// <returns>The total minutes listened by the user.</returns>
         public int GetTotalMinutesListened(int userId)
         {
-            var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
+            var userEvents = UserPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
             int totalMinutesListened = 0;
             for (int firstCounter = 0; firstCounter < userEvents.Count; firstCounter++)
             {
-                if (userEvents[firstCounter].Event_Type == PlaybackEventType.startSongPlayback)
+                if (userEvents[firstCounter].Event_Type == PlaybackEventType.StartSongPlayback)
                 {
                     for (int secondCounter = firstCounter + 1; secondCounter < userEvents.Count; secondCounter++)
                     {
-                        if (userEvents[secondCounter].Event_Type == PlaybackEventType.endSongPlayback)
+                        if (userEvents[secondCounter].Event_Type == PlaybackEventType.EndSongPlayback)
                         {
                             totalMinutesListened += (int)(userEvents[secondCounter].Timestamp - userEvents[firstCounter].Timestamp).TotalMinutes;
                             firstCounter = secondCounter;
@@ -112,7 +109,7 @@ namespace TechTitans.Services
         /// <returns>A list of the top 5 genres.</returns>
         public List<string> GetTheTop5Genres(int userId)
         {
-            return this.songBasicDetailsRepository.GetTop5Genres(userId);
+            return this.SongBasicDetailsRepository.GetTop5Genres(userId);
         }
 
         /// <summary>
@@ -122,7 +119,7 @@ namespace TechTitans.Services
         /// <returns>A list of new genres discovered by the user.</returns>
         public List<string> GetNewGenresDiscovered(int userId)
         {
-            return this.songBasicDetailsRepository.GetAllNewGenresDiscovered(userId);
+            return this.SongBasicDetailsRepository.GetAllNewGenresDiscovered(userId);
         }
 
         /// <summary>
@@ -133,25 +130,25 @@ namespace TechTitans.Services
         /// <returns>The listener personality of the user.</returns>
         public ListenerPersonality GetListenerPersonality(int userId)
         {
-            var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
+            var userEvents = UserPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
             int playCount = 0;
-            for(int counter = 0; counter < userEvents.Count; counter++)
+            for (int counter = 0; counter < userEvents.Count; counter++)
             {
-                if ((userEvents[counter].Event_Type == PlaybackEventType.startSongPlayback) && (userEvents[counter].Timestamp.Year == DateTime.Now.Year))
+                if ((userEvents[counter].Event_Type == PlaybackEventType.StartSongPlayback) && (userEvents[counter].Timestamp.Year == DateTime.Now.Year))
                 {
                     playCount++;
                 }
             }
-            if(playCount > 100)
+            if (playCount > 100)
             {
                 return Enums.ListenerPersonality.Melophile;
             }
             var newGenres = GetNewGenresDiscovered(userId);
-            if(newGenres.Count > 3)
+            if (newGenres.Count > 3)
             {
                 return Enums.ListenerPersonality.Explorer;
             }
-            if(playCount < 10)
+            if (playCount < 10)
             {
                 return Enums.ListenerPersonality.Casual;
             }
@@ -159,11 +156,11 @@ namespace TechTitans.Services
         }
 
         /// <summary>
-        /// Generates an end-of-year recap for a user, including top songs, 
+        /// Generates an end-of-year recap for a user, including top songs,
         /// artist percentiles, minutes listened, genres, and listener personality.
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
-        /// <returns>An <see cref="EndOfYearRecapViewModel"/> containing 
+        /// <returns>An <see cref="EndOfYearRecapViewModel"/> containing
         /// the end-of-year recap for the user.</returns>
         public EndOfYearRecapViewModel GenerateEndOfYearRecap(int userId)
         {
