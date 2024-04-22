@@ -1,78 +1,77 @@
+using System.Data;
 using TechTitans.Models;
 using TechTitans.ViewModels;
 using TechTitans.Services;
 using TechTitans.Repositories;
-using System.Data;
 using Microsoft.Extensions.Configuration;
 namespace TechTitans.Views.Components.Artist;
 
-
 public partial class ArtistSongDashboard : ContentPage
 {
-    private static readonly IConfiguration _configuration = MauiProgram.Configuration;
-    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+    private static readonly IConfiguration Configuration = MauiProgram.Configuration;
+    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
     private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-    public ArtistSongDashboardController service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
+    public ArtistSongDashboardController Service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
     // alt domain song type cu mai multe detalii
-    int songId;
-	ArtistSongDashboardViewModel viewModel;
+    public int SongId;
+    public ArtistSongDashboardViewModel ViewModel;
 	public ArtistSongDashboard(SongBasicInformation song)
 	{
-		songId = song.SongId;
+		SongId = song.SongId;
 		InitializeComponent();
-		populateViewModel(songId);
+		PopulateViewModel(SongId);
 		LoadPage();
 	}
-	private void populateViewModel(int songID)
+	private void PopulateViewModel(int songID)
 	{
-		viewModel = new ArtistSongDashboardViewModel() {
-			SongInfo = service.GetSongInformation(songID),
-			SongDetails = service.GetSongRecommandationDetails(songID),
-			ArtistInfo = service.GetArtistInfoBySong(songID)
+		ViewModel = new ArtistSongDashboardViewModel()
+		{
+			SongInfo = Service.GetSongInformation(songID),
+			SongDetails = Service.GetSongRecommandationDetails(songID),
+			ArtistInfo = Service.GetArtistInfoBySong(songID)
 		};
 	}
 	private void LoadPage()
 	{
-		SongImage.Source = viewModel.SongInfo.Image;
-		SongTitle.Text = viewModel.SongInfo.Name;
-		SongArtist.Text = "by " + viewModel.ArtistInfo.Name;
-		SongAlbum.Text = "from " + viewModel.SongInfo.Album;
+		SongImage.Source = ViewModel.SongInfo.Image;
+		SongTitle.Text = ViewModel.SongInfo.Name;
+		SongArtist.Text = "by " + ViewModel.ArtistInfo.Name;
+		SongAlbum.Text = "from " + ViewModel.SongInfo.Album;
 
 		// set song info panel
         label1.Text = "Genre:";
-        content1.Text = viewModel.SongInfo.Genre;
+        content1.Text = ViewModel.SongInfo.Genre;
 		label2.Text = "Subgenre:";
-		content2.Text = viewModel.SongInfo.Subgenre;
+		content2.Text = ViewModel.SongInfo.Subgenre;
 		label3.Text = "Country:";
-		content3.Text = viewModel.SongInfo.Country;
+		content3.Text = ViewModel.SongInfo.Country;
 		label4.Text = "Language:";
-		content4.Text = viewModel.SongInfo.Language;
+		content4.Text = ViewModel.SongInfo.Language;
     }
 
- //   private ArtistSongDashboardViewModel getMockedViewModel()
-	//{
-	//	var mockedModel = new ArtistSongDashboardViewModel()
-	//	{
-	//		SongInfo = new SongBasicInfo(),
-	//		SongDetails = new SongRecommendationDetails(),
-	//		ArtistInfo = new AuthorDetails(),
-	//	};
-	//	return mockedModel;
-	//}
-
+	// private ArtistSongDashboardViewModel getMockedViewModel()
+	// {
+	// var mockedModel = new ArtistSongDashboardViewModel()
+	// {
+	// SongInfo = new SongBasicInfo(),
+	// SongDetails = new SongRecommendationDetails(),
+	// ArtistInfo = new AuthorDetails(),
+	// };
+	// return mockedModel;
+	// }
 	private void OnInfoClick(object sender, EventArgs e)
 	{
 		InfoBoxView.Color = Color.FromArgb("#6E6E6E");
 		PerformanceBoxView.Color = Color.FromArgb("#1E1E1E");
 
         label1.Text = "Genre:";
-        content1.Text = viewModel.SongInfo.Genre;
+        content1.Text = ViewModel.SongInfo.Genre;
         label2.Text = "Subgenre:";
-        content2.Text = viewModel.SongInfo.Subgenre;
+        content2.Text = ViewModel.SongInfo.Subgenre;
         label3.Text = "Country:";
-        content3.Text = viewModel.SongInfo.Country;
+        content3.Text = ViewModel.SongInfo.Country;
         label4.Text = "Language:";
-        content4.Text = viewModel.SongInfo.Language;
+        content4.Text = ViewModel.SongInfo.Language;
     }
 
 	private void OnPerformanceCLick(object sender, EventArgs e)
@@ -81,12 +80,12 @@ public partial class ArtistSongDashboard : ContentPage
         InfoBoxView.Color = Color.FromArgb("#1E1E1E");
 
 		label1.Text = "Minutes Listened:";
-		content1.Text = viewModel.SongDetails.Minutes_Listened.ToString();
+		content1.Text = ViewModel.SongDetails.Minutes_Listened.ToString();
 		label2.Text = "Total Plays:";
-		content2.Text = viewModel.SongDetails.Number_Of_Plays.ToString();
+		content2.Text = ViewModel.SongDetails.Number_Of_Plays.ToString();
 		label3.Text = "Likes:";
-		content3.Text = viewModel.SongDetails.Likes.ToString();
+		content3.Text = ViewModel.SongDetails.Likes.ToString();
 		label4.Text = "Dislikes:";
-		content4.Text = viewModel.SongDetails.Dislikes.ToString();
+		content4.Text = ViewModel.SongDetails.Dislikes.ToString();
     }
 }

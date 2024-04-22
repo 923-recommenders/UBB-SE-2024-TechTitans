@@ -28,10 +28,10 @@ namespace TechTitans.Models
 
         [Column("event_type")]
         public PlaybackEventType Event_Type { get; set; }
-        
+
         [Key]
         [Column("timestamp")]
         public DateTime Timestamp { get; set; }
     }
-}   
+}
 

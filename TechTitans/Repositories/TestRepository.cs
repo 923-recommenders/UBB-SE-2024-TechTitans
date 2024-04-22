@@ -1,11 +1,11 @@
-using Dapper;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
+using Microsoft.Extensions.Configuration;
 using TechTitans.Models;
 
 namespace TechTitans.Repositories
@@ -20,7 +20,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM Test");
-            return _databaseOperations.Query<Test>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<Test>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestDemographicDetails : Repository<UserDemographicsDetails>
@@ -33,7 +33,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM UserDemographicsDetails");
-            return _databaseOperations.Query<UserDemographicsDetails>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<UserDemographicsDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestAuthorDetails : Repository<ArtistDetails>
@@ -46,7 +46,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM AuthorDetails");
-            return _databaseOperations.Query<ArtistDetails>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<ArtistDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestAdDistributionData : Repository<AdDistributionData>
@@ -59,7 +59,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM AdDistributionData");
-            return _databaseOperations.Query<AdDistributionData>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<AdDistributionData>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestSongBasicDetails : Repository<SongDataBaseModel>
@@ -72,7 +72,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongBasicDetails");
-            return _databaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestUserPlaybackBehaviour : Repository<UserPlaybackBehaviour>
@@ -85,7 +85,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM UserPlaybackBehaviour");
-            return _databaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestSongRecommendationDetails : Repository<SongRecommendationDetails>
@@ -98,7 +98,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongRecommendationDetails");
-            return _databaseOperations.Query<SongRecommendationDetails>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<SongRecommendationDetails>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestSongFeatures : Repository<SongFeatures>
@@ -111,7 +111,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongFeatures");
-            return _databaseOperations.Query<SongFeatures>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<SongFeatures>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
     public class TestTrends : Repository<Trends>
@@ -124,7 +124,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM Trends");
-            return _databaseOperations.Query<Trends>(queryBuilder.ToString()).FirstOrDefault();
+            return DatabaseOperations.Query<Trends>(queryBuilder.ToString()).FirstOrDefault();
         }
     }
 }

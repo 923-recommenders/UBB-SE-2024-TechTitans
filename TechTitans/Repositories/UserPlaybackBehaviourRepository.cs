@@ -1,5 +1,4 @@
-﻿using Dapper;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -7,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TechTitans.Models;
+using Dapper;
 
 namespace TechTitans.Repositories
 {
     /// <summary>
-    /// Represents a repository for managing user playback behavior data, 
+    /// Represents a repository for managing user playback behavior data,
     /// including operations for retrieving playback behavior records.
     /// </summary>
     internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
@@ -21,7 +21,7 @@ namespace TechTitans.Repositories
         }
 
         /// <summary>
-        /// Retrieves a specific user's playback behavior record 
+        /// Retrieves a specific user's playback behavior record
         /// based on the provided criteria.
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
@@ -41,7 +41,7 @@ namespace TechTitans.Repositories
             {
                 queryBuilder.Append(" AND timestamp = @timestamp");
             }
-            return _databaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
+            return DatabaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId, songId, timestamp }).FirstOrDefault();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT user_id as User_Id, song_id as Song_Id, event_type as Event_Type, timestamp as Timestamp FROM UserPlaybackBehaviour WHERE user_id = @userId");
-            return _databaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId }).ToList();
+            return DatabaseOperations.Query<UserPlaybackBehaviour>(queryBuilder.ToString(), new { userId }).ToList();
         }
     }
 }
