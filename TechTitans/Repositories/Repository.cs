@@ -18,16 +18,15 @@ namespace TechTitans.Repositories
     
     public class Repository<T> : IRepository<T> where T : class
     {
-        public IDbConnection _connection;
-        private readonly IConfiguration _configuration = MauiProgram.Configuration;
+        public IDatabaseOperations _databaseOperations;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{T}"/> class.
         /// </summary>
-        public Repository()
+        public Repository(IDatabaseOperations databaseOperations)
         {
 
-            _connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+            _databaseOperations = databaseOperations;//
         }
 
 
@@ -46,7 +45,7 @@ namespace TechTitans.Repositories
                 string properties = GetPropertyNames(excludeKey: true);
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
 
-                rowsAffectedByQueryExecution = _connection.Execute(query, entity);
+                rowsAffectedByQueryExecution = _databaseOperations.Execute(query, entity);
             }
             catch (Exception ex) { }
 
@@ -68,7 +67,7 @@ namespace TechTitans.Repositories
                 string keyProperty = GetKeyPropertyName();
                 string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
 
-                rowsAffectedByQueryExecution = _connection.Execute(query, entity);
+                rowsAffectedByQueryExecution = _databaseOperations.Execute(query, entity);
             }
             catch (Exception ex) { }
 
@@ -87,7 +86,7 @@ namespace TechTitans.Repositories
                 string tableName = GetTableName();
                 string query = $"SELECT * FROM {tableName}";
 
-                result = _connection.Query<T>(query);
+                result = _databaseOperations.Query<T>(query);
             }
             catch (Exception ex) { }
 
@@ -109,7 +108,7 @@ namespace TechTitans.Repositories
                 string keyColumn = GetKeyColumnName();
                 string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{Id}'";
 
-                resultOfQueryExecution = _connection.Query<T>(query);
+                resultOfQueryExecution = _databaseOperations.Query<T>(query);
             }
             catch (Exception ex) { }
 
@@ -147,7 +146,7 @@ namespace TechTitans.Repositories
 
                 query.Append($" WHERE {keyColumn} = @{keyProperty}");
 
-                rowsAffectedByQueryExecution = _connection.Execute(query.ToString(), entity);
+                rowsAffectedByQueryExecution = _databaseOperations.Execute(query.ToString(), entity);
             }
             catch (Exception ex) { }
 

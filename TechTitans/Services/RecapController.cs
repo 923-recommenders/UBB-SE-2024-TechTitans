@@ -8,6 +8,8 @@ using TechTitans.Models;
 using Dapper;
 using TechTitans.ViewModels;
 using TechTitans.Enums;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace TechTitans.Services
 {
@@ -17,8 +19,11 @@ namespace TechTitans.Services
     /// </summary>
     internal class RecapController
     {
-        SongBasicDetailsRepository songBasicDetailsRepository = new SongBasicDetailsRepository();
-        UserPlaybackBehaviourRepository userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository();
+        private static readonly IConfiguration _configuration = MauiProgram.Configuration;
+        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+        SongBasicDetailsRepository songBasicDetailsRepository = new SongBasicDetailsRepository(databaseOperations);
+        UserPlaybackBehaviourRepository userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository(databaseOperations);
 
         /// <summary>
         /// Retrieves the top 5 most listened songs for a user.

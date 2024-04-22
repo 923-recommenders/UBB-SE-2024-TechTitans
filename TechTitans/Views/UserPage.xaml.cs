@@ -4,10 +4,15 @@ using TechTitans.Views.Components;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.Services;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
     public partial class UserPage : ContentPage
     {
-        UserController userService=new UserController(new UserSongRepository());
+    private static readonly IConfiguration _configuration = MauiProgram.Configuration;
+    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+    private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+    UserController userService=new UserController(new UserSongRepository(databaseOperations));
         public UserPage()
         {
 

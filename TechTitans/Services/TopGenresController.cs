@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using TechTitans.Models;
 using TechTitans.Repositories;
 namespace TechTitans.Services
@@ -12,8 +14,11 @@ namespace TechTitans.Services
     /// </summary>
     public class TopGenresController
     {
-        private Repository<SongDataBaseModel> SongRepo = new Repository<SongDataBaseModel>();
-        private Repository<SongRecommendationDetails> SongRecommendationRepo= new Repository<SongRecommendationDetails>();
+        private static readonly IConfiguration _configuration = MauiProgram.Configuration;
+        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(_configuration.GetConnectionString("TechTitansDev"));
+        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+        private Repository<SongDataBaseModel> SongRepo = new Repository<SongDataBaseModel>(databaseOperations);
+        private Repository<SongRecommendationDetails> SongRecommendationRepo= new Repository<SongRecommendationDetails>(databaseOperations);
 
         /// <summary>
         /// Retrieves the top 3 genres for a specified month and year,

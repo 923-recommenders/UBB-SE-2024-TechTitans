@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TechTitans.Repositories;
 using TechTitans.Models;
 using Dapper;
+using System.Data;
 
 namespace TechTitans.Repositories
 {
@@ -16,6 +17,10 @@ namespace TechTitans.Repositories
     /// </summary>
     internal class UserSongRepository : Repository<SongDataBaseModel>, IUserSongRepository
     {
+        public UserSongRepository(IDatabaseOperations databaseOperations) : base(databaseOperations)
+        {
+        }
+
         /// <summary>
         /// Converts a song database model to a simplified song information model,
         /// including retrieving the artist's name.
@@ -28,7 +33,7 @@ namespace TechTitans.Repositories
                 var artistId = songBasicDetails.Artist_Id;
                 var queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
-                var artistName = _connection.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
+                var artistName = _databaseOperations.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
                 return new SongBasicInformation
                 {
                     SongId = songBasicDetails.Song_Id,
