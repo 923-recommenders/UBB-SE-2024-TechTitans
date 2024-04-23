@@ -14,11 +14,20 @@ namespace TechTitans.Services
     /// </summary>
     public class TopGenresController
     {
-        private static readonly IConfiguration Configuration = MauiProgram.Configuration;
+        /*private static readonly IConfiguration Configuration = MauiProgram.Configuration;
         private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
         private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
         private Repository<SongDataBaseModel> songRepo = new Repository<SongDataBaseModel>(databaseOperations);
-        private Repository<SongRecommendationDetails> songRecommendationRepo = new Repository<SongRecommendationDetails>(databaseOperations);
+        private Repository<SongRecommendationDetails> songRecommendationRepo = new Repository<SongRecommendationDetails>(databaseOperations);*/
+
+        private IRepository<SongDataBaseModel> songRepo;
+        private IRepository<SongRecommendationDetails> songRecommendationRepo;
+
+        public TopGenresController(IRepository<SongDataBaseModel> songRepo, IRepository<SongRecommendationDetails> songRecommendationRepo)
+        {
+            this.songRepo = songRepo;
+            this.songRecommendationRepo = songRecommendationRepo;
+        }
 
         /// <summary>
         /// Retrieves the top 3 genres for a specified month and year,
@@ -57,17 +66,17 @@ namespace TechTitans.Services
                     case 0:
                         genre1.Text = entry.Key;
                         minutes1.Text = entry.Value.ToString();
-                        percentage1.Text = ((entry.Value / totalMinutes) * 100).ToString();
+                        percentage1.Text = ((entry.Value * 100) / totalMinutes).ToString();
                         break;
                     case 1:
                         genre2.Text = entry.Key;
                         minutes2.Text = entry.Value.ToString();
-                        percentage2.Text = ((entry.Value / totalMinutes) * 100).ToString();
+                        percentage2.Text = ((entry.Value * 100) / totalMinutes).ToString();
                         break;
                     case 2:
                         genre3.Text = entry.Key;
                         minutes3.Text = entry.Value.ToString();
-                        percentage3.Text = ((entry.Value / totalMinutes) * 100).ToString();
+                        percentage3.Text = ((entry.Value * 100) / totalMinutes).ToString();
                         break;
                 }
                 if (count == 2)
@@ -85,7 +94,7 @@ namespace TechTitans.Services
         /// </summary>
         public void GetTop3SubGenres(int month, int year, Label genre1, Label minutes1, Label percentage1, Label genre2, Label minutes2, Label percentage2, Label genre3, Label minutes3, Label percentage3)
         {
-               Dictionary<string, int> subgenreCount = new Dictionary<string, int>();
+            Dictionary<string, int> subgenreCount = new Dictionary<string, int>();
             int totalMinutes = 0;
             foreach (SongDataBaseModel song in songRepo.GetAll())
             {
@@ -115,24 +124,23 @@ namespace TechTitans.Services
                     case 0:
                         genre1.Text = entry.Key;
                         minutes1.Text = entry.Value.ToString();
-                        percentage1.Text = ((entry.Value / totalMinutes) * 100).ToString();
+                        percentage1.Text = ((entry.Value * 100) / totalMinutes).ToString();
                         break;
                     case 1:
                         genre2.Text = entry.Key;
                         minutes2.Text = entry.Value.ToString();
-                        percentage2.Text = ((entry.Value / totalMinutes) * 100).ToString();
+                        percentage2.Text = ((entry.Value * 100) / totalMinutes).ToString();
                         break;
                     case 2:
                         genre3.Text = entry.Key;
                         minutes3.Text = entry.Value.ToString();
-                        percentage3.Text = ((entry.Value / totalMinutes) * 100).ToString();
+                        percentage3.Text = ((entry.Value * 100) / totalMinutes).ToString();
                         break;
                 }
                 if (count == 2)
                 {
                     break;
                 }
-                count++;
                 count++;
             }
         }
