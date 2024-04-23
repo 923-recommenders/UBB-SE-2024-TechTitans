@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TechTitans.Models;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("TechTitansTesting")]
 
 namespace TechTitans.Repositories
 {
@@ -16,6 +19,7 @@ namespace TechTitans.Repositories
     /// </summary>
     internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
     {
+
         public UserPlaybackBehaviourRepository(IDatabaseOperations databaseOperations) : base(databaseOperations)
         {
         }
