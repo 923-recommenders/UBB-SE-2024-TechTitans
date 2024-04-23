@@ -300,10 +300,10 @@ namespace TechTitansTesting.Services
             Assert.Equal(4, result.Month);
             Assert.Equal(2024, result.Year);
         }
+
         [Fact]
         public void GetSongInformation_ReturnsNull_WhenArtistNotFoundForSong()
         {
-            // Arrange
             var songIdToSearch = 1;
             var expectedSong = new SongDataBaseModel
             {
@@ -320,25 +320,18 @@ namespace TechTitansTesting.Services
             Assert.NotEqual(songIdToSearch, expectedSong.Song_Id);
             var songRepositoryMock = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryMock.Setup(repo => repo.GetAll()).Returns(new List<SongDataBaseModel> { expectedSong });
-
-            // Empty artist data
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(new List<ArtistDetails>());
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var songRecommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryMock.Object,
                 featureRepositoryStub,
                 songRecommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
-            // Act
             var result = controller.GetSongInformation(songIdToSearch);
 
-            // Assert
             Assert.Null(result);
         }
 
@@ -488,7 +481,6 @@ namespace TechTitansTesting.Services
                 artistRepositoryStub.Object
             );
 
-            // Act
             var result = controller.GetArtistInfoBySong(songIdToSearch);
 
             Assert.NotNull(result);
@@ -798,7 +790,6 @@ namespace TechTitansTesting.Services
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
             var result = controller.GetSongsByMostPublishedArtistForMainPage();
 
             Assert.NotNull(result);
@@ -808,29 +799,23 @@ namespace TechTitansTesting.Services
         public void GetSongsByMostPublishedArtistForMainPage_ReturnsEmptyList_WhenNoSongsPublishedByMostPublishedArtist()
         {
             var mostPublishedArtistId = 1;
-
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel { Artist_Id = 2 },
                 new SongDataBaseModel { Artist_Id = 3 }
             };
-
             var artistData = new List<ArtistDetails>
             {
                 new ArtistDetails { Artist_Id = mostPublishedArtistId, Name = "Most Published Artist" },
                 new ArtistDetails { Artist_Id = 2, Name = "Artist 2" },
                 new ArtistDetails { Artist_Id = 3, Name = "Artist 3" }
             };
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
