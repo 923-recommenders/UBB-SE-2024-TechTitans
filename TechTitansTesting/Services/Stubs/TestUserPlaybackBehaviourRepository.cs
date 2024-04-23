@@ -21,7 +21,7 @@ namespace TechTitansTesting.Services.Stubs
             };
         }
 
-        public List<UserPlaybackBehaviour> GetUserPlaybackBehaviour(int userId)
+        public List<UserPlaybackBehaviour> GetListOfUserPlaybackBehaviourEntities(int userId)
         {
             if (userId == 3) {
                 List<UserPlaybackBehaviour> userPlaybackBehaviourList = new List<UserPlaybackBehaviour>();
