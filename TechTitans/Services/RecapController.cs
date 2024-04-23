@@ -14,25 +14,10 @@ namespace TechTitans.Services
     /// Provides functionality for generating recaps based on
     /// user playback behavior and song details.
     /// </summary>
-    internal class RecapController
+    internal class RecapController(ISongBasicDetailsRepository songBasicDetailsRepository, IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository)
     {
-        private static readonly IConfiguration Configuration = MauiProgram.Configuration;
-        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
-        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        private ISongBasicDetailsRepository songBasicDetailsRepository;
-        private IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository;
-
-        public RecapController()
-        {
-            songBasicDetailsRepository = new SongBasicDetailsRepository(databaseOperations);
-            userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository(databaseOperations);
-        }
-
-        public RecapController(ISongBasicDetailsRepository songBasicDetailsRepository, IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository)
-        {
-            this.songBasicDetailsRepository = songBasicDetailsRepository;
-            this.userPlaybackBehaviourRepository = userPlaybackBehaviourRepository;
-        }
+        private ISongBasicDetailsRepository songBasicDetailsRepository = songBasicDetailsRepository;
+        private IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository = userPlaybackBehaviourRepository;
 
         /// <summary>
         /// Retrieves the top 5 most listened songs for a user.
