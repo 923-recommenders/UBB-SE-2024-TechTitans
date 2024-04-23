@@ -44,7 +44,7 @@ namespace TechTitansTesting.Services
            
             var songData = new List<SongDataBaseModel>
             {
-                new SongFeatures{ Song_Id = 1, Artist_Id = 2}
+                new SongDataBaseModel{ Song_Id = 1, Artist_Id = 2}
             };
             
             var songRecommendationData = new List<SongRecommendationDetails>();
