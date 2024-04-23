@@ -24,7 +24,7 @@ namespace TechTitansTesting.Repositories
             { 
                 User_Id = 1, 
                 Song_Id = 1, 
-                Event_Type = TechTitans.Enums.PlaybackEventType.startSongPlayback, 
+                Event_Type = TechTitans.Enums.PlaybackEventType.StartSongPlayback, 
                 Timestamp = DateTime.Now 
             };
             _mockDatabaseOperations.Setup(c => c.Query<UserPlaybackBehaviour>(It.IsAny<string>(), It.IsAny<object>(), null, true, null, null))
@@ -47,14 +47,14 @@ namespace TechTitansTesting.Repositories
                 {
                     User_Id = 1, 
                     Song_Id = 1, 
-                    Event_Type = TechTitans.Enums.PlaybackEventType.startSongPlayback, 
+                    Event_Type = TechTitans.Enums.PlaybackEventType.StartSongPlayback, 
                     Timestamp = DateTime.Now 
                 },
                 new UserPlaybackBehaviour()
                 {
                     User_Id = 1, 
                     Song_Id = 2, 
-                    Event_Type = TechTitans.Enums.PlaybackEventType.startSongPlayback, 
+                    Event_Type = TechTitans.Enums.PlaybackEventType.StartSongPlayback, 
                     Timestamp = DateTime.Now 
                 }
                 

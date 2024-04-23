@@ -5,9 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using TechTitans.Models;
 using Dapper;
-using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("TechTitansTesting")]
 
@@ -19,7 +19,6 @@ namespace TechTitans.Repositories
     /// </summary>
     internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
     {
-
         public UserPlaybackBehaviourRepository(IDatabaseOperations databaseOperations) : base(databaseOperations)
         {
         }
