@@ -1,13 +1,10 @@
 ﻿using System.Data;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using TechTitans.Enums;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.ViewModels;
-using TechTitans.Enums;
-using Microsoft.Extensions.Configuration;
-using System.Data;
-using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("TechTitansTesting")]
 
@@ -22,8 +19,8 @@ namespace TechTitans.Services
         private static readonly IConfiguration Configuration = MauiProgram.Configuration;
         private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
         private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        ISongBasicDetailsRepository songBasicDetailsRepository;
-        IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository;
+        private ISongBasicDetailsRepository songBasicDetailsRepository;
+        private IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository;
 
         public RecapController()
         {
@@ -44,11 +41,11 @@ namespace TechTitans.Services
         /// <returns>A list of the top 5 most listened songs.</returns>
         public List<SongBasicInformation> GetTheTop5MostListenedSongs(int userId)
         {
-            var top5Songs = SongBasicDetailsRepository.GetTop5MostListenedSongs(userId);
+            var top5Songs = songBasicDetailsRepository.GetTop5MostListenedSongs(userId);
             List<SongBasicInformation> top5SongsInformation = new List<SongBasicInformation>();
             foreach (var song in top5Songs)
             {
-                top5SongsInformation.Add(SongBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(song));
+                top5SongsInformation.Add(songBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(song));
             }
             return top5SongsInformation;
         }
@@ -61,8 +58,8 @@ namespace TechTitans.Services
         /// and its percentile.</returns>
         public Tuple<SongBasicInformation, decimal> GetTheMostPlayedSongPercentile(int userId)
         {
-            var mostPlayedSong = SongBasicDetailsRepository.GetMostPlayedSongPercentile(userId);
-            return new Tuple<SongBasicInformation, decimal>(SongBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
+            var mostPlayedSong = songBasicDetailsRepository.GetMostPlayedSongPercentile(userId);
+            return new Tuple<SongBasicInformation, decimal>(songBasicDetailsRepository.TransformSongBasicDetailsToSongBasicInfo(mostPlayedSong.Item1), mostPlayedSong.Item2);
         }
 
         /// <summary>
@@ -72,7 +69,7 @@ namespace TechTitans.Services
         /// <returns>A tuple containing the most played artist and its percentile.</returns>
         public Tuple<string, decimal> GetTheMostPlayedArtistPercentile(int userId)
         {
-            return SongBasicDetailsRepository.GetMostPlayedArtistPercentile(userId);
+            return songBasicDetailsRepository.GetMostPlayedArtistPercentile(userId);
         }
 
         /// <summary>
@@ -82,7 +79,7 @@ namespace TechTitans.Services
         /// <returns>The total minutes listened by the user.</returns>
         public int GetTotalMinutesListened(int userId)
         {
-            var userEvents = UserPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
+            var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
             int totalMinutesListened = 0;
             for (int firstCounter = 0; firstCounter < userEvents.Count; firstCounter++)
             {
@@ -109,7 +106,7 @@ namespace TechTitans.Services
         /// <returns>A list of the top 5 genres.</returns>
         public List<string> GetTheTop5Genres(int userId)
         {
-            return this.SongBasicDetailsRepository.GetTop5Genres(userId);
+            return this.songBasicDetailsRepository.GetTop5Genres(userId);
         }
 
         /// <summary>
@@ -119,7 +116,7 @@ namespace TechTitans.Services
         /// <returns>A list of new genres discovered by the user.</returns>
         public List<string> GetNewGenresDiscovered(int userId)
         {
-            return this.SongBasicDetailsRepository.GetAllNewGenresDiscovered(userId);
+            return this.songBasicDetailsRepository.GetAllNewGenresDiscovered(userId);
         }
 
         /// <summary>
@@ -130,7 +127,7 @@ namespace TechTitans.Services
         /// <returns>The listener personality of the user.</returns>
         public ListenerPersonality GetListenerPersonality(int userId)
         {
-            var userEvents = UserPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
+            var userEvents = userPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
             int playCount = 0;
             for (int counter = 0; counter < userEvents.Count; counter++)
             {

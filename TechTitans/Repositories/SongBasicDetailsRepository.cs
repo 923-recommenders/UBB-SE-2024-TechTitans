@@ -8,7 +8,6 @@ using Microsoft.Extensions.Primitives;
 using Dapper;
 using TechTitans.Models;
 
-
 namespace TechTitans.Repositories
 {
     /// <summary>

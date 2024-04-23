@@ -30,7 +30,7 @@ namespace TechTitansTesting.Services.Stubs
                     UserPlaybackBehaviour userPlaybackBehaviour = new UserPlaybackBehaviour();
                     userPlaybackBehaviour.User_Id = 3;
                     userPlaybackBehaviour.Song_Id = i;
-                    userPlaybackBehaviour.Event_Type = PlaybackEventType.startSongPlayback;
+                    userPlaybackBehaviour.Event_Type = PlaybackEventType.StartSongPlayback;
                     userPlaybackBehaviour.Timestamp = DateTime.Now;
                     userPlaybackBehaviourList.Add(userPlaybackBehaviour);
                 }
@@ -46,7 +46,7 @@ namespace TechTitansTesting.Services.Stubs
                         UserPlaybackBehaviour userPlaybackBehaviour = new UserPlaybackBehaviour();
                         userPlaybackBehaviour.User_Id = 4;
                         userPlaybackBehaviour.Song_Id = i;
-                        userPlaybackBehaviour.Event_Type = PlaybackEventType.startSongPlayback;
+                        userPlaybackBehaviour.Event_Type = PlaybackEventType.StartSongPlayback;
                         userPlaybackBehaviour.Timestamp = DateTime.Now;
                         userPlaybackBehaviours.Add(userPlaybackBehaviour);
                     }
