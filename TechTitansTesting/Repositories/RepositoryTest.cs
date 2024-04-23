@@ -147,6 +147,24 @@ namespace TechTitansTesting.Repositories
         }
 
         [Fact]
+        public void GetById_WhenDatabaseOperationsThrowsException_ShouldReturnNull()
+        {
+            _mockDatabaseOperations = new Mock<IDatabaseOperations>();
+            _repository = new Repository<TestEntity>(_mockDatabaseOperations.Object);
+            _mockDatabaseOperations.Setup(c => c.Query<TestEntity>(It.IsAny<string>(), null, null, true, null, null))
+                           .Throws(new Exception("Test exception"));
+
+            
+            var result = _repository.GetById(1);
+            var id = result?.Id;
+            var name = result?.Name;
+        
+            Assert.Null(id);
+            Assert.Null(name);
+            Assert.Null(result);
+        }
+
+        [Fact]
         public void Update_WhenEntityIsUpdated_ShouldReturnTrue()
         {
             _mockDatabaseOperations = new Mock<IDatabaseOperations>();
@@ -181,6 +199,14 @@ namespace TechTitansTesting.Repositories
 
             Assert.False(result);
           }
+
+        [Fact]
+        public void GetKeyColumnName_WhenEntityHasNoProperties_ShouldReturnNull()
+        {
+            string actualColumnName = Repository<TestEntityWithNoProperties>.GetKeyColumnName();
+
+            Assert.Null(actualColumnName);
+        }
 
 
         [Fact]
@@ -239,5 +265,9 @@ namespace TechTitansTesting.Repositories
         public int Id { get; set; }
 
         public string Name { get; set; }
+    }
+
+    public class TestEntityWithNoProperties
+    {
     }
 }

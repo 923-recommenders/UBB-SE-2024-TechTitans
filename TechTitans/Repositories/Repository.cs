@@ -116,7 +116,7 @@ namespace TechTitans.Repositories
             {
             }
 
-            return resultOfQueryExecution.FirstOrDefault();
+            return resultOfQueryExecution?.FirstOrDefault();
         }
 
         /// <summary>
