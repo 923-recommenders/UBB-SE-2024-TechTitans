@@ -79,7 +79,7 @@ namespace TechTitans.Services
         /// <returns>The total minutes listened by the user.</returns>
         public int GetTotalMinutesListened(int userId)
         {
-            var userEvents = UserPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
+            var userEvents = UserPlaybackBehaviourRepository.GetListOfUserPlaybackBehaviourEntities(userId);
             int totalMinutesListened = 0;
             for (int firstCounter = 0; firstCounter < userEvents.Count; firstCounter++)
             {
@@ -127,7 +127,7 @@ namespace TechTitans.Services
         /// <returns>The listener personality of the user.</returns>
         public ListenerPersonality GetListenerPersonality(int userId)
         {
-            var userEvents = UserPlaybackBehaviourRepository.GetUserPlaybackBehaviour(userId);
+            var userEvents = UserPlaybackBehaviourRepository.GetListOfUserPlaybackBehaviourEntities(userId);
             int playCount = 0;
             for (int counter = 0; counter < userEvents.Count; counter++)
             {
