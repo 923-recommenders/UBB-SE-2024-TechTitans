@@ -17,11 +17,6 @@ namespace TechTitans.Services
     /// </summary>
     public class FullDetailsOnSongController
     {
-        // private static readonly IConfiguration Configuration = MauiProgram.Configuration;
-        // private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
-        // private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        // private readonly Repository<UserPlaybackBehaviour> userPlaybackBehaviourRepo = new Repository<UserPlaybackBehaviour>(databaseOperations);
-        // private readonly Repository<AdDistributionData> adDistributionDataRepo = new Repository<AdDistributionData>(databaseOperations);
         private readonly IRepository<UserPlaybackBehaviour> userPlaybackBehaviourRepo;
         private readonly IRepository<AdDistributionData> adDistributionDataRepo;
 
