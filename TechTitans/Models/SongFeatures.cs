@@ -21,5 +21,10 @@ namespace TechTitans.Models
         [Key]
         [Column("artist_id")]
         public int Artist_Id { get; set; }
+
+        public override string ToString()
+        {
+            return $"Artist ID: {Artist_Id}";
+        }
     }
 }
