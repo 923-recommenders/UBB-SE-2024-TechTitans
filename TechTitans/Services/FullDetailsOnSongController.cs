@@ -15,13 +15,17 @@ namespace TechTitans.Services
     /// Provides functionality for retrieving detailed information about songs,
     /// including playback behavior and ad distribution data.
     /// </summary>
-    internal class FullDetailsOnSongController
+    public class FullDetailsOnSongController
     {
-        private static readonly IConfiguration Configuration = MauiProgram.Configuration;
-        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
-        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        private readonly Repository<UserPlaybackBehaviour> userPlaybackBehaviourRepo = new Repository<UserPlaybackBehaviour>(databaseOperations);
-        private readonly Repository<AdDistributionData> adDistributionDataRepo = new Repository<AdDistributionData>(databaseOperations);
+        private readonly IRepository<UserPlaybackBehaviour> userPlaybackBehaviourRepo;
+        private readonly IRepository<AdDistributionData> adDistributionDataRepo;
+
+        public FullDetailsOnSongController(IRepository<UserPlaybackBehaviour> userPlaybackBehaviourRepo,
+            IRepository<AdDistributionData> adDistributionDataRepo)
+        {
+            this.userPlaybackBehaviourRepo = userPlaybackBehaviourRepo;
+            this.adDistributionDataRepo = adDistributionDataRepo;
+        }
 
         /// <summary>
         /// Retrieves full details on a song, including total minutes listened,
