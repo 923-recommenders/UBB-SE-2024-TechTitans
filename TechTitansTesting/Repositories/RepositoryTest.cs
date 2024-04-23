@@ -198,7 +198,9 @@ namespace TechTitansTesting.Repositories
             
 
             Assert.False(result);
-          }
+        }
+
+
 
         [Fact]
         public void GetKeyColumnName_WhenEntityHasNoProperties_ShouldReturnNull()
@@ -242,6 +244,7 @@ namespace TechTitansTesting.Repositories
 
     }
 
+    [Table("TestEntity")]
     public class TestEntity
     {
         [Key]
