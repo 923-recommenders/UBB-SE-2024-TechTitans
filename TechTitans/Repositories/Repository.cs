@@ -4,31 +4,29 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Dapper;
 using static Dapper.SqlMapper;
 using Microsoft.Extensions.Configuration;
 
 namespace TechTitans.Repositories
 {
-    
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T>
+        where T : class
     {
-        public IDatabaseOperations _databaseOperations;
+        public IDatabaseOperations DatabaseOperations;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{T}"/> class.
         /// </summary>
         public Repository(IDatabaseOperations databaseOperations)
         {
-
-            _databaseOperations = databaseOperations;//
+            DatabaseOperations = databaseOperations;
         }
-
 
         /// <summary>
         /// Adds a new entity to the database.
@@ -45,10 +43,11 @@ namespace TechTitans.Repositories
                 string properties = GetPropertyNames(excludeKey: true);
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
 
-                rowsAffectedByQueryExecution = _databaseOperations.Execute(query, entity);
+                rowsAffectedByQueryExecution = DatabaseOperations.Execute(query, entity);
             }
-            catch (Exception ex) { }
-
+            catch (Exception ex)
+            {
+            }
             return rowsAffectedByQueryExecution > 0 ? true : false;
         }
 
@@ -67,9 +66,11 @@ namespace TechTitans.Repositories
                 string keyProperty = GetKeyPropertyName();
                 string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
 
-                rowsAffectedByQueryExecution = _databaseOperations.Execute(query, entity);
+                rowsAffectedByQueryExecution = DatabaseOperations.Execute(query, entity);
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+            }
 
             return rowsAffectedByQueryExecution > 0 ? true : false;
         }
@@ -86,9 +87,11 @@ namespace TechTitans.Repositories
                 string tableName = GetTableName();
                 string query = $"SELECT * FROM {tableName}";
 
-                result = _databaseOperations.Query<T>(query);
+                result = DatabaseOperations.Query<T>(query);
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+            }
 
             return result;
         }
@@ -96,21 +99,22 @@ namespace TechTitans.Repositories
         /// <summary>
         /// Retrieves an entity by its ID.
         /// </summary>
-        /// <param name="Id">The ID of the entity.</param>
+        /// <param name="id">The ID of the entity.</param>
         /// <returns>The entity if found; otherwise, null.</returns>
-
-        public T GetById(int Id)
+        public T GetById(int id)
         {
             IEnumerable<T> resultOfQueryExecution = null;
             try
             {
                 string tableName = GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{Id}'";
+                string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{id}'";
 
-                resultOfQueryExecution = _databaseOperations.Query<T>(query);
+                resultOfQueryExecution = DatabaseOperations.Query<T>(query);
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+            }
 
             return resultOfQueryExecution.FirstOrDefault();
         }
@@ -146,9 +150,11 @@ namespace TechTitans.Repositories
 
                 query.Append($" WHERE {keyColumn} = @{keyProperty}");
 
-                rowsAffectedByQueryExecution = _databaseOperations.Execute(query.ToString(), entity);
+                rowsAffectedByQueryExecution = DatabaseOperations.Execute(query.ToString(), entity);
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+            }
 
             return rowsAffectedByQueryExecution > 0 ? true : false;
         }
@@ -159,7 +165,7 @@ namespace TechTitans.Repositories
         /// <returns>The name of the table.</returns>
         private string GetTableName()
         {
-            string tableName = "";
+            string tableName = string.Empty;
             var type = typeof(T);
             var tableAttribute = type.GetCustomAttribute<TableAttribute>();
             if (tableAttribute != null)
@@ -203,7 +209,7 @@ namespace TechTitans.Repositories
         }
 
         /// <summary>
-        /// Retrieves a comma-separated list of column names for the entity type T, 
+        /// Retrieves a comma-separated list of column names for the entity type T
         /// excluding the key column if specified.
         /// </summary>
         /// <param name="excludeKey">Indicates whether to exclude the key column
@@ -224,11 +230,11 @@ namespace TechTitans.Repositories
         }
 
         /// <summary>
-        /// Retrieves a comma-separated list of property names for 
+        /// Retrieves a comma-separated list of property names for
         /// the entity type T, excluding the key property if specified.
         /// </summary>
         /// <param>
-        /// name="excludeKey">Indicates whether to 
+        /// name="excludeKey">Indicates whether to
         /// exclude the key property from the list.
         /// </param>
         /// <returns>A comma-separated list of property names.</returns>
@@ -249,7 +255,7 @@ namespace TechTitans.Repositories
         /// Retrieves a collection of PropertyInfo objects for the entity type T,
         /// excluding the key property if specified.
         /// </summary>
-        /// <param name="excludeKey">Indicates whether to exclude the 
+        /// <param name="excludeKey">Indicates whether to exclude the
         /// key property from the collection.</param>
         /// <returns>A collection of PropertyInfo objects.</returns>
         protected IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
@@ -276,7 +282,5 @@ namespace TechTitans.Repositories
 
             return null;
         }
-
-
     }
 }

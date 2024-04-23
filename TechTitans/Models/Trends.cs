@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 namespace TechTitans.Models
 {
     /// <summary>
-    /// Represents trend data for songs, including genre, language, country, 
+    /// Represents trend data for songs, including genre, language, country,
     /// and the unique identifier for the song. It is stored in the database.
     /// </summary>
-
     [Table("Trends")]
     public class Trends
     {

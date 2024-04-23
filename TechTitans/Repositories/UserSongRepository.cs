@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 using TechTitans.Repositories;
 using TechTitans.Models;
 using Dapper;
-using System.Data;
 
 namespace TechTitans.Repositories
 {
     /// <summary>
-    /// Represents a repository for managing user song data, 
+    /// Represents a repository for managing user song data,
     /// including operations for converting song database models
     /// to simplified song information.
     /// </summary>
@@ -33,7 +33,7 @@ namespace TechTitans.Repositories
                 var artistId = songBasicDetails.Artist_Id;
                 var queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
-                var artistName = _databaseOperations.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
+                var artistName = DatabaseOperations.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
                 return new SongBasicInformation
                 {
                     SongId = songBasicDetails.Song_Id,

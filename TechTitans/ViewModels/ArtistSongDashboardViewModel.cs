@@ -8,7 +8,7 @@ namespace TechTitans.ViewModels
     /// Represents the view model for the artist song dashboard,
     /// including song information, artist details, and song recommendation details.
     /// </summary>
-    class ArtistSongDashboardViewModel
+    public class ArtistSongDashboardViewModel
     {
         public SongBasicInformation SongInfo { get; set; }
         public ArtistDetails ArtistInfo { get; set; }

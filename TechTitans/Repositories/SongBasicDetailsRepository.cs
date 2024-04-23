@@ -1,18 +1,18 @@
-﻿using Dapper;
-using Microsoft.Extensions.Primitives;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Primitives;
+using Dapper;
 using TechTitans.Models;
 
 namespace TechTitans.Repositories
 {
     /// <summary>
     /// Represents a repository for managing song basic details,
-    /// including operations for retrieving song information, top listened songs, 
+    /// including operations for retrieving song information, top listened songs,
     /// and user playback behavior analysis.
     /// </summary>
     public class SongBasicDetailsRepository : Repository<SongDataBaseModel>
@@ -27,11 +27,11 @@ namespace TechTitans.Repositories
         /// <param name="songBasicDetails">The song basic details to convert.</param>
         /// <returns>A simplified song information model.</returns>
         public SongBasicInformation TransformSongBasicDetailsToSongBasicInfo(SongDataBaseModel songBasicDetails)
-        {   
+        {
             var artistId = songBasicDetails.Artist_Id;
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artistId");
-            var artistName = _databaseOperations.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
+            var artistName = DatabaseOperations.Query<string>(queryBuilder.ToString(), new { artistId }).FirstOrDefault();
             return new SongBasicInformation
             {
                 SongId = songBasicDetails.Song_Id,
@@ -55,7 +55,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id = @songId");
-            return _databaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString(), new { songId }).FirstOrDefault();
+            return DatabaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString(), new { songId }).FirstOrDefault();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id IN (SELECT TOP 5 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _databaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).ToList();
+            return DatabaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).ToList();
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT * FROM SongBasicDetails WHERE song_id IN (SELECT TOP 1 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _databaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            return DatabaseOperations.Query<SongDataBaseModel>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE());");
-            return _databaseOperations.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            return DatabaseOperations.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) AND song_id IN (SELECT TOP 1 song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id ORDER BY COUNT(song_id) DESC);");
-            return _databaseOperations.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            return DatabaseOperations.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
         /// <summary>
@@ -127,11 +127,8 @@ namespace TechTitans.Repositories
         public Tuple<string, decimal> GetMostPlayedArtistPercentile(int userId)
         {
             var mostPlayedArtistInfo = GetMostPlayedArtistInfo(userId);
-            
             var mostPlayedArtist = GetMostPlayedArtist(userId, mostPlayedArtistInfo);
-            
             var totalSongs = GetTotalNumberOfSongs(userId);
-            
             return new Tuple<string, decimal>(mostPlayedArtist, (decimal)mostPlayedArtistInfo.Start_Listen_Events / totalSongs);
         }
 
@@ -144,7 +141,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT TOP 1 sd.artist_id as Artist_Id, COUNT(*) AS Start_Listen_Events FROM UserPlaybackBehaviour ub JOIN SongBasicDetails sd ON ub.song_id = sd.song_id WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY sd.artist_id ORDER BY COUNT(*) DESC;");
-            return _databaseOperations.Query<MostPlayedArtistInformation>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            return DatabaseOperations.Query<MostPlayedArtistInformation>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
         /// <summary>
@@ -157,7 +154,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT name FROM AuthorDetails WHERE artist_id = @artist_Id");
-            return _databaseOperations.Query<string>(queryBuilder.ToString(), new { mostPlayedArtistInfo.Artist_Id }).FirstOrDefault();
+            return DatabaseOperations.Query<string>(queryBuilder.ToString(), new { mostPlayedArtistInfo.Artist_Id }).FirstOrDefault();
         }
 
         /// <summary>
@@ -169,7 +166,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT COUNT(*) FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE());");
-            return _databaseOperations.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
+            return DatabaseOperations.Query<int>(queryBuilder.ToString(), new { userId }).FirstOrDefault();
         }
 
         /// <summary>
@@ -181,7 +178,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT TOP 5 sb.genre FROM UserPlaybackBehaviour ub JOIN SongBasicDetails sb ON ub.song_id = sb.song_id WHERE ub.user_id = @userId AND ub.event_type = 2 AND YEAR(ub.timestamp) = YEAR(GETDATE()) GROUP BY sb.genre ORDER BY COUNT(*) DESC;");
-            return _databaseOperations.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
+            return DatabaseOperations.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
         }
 
         /// <summary>
@@ -193,7 +190,7 @@ namespace TechTitans.Repositories
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT DISTINCT genre FROM SongBasicDetails WHERE song_id IN (SELECT song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) GROUP BY song_id) AND genre NOT IN (SELECT genre FROM SongBasicDetails WHERE song_id IN (SELECT song_id FROM UserPlaybackBehaviour WHERE user_id = @userId AND event_type = 2 AND YEAR(timestamp) = YEAR(GETDATE()) - 1 GROUP BY song_id));");
-            return _databaseOperations.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
+            return DatabaseOperations.Query<string>(queryBuilder.ToString(), new { userId }).ToList();
         }
     }
 }
