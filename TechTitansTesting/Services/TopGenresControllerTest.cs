@@ -26,7 +26,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetTop3Genres_SetsGenreNameAndMinutesListenedAndPercentageOfLabelsForTop3Genres()
+        public void GetTop3Genres_GetExistingGenres_SetsGenreNameAndMinutesListenedAndPercentageOfLabelsForTop3Genres()
         {
             var genre1 = new Label();
             var minutes1 = new Label();
@@ -50,7 +50,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetTop3SubGenres_SetsGenreNameAndMinutesListenedAndPercentageOfLabelsForTop3Genres()
+        public void GetTop3SubGenres_GetExistingSubgenres_SetsGenreNameAndMinutesListenedAndPercentageOfLabelsForTop3Genres()
         {
             var subgenre1 = new Label();
             var minutes1 = new Label();
