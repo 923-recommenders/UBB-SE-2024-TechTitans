@@ -14,7 +14,7 @@ namespace TechTitans.Repositories
     /// Represents a repository for managing user playback behavior data,
     /// including operations for retrieving playback behavior records.
     /// </summary>
-    internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>
+    internal class UserPlaybackBehaviourRepository : Repository<UserPlaybackBehaviour>, IUserPlaybackBehaviourRepository
     {
         public UserPlaybackBehaviourRepository(IDatabaseOperations databaseOperations) : base(databaseOperations)
         {

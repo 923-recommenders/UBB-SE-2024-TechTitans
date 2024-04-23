@@ -1,9 +1,12 @@
 ﻿using System.Data;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using TechTitans.Enums;
 using TechTitans.Models;
 using TechTitans.Repositories;
 using TechTitans.ViewModels;
+
+[assembly: InternalsVisibleTo("TechTitansTesting")]
 
 namespace TechTitans.Services
 {
@@ -16,8 +19,20 @@ namespace TechTitans.Services
         private static readonly IConfiguration Configuration = MauiProgram.Configuration;
         private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
         private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        public SongBasicDetailsRepository SongBasicDetailsRepository = new SongBasicDetailsRepository(databaseOperations);
-        public UserPlaybackBehaviourRepository UserPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository(databaseOperations);
+        private ISongBasicDetailsRepository songBasicDetailsRepository;
+        private IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository;
+
+        public RecapController()
+        {
+            songBasicDetailsRepository = new SongBasicDetailsRepository(databaseOperations);
+            userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository(databaseOperations);
+        }
+
+        public RecapController(ISongBasicDetailsRepository songBasicDetailsRepository, IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository)
+        {
+            this.songBasicDetailsRepository = songBasicDetailsRepository;
+            this.userPlaybackBehaviourRepository = userPlaybackBehaviourRepository;
+        }
 
         /// <summary>
         /// Retrieves the top 5 most listened songs for a user.

@@ -15,7 +15,7 @@ namespace TechTitans.Repositories
     /// including operations for retrieving song information, top listened songs,
     /// and user playback behavior analysis.
     /// </summary>
-    public class SongBasicDetailsRepository : Repository<SongDataBaseModel>
+    public class SongBasicDetailsRepository : Repository<SongDataBaseModel>, ISongBasicDetailsRepository
     {
         public SongBasicDetailsRepository(IDatabaseOperations databaseOperations) : base(databaseOperations)
         {
