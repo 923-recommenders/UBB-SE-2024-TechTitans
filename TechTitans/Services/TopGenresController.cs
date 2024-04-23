@@ -14,12 +14,6 @@ namespace TechTitans.Services
     /// </summary>
     public class TopGenresController
     {
-        /*private static readonly IConfiguration Configuration = MauiProgram.Configuration;
-        private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
-        private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-        private Repository<SongDataBaseModel> songRepo = new Repository<SongDataBaseModel>(databaseOperations);
-        private Repository<SongRecommendationDetails> songRecommendationRepo = new Repository<SongRecommendationDetails>(databaseOperations);*/
-
         private IRepository<SongDataBaseModel> songRepo;
         private IRepository<SongRecommendationDetails> songRecommendationRepo;
 

@@ -44,7 +44,6 @@ public partial class AnalystPage : ContentPage
 		{
 			try
 			{
-				// make them ints
 				monthInt = Convert.ToInt32(month);
 				yearInt = Convert.ToInt32(year);
 			}
