@@ -16,7 +16,7 @@ namespace TechTitans.Services
     /// including playback behavior and ad distribution data.
     /// </summary>
     internal class FullDetailsOnSongController
-    { 
+    {
         private static readonly IConfiguration Configuration = MauiProgram.Configuration;
         private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
         private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
