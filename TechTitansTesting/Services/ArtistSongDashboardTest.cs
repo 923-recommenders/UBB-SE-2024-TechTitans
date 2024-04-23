@@ -46,21 +46,15 @@ namespace TechTitansTesting.Services
             {
                 song 
             };
-
             
             var songRecommendationData = new List<SongRecommendationDetails>();
             var songRepositoryStub = new TestArtistSongDashboardRepository<SongDataBaseModel>(songData);
             var songRecommendationRepositoryStub = new TestArtistSongDashboardRepository<SongRecommendationDetails>(songRecommendationData);
-            
             var artistRepositoryStub = new TestArtistSongDashboardRepository<ArtistDetails>(artistDetailsData);
-            
             var songFeaturesData = new List<SongFeatures>(songFeaturesDataTest);
-
             var featureRepositoryStub = new TestArtistSongDashboardRepository<SongFeatures>(songFeaturesData);
-
             IEnumerable<ArtistDetails> x = artistRepositoryStub.GetAll();
             Console.WriteLine(x);
-
             var controller = new ArtistSongDashboardController(
             songRepositoryStub,
             featureRepositoryStub,
@@ -68,10 +62,8 @@ namespace TechTitansTesting.Services
             artistRepositoryStub
             );
 
-            
             SongBasicInformation result = controller.TransformSongDataBaseModelToSongInfo(song);
 
-            
             Assert.Equal(song.Song_Id, result.SongId);
             Assert.Equal(song.Name, result.Name);
             Assert.Equal(song.Genre, result.Genre);
@@ -88,7 +80,6 @@ namespace TechTitansTesting.Services
         {
             
             var artistId = 1;
-
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel
@@ -137,7 +128,6 @@ namespace TechTitansTesting.Services
                 songRecommendationRepositoryStub,
                 artistRepositoryMock.Object
             );
-
             var result = controller.GetAllArtistSongs(artistId);
 
             Assert.NotNull(result);
@@ -153,7 +143,6 @@ namespace TechTitansTesting.Services
         public void SearchSongsByTitle_ReturnsMatchingSongs()
         {
             var titleToSearch = "Test";
-
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel
@@ -184,18 +173,15 @@ namespace TechTitansTesting.Services
 
             var songRepositoryMock = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryMock.Setup(repo => repo.GetAll()).Returns(songData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var songRecommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryMock.Object,
                 featureRepositoryStub,
                 songRecommendationRepositoryStub,
                 artistRepositoryStub
             );
-
             var result = controller.SearchSongsByTitle(titleToSearch);
 
             Assert.NotNull(result);
@@ -220,25 +206,19 @@ namespace TechTitansTesting.Services
                 Album = "Test Album",
                 Image = "test_image.png"
             };
-
             var songRepositoryMock = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryMock.Setup(repo => repo.GetAll()).Returns(new List<SongDataBaseModel> { expectedSong });
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>().Object;
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var songRecommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryMock.Object,
                 featureRepositoryStub,
                 songRecommendationRepositoryStub,
                 artistRepositoryStub
             );
-
-            // Act
             var result = controller.GetSongInformation(songIdToSearch);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedSong.Song_Id, result.SongId);
             Assert.Equal(expectedSong.Name, result.Name);
@@ -253,12 +233,9 @@ namespace TechTitansTesting.Services
         [Fact]
         public void GetSongInformation_ReturnsNull_WhenSongDoesNotExist()
         {
-            // Arrange
-            var songIdToSearch = 100; // Assuming ID that doesn't exist
-
+            var songIdToSearch = 100;
             var songRepositoryMock = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryMock.Setup(repo => repo.GetAll()).Returns(new List<SongDataBaseModel>());
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>().Object;
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var songRecommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
@@ -270,10 +247,8 @@ namespace TechTitansTesting.Services
                 artistRepositoryStub
             );
 
-            // Act
             var result = controller.GetSongInformation(songIdToSearch);
 
-            // Assert
             Assert.Null(result);
         }
 
@@ -281,7 +256,6 @@ namespace TechTitansTesting.Services
         public void GetSongRecommandationDetails_ReturnsCorrectDetails()
         {
             var songIdToSearch = 1;
-
             var recommendationData = new List<SongRecommendationDetails>
             {
                 new SongRecommendationDetails
@@ -308,11 +282,9 @@ namespace TechTitansTesting.Services
 
             var recommendationRepositoryMock = new Mock<IRepository<SongRecommendationDetails>>();
             recommendationRepositoryMock.Setup(repo => repo.GetAll()).Returns(recommendationData);
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>().Object;
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub,
                 featureRepositoryStub,
@@ -320,10 +292,8 @@ namespace TechTitansTesting.Services
                 artistRepositoryStub
             );
 
-
             var result = controller.GetSongRecommandationDetails(songIdToSearch);
 
-       
             Assert.NotNull(result);
             Assert.Equal(100, result.Likes);
             Assert.Equal(10, result.Dislikes);
@@ -332,10 +302,10 @@ namespace TechTitansTesting.Services
             Assert.Equal(4, result.Month);
             Assert.Equal(2024, result.Year);
         }
+
         [Fact]
         public void GetSongInformation_ReturnsNull_WhenArtistNotFoundForSong()
         {
-            // Arrange
             var songIdToSearch = 1;
             var expectedSong = new SongDataBaseModel
             {
@@ -352,25 +322,18 @@ namespace TechTitansTesting.Services
             Assert.NotEqual(songIdToSearch, expectedSong.Song_Id);
             var songRepositoryMock = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryMock.Setup(repo => repo.GetAll()).Returns(new List<SongDataBaseModel> { expectedSong });
-
-            // Empty artist data
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(new List<ArtistDetails>());
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var songRecommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryMock.Object,
                 featureRepositoryStub,
                 songRecommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
-            // Act
             var result = controller.GetSongInformation(songIdToSearch);
 
-            // Assert
             Assert.Null(result);
         }
 
@@ -402,21 +365,17 @@ namespace TechTitansTesting.Services
                     Year = 2024
                 }
             };
-
             var recommendationRepositoryMock = new Mock<IRepository<SongRecommendationDetails>>();
             recommendationRepositoryMock.Setup(repo => repo.GetAll()).Returns(recommendationData);
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>().Object;
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub,
                 featureRepositoryStub,
                 recommendationRepositoryMock.Object,
                 artistRepositoryStub
             );
-
 
             var result = controller.GetSongRecommandationDetails(songIdToSearch);
 
@@ -428,37 +387,27 @@ namespace TechTitansTesting.Services
             Assert.Equal(0, result.Month);
             Assert.Equal(0, result.Year); 
         }
+
         [Fact]
         public void GetArtistInfoBySong_ReturnsArtistDetails_WhenSongExists()
         {
-            // Arrange
             var songIdToSearch = 1;
             var artistId = 1;
             var expectedArtistName = "Test Artist";
-
-            // Mock song data
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel { Song_Id = 1, Artist_Id = artistId }
             };
-
-            // Mock artist data
             var artistData = new List<ArtistDetails>
             {
                 new ArtistDetails { Artist_Id = artistId, Name = expectedArtistName }
             };
-
-            // Mock repositories
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
-            // Create the controller instance
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
@@ -466,10 +415,8 @@ namespace TechTitansTesting.Services
                 artistRepositoryStub.Object
             );
 
-            // Act
             var result = controller.GetArtistInfoBySong(songIdToSearch);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(artistId, result.Artist_Id);
             Assert.Equal(expectedArtistName, result.Name);
@@ -478,125 +425,83 @@ namespace TechTitansTesting.Services
         [Fact]
         public void GetArtistInfoBySong_ReturnsNull_WhenSongDoesNotExist()
         {
-            // Arrange
             var songIdToSearch = 3;
-
-            // Mock empty song data
             var songData = new List<SongDataBaseModel>();
-
-            // Mock artist data
             var artistData = new List<ArtistDetails>
-    {
-        new ArtistDetails { Artist_Id = 1, Name = "Test Artist" }
-    };
-
-            // Mock repositories
+            {
+                new ArtistDetails { Artist_Id = 1, Name = "Test Artist" }
+            };
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
-            // Create the controller instance
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
-            // Act
             var result = controller.GetArtistInfoBySong(songIdToSearch);
 
-            // Assert
             Assert.Null(result);
         }
 
         [Fact]
         public void GetArtistInfoBySong_ReturnsNull_WhenArtistNotFoundForSong()
         {
-            // Arrange
             var songIdToSearch = 1;
-            var artistId = 2; // Artist ID that doesn't exist in the artist data
-
-            // Mock song data
+            var artistId = 2; 
             var songData = new List<SongDataBaseModel>
-    {
-        new SongDataBaseModel { Song_Id = 1, Artist_Id = artistId }
-    };
-
-            // Mock artist data with different artist ID
+            {
+                new SongDataBaseModel { Song_Id = 1, Artist_Id = artistId }
+            };
             var artistData = new List<ArtistDetails>
-    {
-        new ArtistDetails { Artist_Id = 3, Name = "Test Artist 3" }
-    };
-
-            // Mock repositories
+            {
+                new ArtistDetails { Artist_Id = 3, Name = "Test Artist 3" }
+            };
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
-            // Create the controller instance
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
-            // Act
             var result = controller.GetArtistInfoBySong(songIdToSearch);
 
-            // Assert
             Assert.Null(result);
         }
 
         [Fact]
         public void GetArtistInfoBySong_ReturnsNull_WhenArtistNotFound()
         {
-            // Arrange
             var songIdToSearch = 1;
-            var artistId = 2; // Artist ID that doesn't exist in the artist data
-
-            // Mock song data
+            var artistId = 2;
             var songData = new List<SongDataBaseModel>
-    {
-        new SongDataBaseModel { Song_Id = 1, Artist_Id = artistId }
-    };
-
-            // Mock empty artist data
+            {
+                new SongDataBaseModel { Song_Id = 1, Artist_Id = artistId }
+            };
             var artistData = new List<ArtistDetails>();
-
-            // Mock repositories
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
-            // Create the controller instance
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
-            // Act
             var result = controller.GetArtistInfoBySong(songIdToSearch);
 
-            // Assert
             Assert.Null(result);
         }
 
@@ -606,39 +511,32 @@ namespace TechTitansTesting.Services
             var expectedArtistId = 1;
             var expectedArtistName = "Test Artist";
             var expectedSongCount = 3;
-
             var songData = new List<SongDataBaseModel>
-    {
-        new SongDataBaseModel { Artist_Id = expectedArtistId },
-        new SongDataBaseModel { Artist_Id = expectedArtistId },
-        new SongDataBaseModel { Artist_Id = expectedArtistId },
-        new SongDataBaseModel { Artist_Id = 2 },
-        new SongDataBaseModel { Artist_Id = 3 }
-    };
-
+            {
+                new SongDataBaseModel { Artist_Id = expectedArtistId },
+                new SongDataBaseModel { Artist_Id = expectedArtistId },
+                new SongDataBaseModel { Artist_Id = expectedArtistId },
+                new SongDataBaseModel { Artist_Id = 2 },
+                new SongDataBaseModel { Artist_Id = 3 }
+            };
             var artistData = new List<ArtistDetails>
-    {
-        new ArtistDetails { Artist_Id = expectedArtistId, Name = expectedArtistName },
-        new ArtistDetails { Artist_Id = 2, Name = "Artist 2" },
-        new ArtistDetails { Artist_Id = 3, Name = "Artist 3" }
-    };
-
+            {
+                new ArtistDetails { Artist_Id = expectedArtistId, Name = expectedArtistName },
+                new ArtistDetails { Artist_Id = 2, Name = "Artist 2" },
+                new ArtistDetails { Artist_Id = 3, Name = "Artist 3" }
+            };
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
             var result = controller.GetMostPublishedArtist();
 
             Assert.NotNull(result);
@@ -651,23 +549,18 @@ namespace TechTitansTesting.Services
         {
             var songData = new List<SongDataBaseModel>();
             var artistData = new List<ArtistDetails>();
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
             var result = controller.GetMostPublishedArtist();
 
             Assert.Null(result);
@@ -678,10 +571,8 @@ namespace TechTitansTesting.Services
         {
             var expectedArtistId1 = 1;
             var expectedArtistName1 = "Test Artist 1";
-
             var expectedArtistId2 = 2;
             var expectedArtistName2 = "Test Artist 2";
-
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel { Artist_Id = expectedArtistId1 },
@@ -689,29 +580,23 @@ namespace TechTitansTesting.Services
                 new SongDataBaseModel { Artist_Id = expectedArtistId2 },
                 new SongDataBaseModel { Artist_Id = expectedArtistId2 }
             };
-
-                    var artistData = new List<ArtistDetails>
+            var artistData = new List<ArtistDetails>
             {
                 new ArtistDetails { Artist_Id = expectedArtistId1, Name = expectedArtistName1 },
                 new ArtistDetails { Artist_Id = expectedArtistId2, Name = expectedArtistName2 }
             };
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
             var result = controller.GetMostPublishedArtist();
 
             Assert.NotNull(result);
@@ -724,7 +609,6 @@ namespace TechTitansTesting.Services
         {
             var mostPublishedArtistId = 1;
             var expectedSongCount = 3; 
-
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel { Artist_Id = mostPublishedArtistId },
@@ -733,30 +617,24 @@ namespace TechTitansTesting.Services
                 new SongDataBaseModel { Artist_Id = 2 },
                 new SongDataBaseModel { Artist_Id = 3 }
             };
-
             var artistData = new List<ArtistDetails>
             {
                 new ArtistDetails { Artist_Id = mostPublishedArtistId, Name = "Most Published Artist" },
                 new ArtistDetails { Artist_Id = 2, Name = "Artist 2" },
                 new ArtistDetails { Artist_Id = 3, Name = "Artist 3" }
             };
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
             var result = controller.GetSongsByMostPublishedArtistForMainPage();
 
             Assert.NotNull(result); 
@@ -769,23 +647,18 @@ namespace TechTitansTesting.Services
         {
             var songData = new List<SongDataBaseModel>(); 
             var artistData = new List<ArtistDetails>(); 
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
                 recommendationRepositoryStub,
                 artistRepositoryStub.Object
             );
-
             var result = controller.GetSongsByMostPublishedArtistForMainPage();
 
             Assert.NotNull(result); 
@@ -796,29 +669,23 @@ namespace TechTitansTesting.Services
         public void GetSongsByMostPublishedArtistForMainPage_ReturnsEmptyList_WhenNoSongsPublishedByMostPublishedArtist()
         {
             var mostPublishedArtistId = 1;
-
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel { Artist_Id = 2 },
                 new SongDataBaseModel { Artist_Id = 3 }
             };
-
             var artistData = new List<ArtistDetails>
             {
                 new ArtistDetails { Artist_Id = mostPublishedArtistId, Name = "Most Published Artist" },
                 new ArtistDetails { Artist_Id = 2, Name = "Artist 2" },
                 new ArtistDetails { Artist_Id = 3, Name = "Artist 3" }
             };
-
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
-
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
             artistRepositoryStub.Setup(repo => repo.GetAll()).Returns(artistData);
-
             var featureRepositoryStub = new Mock<IRepository<SongFeatures>>().Object;
             var recommendationRepositoryStub = new Mock<IRepository<SongRecommendationDetails>>().Object;
-
             var controller = new ArtistSongDashboardController(
                 songRepositoryStub.Object,
                 featureRepositoryStub,
