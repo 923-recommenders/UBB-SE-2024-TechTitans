@@ -37,20 +37,20 @@ namespace TechTitansTesting.Repositories
         }
 
         [Fact]
-        public void GetUserPlaybackBehaviour_ShouldReturnListOfUserPlaybackBehaviour()
+        public void GetListOfUserPlaybackEntitiesBehaviour_ShouldReturnListOfUserPlaybackBehaviour()
         {
             _mockDatabaseOperations = new Mock<IDatabaseOperations>();
             _repository = new UserPlaybackBehaviourRepository(_mockDatabaseOperations.Object);
             var expectedUserPlaybackBehaviour = new List<UserPlaybackBehaviour> ()
             {
-                new UserPlaybackBehaviour()
+                new()
                 {
                     User_Id = 1, 
                     Song_Id = 1, 
                     Event_Type = TechTitans.Enums.PlaybackEventType.StartSongPlayback, 
                     Timestamp = DateTime.Now 
                 },
-                new UserPlaybackBehaviour()
+                new()
                 {
                     User_Id = 1, 
                     Song_Id = 2, 
@@ -62,10 +62,10 @@ namespace TechTitansTesting.Repositories
             _mockDatabaseOperations.Setup(c => c.Query<UserPlaybackBehaviour>(It.IsAny<string>(), It.IsAny<object>(), null, true, null, null))
                            .Returns(expectedUserPlaybackBehaviour);
 
-            var result = _repository.GetUserPlaybackBehaviour(1);
+            var result = _repository.GetListOfUserPlaybackBehaviourEntities(1);
 
             Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
+            Assert.Equal(2, result.Count);
         }
     }
 

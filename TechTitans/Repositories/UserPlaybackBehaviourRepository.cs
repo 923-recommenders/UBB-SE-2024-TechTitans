@@ -52,7 +52,7 @@ namespace TechTitans.Repositories
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>A list of playback behavior records for the specified user.</returns>
-        public List<UserPlaybackBehaviour> GetUserPlaybackBehaviour(int userId)
+        public List<UserPlaybackBehaviour> GetListOfUserPlaybackBehaviourEntities(int userId)
         {
             var queryBuilder = new StringBuilder();
             queryBuilder.Append("SELECT user_id as User_Id, song_id as Song_Id, event_type as Event_Type, timestamp as Timestamp FROM UserPlaybackBehaviour WHERE user_id = @userId");
