@@ -302,7 +302,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongInformation_ReturnsNull_WhenArtistNotFoundForSong()
+        public void GetSongInformation_WhenArtistNotFoundForSong_ReturnsNull()
         {
             var songIdToSearch = 1;
             var expectedSong = new SongDataBaseModel
