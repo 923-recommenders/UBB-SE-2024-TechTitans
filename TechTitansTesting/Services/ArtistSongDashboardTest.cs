@@ -15,7 +15,7 @@ namespace TechTitansTesting.Services
     public class ArtistSongDashboardTest
     {
         [Fact]
-        public void TransformSongDataBaseModelToSongInfo_TransformsCorrectly()
+        public void TransformSongDataBaseModelToSongInfo_TransformsExistingSong_ReturnsCorrectSongInfo()
         {
             
             var song = new SongDataBaseModel
@@ -53,8 +53,6 @@ namespace TechTitansTesting.Services
             var artistRepositoryStub = new TestArtistSongDashboardRepository<ArtistDetails>(artistDetailsData);
             var songFeaturesData = new List<SongFeatures>(songFeaturesDataTest);
             var featureRepositoryStub = new TestArtistSongDashboardRepository<SongFeatures>(songFeaturesData);
-            IEnumerable<ArtistDetails> x = artistRepositoryStub.GetAll();
-            Console.WriteLine(x);
             var controller = new ArtistSongDashboardController(
             songRepositoryStub,
             featureRepositoryStub,
@@ -76,7 +74,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetAllArtistSongs_ReturnsCorrectSongs()
+        public void GetAllArtistSongs_GetExistingSongsOfArtist_ReturnsListOfSongsBelongingToArtist()
         {
             
             var artistId = 1;
@@ -140,7 +138,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void SearchSongsByTitle_ReturnsMatchingSongs()
+        public void SearchSongsByTitle_SearchExistingSongTitle_ReturnsMatchingSongs()
         {
             var titleToSearch = "Test";
             var songData = new List<SongDataBaseModel>
@@ -190,7 +188,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongInformation_ReturnsSongInfo_WhenSongExists()
+        public void GetSongInformation_GetExistingSong_ReturnsSongInfo()
         {
             // Arrange
             var songIdToSearch = 1;
@@ -231,7 +229,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongInformation_ReturnsNull_WhenSongDoesNotExist()
+        public void GetSongInformation_WhenSongDoesNotExist_ReturnsNull()
         {
             var songIdToSearch = 100;
             var songRepositoryMock = new Mock<IRepository<SongDataBaseModel>>();
@@ -253,7 +251,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongRecommandationDetails_ReturnsCorrectDetails()
+        public void GetSongRecommandationDetails_GetDetailsExistingSong_ReturnsSongDetails()
         {
             var songIdToSearch = 1;
             var recommendationData = new List<SongRecommendationDetails>
@@ -304,7 +302,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongInformation_ReturnsNull_WhenArtistNotFoundForSong()
+        public void GetSongInformation_WhenArtistNotFoundForSong_ReturnsNull()
         {
             var songIdToSearch = 1;
             var expectedSong = new SongDataBaseModel
@@ -338,7 +336,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongRecommandationDetails_DefaultWhenSongIdNotFound()
+        public void GetSongRecommandationDetails_GetSongIdNotExists_DefaultSongDetails()
         {
             var songIdToSearch = 3; 
 
@@ -389,7 +387,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetArtistInfoBySong_ReturnsArtistDetails_WhenSongExists()
+        public void GetArtistInfoBySong_WhenSongIdExists_ReturnsArtistDetails()
         {
             var songIdToSearch = 1;
             var artistId = 1;
@@ -423,7 +421,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetArtistInfoBySong_ReturnsNull_WhenSongDoesNotExist()
+        public void GetArtistInfoBySong_WhenSongIdDoesNotExist_ReturnsNull()
         {
             var songIdToSearch = 3;
             var songData = new List<SongDataBaseModel>();
@@ -449,7 +447,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetArtistInfoBySong_ReturnsNull_WhenArtistNotFoundForSong()
+        public void GetArtistInfoBySong_WhenArtistNotFoundForSong_ReturnsNull()
         {
             var songIdToSearch = 1;
             var artistId = 2; 
@@ -479,7 +477,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetArtistInfoBySong_ReturnsNull_WhenArtistNotFound()
+        public void GetArtistInfoBySong_WhenArtistNotFound_ReturnsNull()
         {
             var songIdToSearch = 1;
             var artistId = 2;
@@ -506,7 +504,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetMostPublishedArtist_ReturnsArtistWithMostPublishedSongs()
+        public void GetMostPublishedArtist_GetExistingArtist_ReturnsArtistWithMostPublishedSongs()
         {
             var expectedArtistId = 1;
             var expectedArtistName = "Test Artist";
@@ -545,7 +543,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetMostPublishedArtist_ReturnsNull_WhenNoSongsPublished()
+        public void GetMostPublishedArtist_WhenNoSongsPublished_ReturnsNull()
         {
             var songData = new List<SongDataBaseModel>();
             var artistData = new List<ArtistDetails>();
@@ -567,7 +565,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetMostPublishedArtist_ReturnsFirstArtistWithMostPublishedSongs_WhenMultipleArtistsHaveSameNumberOfPublishedSongs()
+        public void GetMostPublishedArtist_WhenMultipleArtistsHaveSameNumberOfPublishedSongs_ReturnsFirstArtistWithMostPublishedSongs()
         {
             var expectedArtistId1 = 1;
             var expectedArtistName1 = "Test Artist 1";
@@ -605,7 +603,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongsByMostPublishedArtistForMainPage_ReturnsSongsByMostPublishedArtist()
+        public void GetSongsByMostPublishedArtistForMainPage_GetExistingSongsOfArtist_ReturnsSongsByMostPublishedArtist()
         {
             var mostPublishedArtistId = 1;
             var expectedSongCount = 3; 
@@ -643,7 +641,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongsByMostPublishedArtistForMainPage_ReturnsEmptyList_WhenNoSongsPublished()
+        public void GetSongsByMostPublishedArtistForMainPage_WhenNoSongsPublished_ReturnsEmptyList()
         {
             var songData = new List<SongDataBaseModel>(); 
             var artistData = new List<ArtistDetails>(); 
@@ -666,7 +664,7 @@ namespace TechTitansTesting.Services
         }
 
         [Fact]
-        public void GetSongsByMostPublishedArtistForMainPage_ReturnsEmptyList_WhenNoSongsPublishedByMostPublishedArtist()
+        public void GetSongsByMostPublishedArtistForMainPage_WhenNoSongsPublishedByMostPublishedArtist_ReturnsEmptyList()
         {
             var mostPublishedArtistId = 1;
             var songData = new List<SongDataBaseModel>
