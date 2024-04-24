@@ -183,14 +183,13 @@ namespace TechTitansTesting.Services
             var result = controller.SearchSongsByTitle(titleToSearch);
 
             Assert.NotNull(result);
-            Assert.Single(result); // Only one song should match the title
+            Assert.Single(result);
             Assert.Equal("Test Song 1", result[0].Name);
         }
 
         [Fact]
         public void GetSongInformation_GetExistingSong_ReturnsSongInfo()
         {
-            // Arrange
             var songIdToSearch = 1;
             var expectedSong = new SongDataBaseModel
             {

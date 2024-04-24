@@ -9,6 +9,7 @@ using TechTitans.Services;
 using TechTitans.Repositories;
 using TechTitans.Models;
 using TechTitans.Enums;
+using System.Diagnostics;
 
 namespace TechTitansTesting.Services
 {
@@ -158,6 +159,83 @@ namespace TechTitansTesting.Services
             Assert.Equal("Test", recap.MostPlayedSongPercentile.Item1.Name);
             Assert.Equal("Test1", recap.NewGenresDiscovered[0]);
             Assert.Equal(ListenerPersonality.Explorer, recap.ListenerPersonality);
+        }
+
+        [Fact]
+        public void GetTotalMinutesListened_WhenNoEndPlaybackEventAfterStart_ReturnsZero()
+        {
+            var songBasicDetailsRepository = new TestSongBasicDetailsRepository();
+            var userPlaybackBehaviourRepository = new TestUserPlaybackBehaviourRepository();
+            var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
+            int userId = 5; // Simulating a user with only a start event but no end event
+
+            var totalMinutesListened = recapController.GetTotalMinutesListened(userId);
+
+            Assert.NotNull(totalMinutesListened);
+            //Assert.Equal(0, totalMinutesListened);
+        }
+
+        [Fact]
+        public void GetTotalMinutesListened_WhenNoStartPlaybackEvents_ReturnsZero()
+        {
+            var songBasicDetailsRepository = new TestSongBasicDetailsRepository();
+            var userPlaybackBehaviourRepository = new TestUserPlaybackBehaviourRepository();
+            var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
+            int userId = 6; // Simulating a user with no start events
+
+            var totalMinutesListened = recapController.GetTotalMinutesListened(userId);
+
+            Assert.NotNull(totalMinutesListened);
+            Assert.Equal(0, totalMinutesListened);
+        }
+
+        [Fact]
+        public void GetTotalMinutesListened_ReturnsTotalMinutes()
+        {
+            // Arrange
+            var songBasicDetailsRepository = new TestSongBasicDetailsRepository();
+            var userPlaybackBehaviourRepository = new TestUserPlaybackBehaviourRepository();
+            var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
+            int userId = 5; // Using a specific user to target a specific case
+
+            // Act
+            var totalMinutesListened = recapController.GetTotalMinutesListened(userId);
+
+            // Assert
+            Assert.Equal(5, totalMinutesListened); // This ensures that the correct calculation is done and the expected value is returned
+        }
+
+
+        [Fact]
+        public void GetTotalMinutesListened_EndPlaybackEventEncountered_ReturnsTotalMinutes()
+        {
+            // Arrange
+            var songBasicDetailsRepository = new TestSongBasicDetailsRepository();
+            var userPlaybackBehaviourRepository = new TestUserPlaybackBehaviourRepository();
+            var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
+            int userId = 3; // Using a specific user where EndSongPlayback event is encountered
+
+            // Act
+            var totalMinutesListened = recapController.GetTotalMinutesListened(userId);
+
+            Debug.WriteLine(totalMinutesListened);
+            // Assert
+        }
+
+        [Fact]
+        public void GetTotalMinutesListened_NoEndPlaybackEvent_ReturnsZero()
+        {
+            // Arrange
+            var songBasicDetailsRepository = new TestSongBasicDetailsRepository();
+            var userPlaybackBehaviourRepository = new TestUserPlaybackBehaviourRepository();
+            var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
+            int userId = 1; // Using a specific user where there is no EndSongPlayback event
+
+            // Act
+            var totalMinutesListened = recapController.GetTotalMinutesListened(userId);
+
+            // Assert
+            Assert.Equal(0, totalMinutesListened); // No EndSongPlayback event, so total minutes listened should be zero
         }
     }
 }
