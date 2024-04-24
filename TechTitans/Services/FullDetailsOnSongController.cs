@@ -20,8 +20,7 @@ namespace TechTitans.Services
         private readonly IRepository<UserPlaybackBehaviour> userPlaybackBehaviourRepo;
         private readonly IRepository<AdDistributionData> adDistributionDataRepo;
 
-        public FullDetailsOnSongController(IRepository<UserPlaybackBehaviour> userPlaybackBehaviourRepo,
-            IRepository<AdDistributionData> adDistributionDataRepo)
+        public FullDetailsOnSongController(IRepository<UserPlaybackBehaviour> userPlaybackBehaviourRepo, IRepository<AdDistributionData> adDistributionDataRepo)
         {
             this.userPlaybackBehaviourRepo = userPlaybackBehaviourRepo;
             this.adDistributionDataRepo = adDistributionDataRepo;

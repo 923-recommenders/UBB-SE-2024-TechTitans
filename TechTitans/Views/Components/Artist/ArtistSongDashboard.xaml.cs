@@ -8,10 +8,7 @@ namespace TechTitans.Views.Components.Artist;
 
 public partial class ArtistSongDashboard : ContentPage
 {
-    private static readonly IConfiguration Configuration = MauiProgram.Configuration;
-    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
-    private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-    public ArtistSongDashboardController Service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
+	public ArtistSongDashboardController Service = ServiceContext.ArtistSongDashboardControllerInstance;
     // alt domain song type cu mai multe detalii
     public int SongId;
     public ArtistSongDashboardViewModel ViewModel;

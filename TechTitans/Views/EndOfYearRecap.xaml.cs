@@ -11,12 +11,7 @@ namespace TechTitans.Views;
 
 public partial class EndOfYearRecap : ContentPage
 {
-    private static readonly IConfiguration Configuration = MauiProgram.Configuration;
-    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
-    private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-    private static ISongBasicDetailsRepository songBasicDetailsRepository = new SongBasicDetailsRepository(databaseOperations);
-    private static IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository(databaseOperations);
-    private static RecapController recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
+    private static RecapController recapController = ServiceContext.RecapControllerInstance;
 
     private int pageIndex = 0;
     private List<ProgressBar> progressBar;
