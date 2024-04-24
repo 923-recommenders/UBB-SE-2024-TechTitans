@@ -1,5 +1,8 @@
+using System.Data;
+using Microsoft.Extensions.Configuration;
 using TechTitans.Enums;
 using TechTitans.Models;
+using TechTitans.Repositories;
 using TechTitans.Services;
 using TechTitans.ViewModels;
 using TechTitans.Views.Components.EndOfYearRecap;
@@ -8,25 +11,32 @@ namespace TechTitans.Views;
 
 public partial class EndOfYearRecap : ContentPage
 {
+    private static readonly IConfiguration Configuration = MauiProgram.Configuration;
+    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
+    private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
+    private static ISongBasicDetailsRepository songBasicDetailsRepository = new SongBasicDetailsRepository(databaseOperations);
+    private static IUserPlaybackBehaviourRepository userPlaybackBehaviourRepository = new UserPlaybackBehaviourRepository(databaseOperations);
+    private static RecapController recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
+
     private int pageIndex = 0;
     private List<ProgressBar> progressBar;
     private EndOfYearRecapViewModel viewModel;
-	public EndOfYearRecap()
-	{
-		var mockSongs = new List<SongBasicInformation>()
-		{
-			new ()
-			{
-				SongId = 1,
-				Name = "Roma1",
-				Genre = "Manele",
-				Subgenre = "Trapanele",
-				Artist = "BDLP",
-				Features = new[] { "Ian" },
-				Language = "Romanian",
-				Country = "Romania",
-				Album = "Single",
-				Image = "https://i.ytimg.com/vi/Ovbn5mPit8o/sddefault.jpg?v=64c3f573"
+    public EndOfYearRecap()
+    {
+        var mockSongs = new List<SongBasicInformation>()
+        {
+            new ()
+            {
+                SongId = 1,
+                Name = "Roma1",
+                Genre = "Manele",
+                Subgenre = "Trapanele",
+                Artist = "BDLP",
+                Features = new[] { "Ian" },
+                Language = "Romanian",
+                Country = "Romania",
+                Album = "Single",
+                Image = "https://i.ytimg.com/vi/Ovbn5mPit8o/sddefault.jpg?v=64c3f573"
             },
             new ()
             {
@@ -98,7 +108,7 @@ public partial class EndOfYearRecap : ContentPage
             ListenerPersonality = ListenerPersonality.Explorer
         };
 
-        viewModel = new RecapController().GenerateEndOfYearRecap(1001);
+        viewModel = recapController.GenerateEndOfYearRecap(1001);
 
         BindingContext = viewModel;
         this.viewModel = viewModel;

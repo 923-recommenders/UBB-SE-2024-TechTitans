@@ -93,7 +93,7 @@ namespace TechTitansTesting.Services.Stubs
                 new SongDataBaseModel(),
                 new SongDataBaseModel(),
                 new SongDataBaseModel(),
-                new SongDataBaseModel()               
+                new SongDataBaseModel()
             };
         }
 

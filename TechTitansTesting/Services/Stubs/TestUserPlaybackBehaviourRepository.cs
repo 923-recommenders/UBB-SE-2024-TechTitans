@@ -23,9 +23,10 @@ namespace TechTitansTesting.Services.Stubs
 
         public List<UserPlaybackBehaviour> GetListOfUserPlaybackBehaviourEntities(int userId)
         {
-            if (userId == 3) {
+            if (userId == 3)
+            {
                 List<UserPlaybackBehaviour> userPlaybackBehaviourList = new List<UserPlaybackBehaviour>();
-                for(int i = 0; i < 102; i++)
+                for (int i = 0; i < 102; i++)
                 {
                     UserPlaybackBehaviour userPlaybackBehaviour = new UserPlaybackBehaviour();
                     userPlaybackBehaviour.User_Id = 3;
@@ -38,7 +39,8 @@ namespace TechTitansTesting.Services.Stubs
             }
             else
             {
-                if (userId == 4) { 
+                if (userId == 4)
+                {
                     List<UserPlaybackBehaviour> userPlaybackBehaviours = new List<UserPlaybackBehaviour>();
 
                     for (int i = 0; i < 12; i++)
@@ -51,6 +53,23 @@ namespace TechTitansTesting.Services.Stubs
                         userPlaybackBehaviours.Add(userPlaybackBehaviour);
                     }
                     return userPlaybackBehaviours;
+                }
+                else if (userId == 5)
+                {
+                    return new List<UserPlaybackBehaviour>()
+                    {
+                        new UserPlaybackBehaviour
+                        {
+                            User_Id = 1, Song_Id = 1, Event_Type = PlaybackEventType.StartSongPlayback,
+                            Timestamp = DateTime.Now
+                        },
+                        new UserPlaybackBehaviour
+                        {
+                            User_Id = 1, Song_Id = 2, Event_Type = PlaybackEventType.EndSongPlayback,
+                            Timestamp = DateTime.Now.AddMinutes(5)
+                        }
+
+                    };
                 }
                 else
                 {

@@ -6,7 +6,7 @@ using TechTitans.Models;
 using System.Collections.Generic;
 using TechTitansTesting.Services.Stubs;
 
-namespace TechTitans.Test.Services
+namespace TechTitansTesting.Services
 {
     public class UserControllerTests
     {

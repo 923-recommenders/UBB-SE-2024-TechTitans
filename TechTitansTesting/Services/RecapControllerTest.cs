@@ -23,7 +23,7 @@ namespace TechTitansTesting.Services
             var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
             int userId = 1;
 
-            var top5Songs = songBasicDetailsRepository.GetTop5MostListenedSongs(userId);
+            var top5Songs = recapController.GetTheTop5MostListenedSongs(userId);
 
             Assert.NotNull(top5Songs);
             Assert.Equal(5, top5Songs.Count);
@@ -37,10 +37,10 @@ namespace TechTitansTesting.Services
             var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
             int userId = 1;
 
-            var mostPlayedSongPercentile = songBasicDetailsRepository.GetMostPlayedSongPercentile(userId);
+            var mostPlayedSongPercentile = recapController.GetTheMostPlayedSongPercentile(userId);
 
             Assert.NotNull(mostPlayedSongPercentile);
-            Assert.IsType<Tuple<SongDataBaseModel, decimal>>(mostPlayedSongPercentile);
+            Assert.IsType<Tuple<SongBasicInformation, decimal>>(mostPlayedSongPercentile);
             Assert.Equal("Test", mostPlayedSongPercentile.Item1.Name);
         }
 
@@ -52,7 +52,7 @@ namespace TechTitansTesting.Services
             var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
             int userId = 1;
 
-            var mostPlayedArtistPercentile = songBasicDetailsRepository.GetMostPlayedArtistPercentile(userId);
+            var mostPlayedArtistPercentile = recapController.GetTheMostPlayedArtistPercentile(userId);
 
             Assert.NotNull(mostPlayedArtistPercentile);
             Assert.IsType<Tuple<string, decimal>>(mostPlayedArtistPercentile);
@@ -66,12 +66,18 @@ namespace TechTitansTesting.Services
             var userPlaybackBehaviourRepository = new TestUserPlaybackBehaviourRepository();
             var recapController = new RecapController(songBasicDetailsRepository, userPlaybackBehaviourRepository);
             int userId = 1;
+            int userId2 = 5;
 
             var totalMinutesListened = recapController.GetTotalMinutesListened(userId);
+            var totalMinutesListened2 = recapController.GetTotalMinutesListened(userId2);
 
             Assert.NotNull(totalMinutesListened);
             Assert.IsType<int>(totalMinutesListened);
+
+            Assert.NotNull(totalMinutesListened2);
+            Assert.Equal(5, totalMinutesListened2);
         }
+
 
         [Fact]
         public void GetTheTop5Genres_WhenUserHasGenres_ReturnsListOfGenres()
