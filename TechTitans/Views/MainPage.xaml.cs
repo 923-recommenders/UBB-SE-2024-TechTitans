@@ -6,15 +6,15 @@ namespace TechTitans.Views;
 public partial class MainPage : ContentPage
 {
     private int count = 0;
-    public TestRepository Repository { get; set; }
-    public TestDemographicDetails RepositoryDemographic { get; set; }
-    public TestAuthorDetails RepositoryAuthorDetails { get; set; }
-    public TestSongBasicDetails RepositorySongBasicDetails { get; set; }
-    public TestTrends RepositoryTestTrends { get; set; }
-    public TestUserPlaybackBehaviour RepositoryUserPlaybackBehaviour { get; set; }
-    public TestAdDistributionData RepositoryAdDistributionData { get; set; }
-    public TestSongRecommendationDetails RepositorySongRecommendationDetails { get; set; }
-    public TestSongFeatures RepositorySongFeatures { get; set; }
+    // public TestRepository Repository { get; set; }
+    // public TestDemographicDetails RepositoryDemographic { get; set; }
+    // public TestAuthorDetails RepositoryAuthorDetails { get; set; }
+    // public TestSongBasicDetails RepositorySongBasicDetails { get; set; }
+    // public TestTrends RepositoryTestTrends { get; set; }
+    // public TestUserPlaybackBehaviour RepositoryUserPlaybackBehaviour { get; set; }
+    // public TestAdDistributionData RepositoryAdDistributionData { get; set; }
+    // public TestSongRecommendationDetails RepositorySongRecommendationDetails { get; set; }
+    // public TestSongFeatures RepositorySongFeatures { get; set; }
     // public TestRepositoryDemographic Repository { get; set; }
     public MainPage()
     {
