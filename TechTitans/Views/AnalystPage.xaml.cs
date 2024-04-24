@@ -15,12 +15,7 @@ public partial class AnalystPage : ContentPage
 	public AnalystPage()
 	{
 		InitializeComponent();
-        IConfiguration configuration = MauiProgram.Configuration;
-		IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(configuration.GetConnectionString("TechTitansDev"));
-		IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-		IRepository<SongDataBaseModel> songRepo = new Repository<SongDataBaseModel>(databaseOperations);
-		IRepository<SongRecommendationDetails> songRecommendationRepo = new Repository<SongRecommendationDetails>(databaseOperations);
-		topGenresController = new TopGenresController(songRepo, songRecommendationRepo);
+		topGenresController = ServiceContext.TopGenresControllerInstance;
 	}
 
 	public void ClearText()

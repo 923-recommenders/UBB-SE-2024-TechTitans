@@ -9,10 +9,7 @@ using TechTitans.Repositories;
 
 public partial class ArtistPage : ContentPage
 {
-    private static readonly IConfiguration Configuration = MauiProgram.Configuration;
-    private static IDbConnection connection = new Microsoft.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("TechTitansDev"));
-    private static IDatabaseOperations databaseOperations = new DatabaseOperations(connection);
-    public ArtistSongDashboardController Service = new ArtistSongDashboardController(new Repository<SongDataBaseModel>(databaseOperations), new Repository<SongFeatures>(databaseOperations), new Repository<SongRecommendationDetails>(databaseOperations), new Repository<ArtistDetails>(databaseOperations));
+    public ArtistSongDashboardController Service = ServiceContext.ArtistSongDashboardControllerInstance;
 	public ArtistPage()
 	{
 		InitializeComponent();
@@ -21,29 +18,24 @@ public partial class ArtistPage : ContentPage
 
     private void LoadSongs()
     {
-        var songs = Service.GetSongsByMostPublishedArtistForMainPage(); // Get your list of songs from somewhere (e.g., database, API, local storage)
+        var songs = Service.GetSongsByMostPublishedArtistForMainPage();
 
-        // initial row
         SongsGrid.RowDefinitions.Add(new RowDefinition());
 
-        // Loop through each song and dynamically create SongItem controls
         int rowIndex = 0;
         int columnIndex = 0;
         foreach (var song in songs)
         {
-            var songItem = new SongItem(); // Create a new instance of SongItem
-            songItem.BindingContext = song; // Set the song as the binding context of the SongItem
-            songItem.Margin = new Thickness(0, 5, 0, 5); // Set margin as needed
+            var songItem = new SongItem();
+            songItem.BindingContext = song;
+            songItem.Margin = new Thickness(0, 5, 0, 5);
 
-            // Add TapGestureRecognizer to handle tap event
             var tapGestureRecognizer = new TapGestureRecognizer();
             tapGestureRecognizer.Tapped += SongItem_Tapped;
             songItem.GestureRecognizers.Add(tapGestureRecognizer);
 
-            // Set the row and column of the SongItem in the grid
             Grid.SetRow(songItem, rowIndex);
             Grid.SetColumn(songItem, columnIndex);
-            // Add the SongItem to the grid
             SongsGrid.Children.Add(songItem);
             columnIndex++;
             if (columnIndex == 2)
@@ -57,16 +49,13 @@ public partial class ArtistPage : ContentPage
 
     private void SongItem_Tapped(object sender, System.EventArgs e)
     {
-        // open ArtistSongDashboard page with song details
         var songItem = (SongItem)sender;
         var songInfo = songItem.BindingContext as SongBasicInformation;
         Navigation.PushAsync(new ArtistSongDashboard(songInfo));
     }
 
-    // Sample method to get list of songs (replace this with your actual method)
     private List<SongBasicInformation> GetSongs()
     {
-        // mocked songs, to be replaced with actual data retrieval from db
         return new List<SongBasicInformation>
         {
             new SongBasicInformation
