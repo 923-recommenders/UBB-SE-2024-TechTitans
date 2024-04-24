@@ -17,7 +17,7 @@ namespace TechTitansTesting.Services
         [Fact]
         public void TransformSongDataBaseModelToSongInfo_TransformsExistingSong_ReturnsCorrectSongInfo()
         {
-            
+
             var song = new SongDataBaseModel
             {
                 Song_Id = 1,
@@ -31,7 +31,7 @@ namespace TechTitansTesting.Services
                 Image = "test_image.png"
             };
 
-            
+
             var artistDetailsData = new List<ArtistDetails>
             {
                 new ArtistDetails { Artist_Id = 1, Name = "Test Artist" }
@@ -41,12 +41,12 @@ namespace TechTitansTesting.Services
             {
                 new SongFeatures{ Song_Id = 1, Artist_Id = 2}
             };
-           
+
             var songData = new List<SongDataBaseModel>
             {
-                song 
+                song
             };
-            
+
             var songRecommendationData = new List<SongRecommendationDetails>();
             var songRepositoryStub = new TestArtistSongDashboardRepository<SongDataBaseModel>(songData);
             var songRecommendationRepositoryStub = new TestArtistSongDashboardRepository<SongRecommendationDetails>(songRecommendationData);
@@ -76,7 +76,7 @@ namespace TechTitansTesting.Services
         [Fact]
         public void GetAllArtistSongs_GetExistingSongsOfArtist_ReturnsListOfSongsBelongingToArtist()
         {
-            
+
             var artistId = 1;
             var songData = new List<SongDataBaseModel>
             {
@@ -338,7 +338,7 @@ namespace TechTitansTesting.Services
         [Fact]
         public void GetSongRecommandationDetails_GetSongIdNotExists_DefaultSongDetails()
         {
-            var songIdToSearch = 3; 
+            var songIdToSearch = 3;
 
             var recommendationData = new List<SongRecommendationDetails>
             {
@@ -377,13 +377,13 @@ namespace TechTitansTesting.Services
 
             var result = controller.GetSongRecommandationDetails(songIdToSearch);
 
-            Assert.NotNull(result); 
-            Assert.Equal(0, result.Likes); 
-            Assert.Equal(0, result.Dislikes); 
-            Assert.Equal(0, result.Minutes_Listened); 
-            Assert.Equal(0, result.Number_Of_Plays); 
+            Assert.NotNull(result);
+            Assert.Equal(0, result.Likes);
+            Assert.Equal(0, result.Dislikes);
+            Assert.Equal(0, result.Minutes_Listened);
+            Assert.Equal(0, result.Number_Of_Plays);
             Assert.Equal(0, result.Month);
-            Assert.Equal(0, result.Year); 
+            Assert.Equal(0, result.Year);
         }
 
         [Fact]
@@ -450,7 +450,7 @@ namespace TechTitansTesting.Services
         public void GetArtistInfoBySong_WhenArtistNotFoundForSong_ReturnsNull()
         {
             var songIdToSearch = 1;
-            var artistId = 2; 
+            var artistId = 2;
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel { Song_Id = 1, Artist_Id = artistId }
@@ -606,7 +606,7 @@ namespace TechTitansTesting.Services
         public void GetSongsByMostPublishedArtistForMainPage_GetExistingSongsOfArtist_ReturnsSongsByMostPublishedArtist()
         {
             var mostPublishedArtistId = 1;
-            var expectedSongCount = 3; 
+            var expectedSongCount = 3;
             var songData = new List<SongDataBaseModel>
             {
                 new SongDataBaseModel { Artist_Id = mostPublishedArtistId },
@@ -635,7 +635,7 @@ namespace TechTitansTesting.Services
             );
             var result = controller.GetSongsByMostPublishedArtistForMainPage();
 
-            Assert.NotNull(result); 
+            Assert.NotNull(result);
             Assert.Equal(expectedSongCount, result.Count);
             Assert.All(result, song => Assert.Equal("Most Published Artist", song.Artist));
         }
@@ -643,8 +643,8 @@ namespace TechTitansTesting.Services
         [Fact]
         public void GetSongsByMostPublishedArtistForMainPage_WhenNoSongsPublished_ReturnsEmptyList()
         {
-            var songData = new List<SongDataBaseModel>(); 
-            var artistData = new List<ArtistDetails>(); 
+            var songData = new List<SongDataBaseModel>();
+            var artistData = new List<ArtistDetails>();
             var songRepositoryStub = new Mock<IRepository<SongDataBaseModel>>();
             songRepositoryStub.Setup(repo => repo.GetAll()).Returns(songData);
             var artistRepositoryStub = new Mock<IRepository<ArtistDetails>>();
@@ -659,7 +659,7 @@ namespace TechTitansTesting.Services
             );
             var result = controller.GetSongsByMostPublishedArtistForMainPage();
 
-            Assert.NotNull(result); 
+            Assert.NotNull(result);
             Assert.Empty(result);
         }
 

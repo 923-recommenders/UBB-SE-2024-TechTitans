@@ -115,7 +115,7 @@ namespace TechTitansTesting.Repositories
 
             var result = _repository.GetAll();
 
-            Assert.Null(result); 
+            Assert.Null(result);
         }
 
         [Fact]
@@ -147,6 +147,24 @@ namespace TechTitansTesting.Repositories
         }
 
         [Fact]
+        public void GetById_WhenDatabaseOperationsThrowsException_ShouldReturnNull()
+        {
+            _mockDatabaseOperations = new Mock<IDatabaseOperations>();
+            _repository = new Repository<TestEntity>(_mockDatabaseOperations.Object);
+            _mockDatabaseOperations.Setup(c => c.Query<TestEntity>(It.IsAny<string>(), null, null, true, null, null))
+                           .Throws(new Exception("Test exception"));
+
+
+            var result = _repository.GetById(1);
+            var id = result?.Id;
+            var name = result?.Name;
+
+            Assert.Null(id);
+            Assert.Null(name);
+            Assert.Null(result);
+        }
+
+        [Fact]
         public void Update_WhenEntityIsUpdated_ShouldReturnTrue()
         {
             _mockDatabaseOperations = new Mock<IDatabaseOperations>();
@@ -156,10 +174,10 @@ namespace TechTitansTesting.Repositories
             _mockDatabaseOperations.Setup(c => c.Execute(It.IsAny<string>(), It.IsAny<TestEntity>(), null, null, null))
                                    .Returns(1);
 
-            
+
             var result = _repository.Update(entity);
 
-            
+
             Assert.True(result);
             _mockDatabaseOperations.Verify(c => c.Execute(It.IsAny<string>(), It.IsAny<TestEntity>(), null, null, null), Times.Once);
         }
@@ -177,22 +195,32 @@ namespace TechTitansTesting.Repositories
 
 
             bool result = _repository.Update(entity);
-            
+
 
             Assert.False(result);
-          }
+        }
+
+
+
+        [Fact]
+        public void GetKeyColumnName_WhenEntityHasNoProperties_ShouldReturnNull()
+        {
+            string actualColumnName = Repository<TestEntityWithNoProperties>.GetKeyColumnName();
+
+            Assert.Null(actualColumnName);
+        }
 
 
         [Fact]
         public void GetKeyColumnName_WhenColumnAttributeIsSpecified_ShouldReturnColumnName()
         {
 
-            string expectedColumnName = "Id"; 
+            string expectedColumnName = "Id";
 
 
-            string actualColumnName = Repository<TestEntity>.GetKeyColumnName(); 
+            string actualColumnName = Repository<TestEntity>.GetKeyColumnName();
 
-            
+
             Assert.Equal(expectedColumnName, actualColumnName);
         }
 
@@ -216,6 +244,7 @@ namespace TechTitansTesting.Repositories
 
     }
 
+    [Table("TestEntity")]
     public class TestEntity
     {
         [Key]
@@ -239,5 +268,9 @@ namespace TechTitansTesting.Repositories
         public int Id { get; set; }
 
         public string Name { get; set; }
+    }
+
+    public class TestEntityWithNoProperties
+    {
     }
 }
