@@ -28,8 +28,6 @@ namespace TechTitansTesting.Services.Stubs
 
         public SongBasicInformation ConvertSongDataBaseModelToSongInfo(SongDataBaseModel song)
         {
-            // Assuming this method is supposed to return _songInfo for any input
-            // Adjust this logic based on your actual implementation
             return _songInfo;
         }
 

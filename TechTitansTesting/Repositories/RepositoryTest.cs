@@ -242,6 +242,29 @@ namespace TechTitansTesting.Repositories
             Assert.Null(actualColumnName);
         }
 
+        [Fact]
+        public void Delete_WhenEntityHasNoAttributes_ShouldReturnFalse()
+        {
+            _mockDatabaseOperations = new Mock<IDatabaseOperations>();
+            var repository = new Repository<TestEntityWithNoProperties>(_mockDatabaseOperations.Object);
+            var entity = new TestEntityWithNoProperties();
+            _mockDatabaseOperations.Setup(c => c.Execute(It.IsAny<string>(),
+                    It.IsAny<TestEntityWithoutColumnAttribute>(), null, null, null))
+                .Returns(1);
+
+            var result = repository.Delete(entity);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void GetKeyColumnName_WhenEntityIsNull_ShouldReturnNull()
+        {
+            string actualColumnName = Repository<TestEntityWithNoProperties>.GetKeyColumnName();
+
+            Assert.Null(actualColumnName);
+        }
+
     }
 
     [Table("TestEntity")]
@@ -273,4 +296,6 @@ namespace TechTitansTesting.Repositories
     public class TestEntityWithNoProperties
     {
     }
+
+    
 }
