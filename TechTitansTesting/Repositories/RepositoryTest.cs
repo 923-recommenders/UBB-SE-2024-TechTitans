@@ -115,7 +115,7 @@ namespace TechTitansTesting.Repositories
 
             var result = _repository.GetAll();
 
-            Assert.Null(result); 
+            Assert.Null(result);
         }
 
         [Fact]
@@ -154,11 +154,11 @@ namespace TechTitansTesting.Repositories
             _mockDatabaseOperations.Setup(c => c.Query<TestEntity>(It.IsAny<string>(), null, null, true, null, null))
                            .Throws(new Exception("Test exception"));
 
-            
+
             var result = _repository.GetById(1);
             var id = result?.Id;
             var name = result?.Name;
-        
+
             Assert.Null(id);
             Assert.Null(name);
             Assert.Null(result);
@@ -174,10 +174,10 @@ namespace TechTitansTesting.Repositories
             _mockDatabaseOperations.Setup(c => c.Execute(It.IsAny<string>(), It.IsAny<TestEntity>(), null, null, null))
                                    .Returns(1);
 
-            
+
             var result = _repository.Update(entity);
 
-            
+
             Assert.True(result);
             _mockDatabaseOperations.Verify(c => c.Execute(It.IsAny<string>(), It.IsAny<TestEntity>(), null, null, null), Times.Once);
         }
@@ -195,7 +195,7 @@ namespace TechTitansTesting.Repositories
 
 
             bool result = _repository.Update(entity);
-            
+
 
             Assert.False(result);
         }
@@ -215,12 +215,12 @@ namespace TechTitansTesting.Repositories
         public void GetKeyColumnName_WhenColumnAttributeIsSpecified_ShouldReturnColumnName()
         {
 
-            string expectedColumnName = "Id"; 
+            string expectedColumnName = "Id";
 
 
-            string actualColumnName = Repository<TestEntity>.GetKeyColumnName(); 
+            string actualColumnName = Repository<TestEntity>.GetKeyColumnName();
 
-            
+
             Assert.Equal(expectedColumnName, actualColumnName);
         }
 
